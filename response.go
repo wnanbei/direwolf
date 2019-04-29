@@ -1,5 +1,5 @@
 package direwolf
 
-type Response struct{
-	
+// Response is the response from request.
+type Response struct {
 }
