@@ -13,7 +13,7 @@ import (
 type PreRequest struct {
 	Method   string
 	URL      string
-	Headers  Headers
+	Headers  http.Header
 	Cookies  Cookies
 	Data     Data
 	DataForm url.Values
@@ -37,10 +37,7 @@ func (session Session) prepareRequest(method string, URL string, args ...interfa
 	for _, arg := range args {
 		switch a := arg.(type) {
 		case Headers:
-			req.Headers = make(map[string]string)
-			for key, value := range a {
-				req.Headers[key] = value
-			}
+			req.Headers = http.Header(a)
 		case Params:
 			req.Params = url.Values(a)
 			req.URL = req.URL + "?" + req.Params.Encode() // add params to url
@@ -83,9 +80,7 @@ func (session *Session) send(preq *PreRequest) *Response {
 	}
 
 	// Handle the Headers.
-	for key, value := range preq.Headers {
-		req.Header.Add(key, value)
-	}
+	req.Header = preq.Headers
 	// Handle the DataForm, convert DataForm to strings.Reader.
 	// add two new headers: Content-Type and ContentLength.
 	if preq.DataForm != nil {
