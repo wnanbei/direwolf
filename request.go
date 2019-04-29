@@ -28,10 +28,10 @@ type Session struct {
 }
 
 // prepareRequest is to process the parameters from user input.Generate PreRequest object.
-func (session Session) prepareRequest(method string, reqURL string, args ...interface{}) *PreRequest {
+func (session Session) prepareRequest(method string, URL string, args ...interface{}) *PreRequest {
 	req := new(PreRequest)
 	req.Method = method
-	req.URL = reqURL
+	req.URL = URL
 
 	// Check the type of the paramter and handle it.
 	for _, arg := range args {
@@ -42,20 +42,15 @@ func (session Session) prepareRequest(method string, reqURL string, args ...inte
 				req.Headers[key] = value
 			}
 		case Params:
-			req.Params = url.Values{}
-			for key, value := range a {
-				req.Params.Add(key, value)
-			}
+			req.Params = url.Values(a)
+			req.URL = req.URL + "?" + req.Params.Encode() // add params to url
 		case Cookies:
 			req.Cookies = make(map[string]string)
 			for key, value := range a {
 				req.Cookies[key] = value
 			}
 		case DataForm:
-			req.DataForm = url.Values{}
-			for key, value := range a {
-				req.DataForm.Add(key, value)
-			}
+			req.DataForm = url.Values(a)
 		case Data:
 			req.Data = a
 		}
@@ -64,19 +59,19 @@ func (session Session) prepareRequest(method string, reqURL string, args ...inte
 }
 
 // Request is a generic request method.
-func (session *Session) Request(method string, reqURL string, args ...interface{}) {
-	preq := session.prepareRequest(method, reqURL, args...)
+func (session *Session) Request(method string, URL string, args ...interface{}) {
+	preq := session.prepareRequest(method, URL, args...)
 	session.send(preq)
 }
 
 // Get is a get method.
-func (session *Session) Get(reqURL string, args ...interface{}) {
-	session.Request("Get", reqURL, args...)
+func (session *Session) Get(URL string, args ...interface{}) {
+	session.Request("Get", URL, args...)
 }
 
 // Post is a post method.
-func (session *Session) Post(reqURL string, args ...interface{}) {
-	session.Request("Post", reqURL, args...)
+func (session *Session) Post(URL string, args ...interface{}) {
+	session.Request("Post", URL, args...)
 }
 
 // send is responsible for handling some subsequent processing of the PreRequest.
@@ -99,6 +94,8 @@ func (session *Session) send(preq *PreRequest) *Response {
 		req.Body = ioutil.NopCloser(strings.NewReader(data))
 		req.ContentLength = int64(len(data))
 	}
+
+	fmt.Println(string(preq.URL))
 
 	resp, err := session.client.Do(req)
 	if err != nil {
