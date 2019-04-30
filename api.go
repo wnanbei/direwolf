@@ -8,8 +8,8 @@ import (
 // Headers is request headers, as parameter in Request method.
 // Headers type is http.Header, so you can init it like this:
 // 	headers := Headers{
-// 		"key1": []string{"value1", "value2"},
-// 		"key2": []string{"value3"},
+// 		"key1": {"value1", "value2"},
+// 		"key2": {"value3"},
 //  }
 type Headers http.Header
 
@@ -19,8 +19,8 @@ type Cookies map[string]string
 // DataForm is the form you want to post, as parameter in Request method.
 // DataForm type is url.values, so you can init it like this:
 // 	df := DataForm{
-// 		"key1": []string{"value1", "value2"},
-// 		"key2": []string{"value3"},
+// 		"key1": {"value1", "value2"},
+// 		"key2": {"value3"},
 //  }
 type DataForm url.Values
 
@@ -30,8 +30,8 @@ type Data string
 // Params is url params you want to join to url, as parameter in Request method.
 // Params type is url.values, so you can init it like this:
 // 	params := Params{
-//  	"key1": []string{"value1", "value2"},
-//  	"key2": []string{"value3"},
+//  	"key1": {"value1", "value2"},
+//  	"key2": {"value3"},
 //  }
 type Params url.Values
 
