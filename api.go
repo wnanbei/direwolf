@@ -1,17 +1,8 @@
 package direwolf
 
 import (
-	"net/http"
 	"net/url"
 )
-
-// Headers is request headers, as parameter in Request method.
-// Headers type is http.Header, so you can init it like this:
-// 	headers := Headers{
-// 		"key1": {"value1", "value2"},
-// 		"key2": {"value3"},
-//  }
-type Headers http.Header
 
 // Cookies is request cookies, as parameter in Request method.
 type Cookies map[string]string
@@ -26,14 +17,6 @@ type DataForm url.Values
 
 // Data is data you want to post, as parameter in Request method.
 type Data string
-
-// Params is url params you want to join to url, as parameter in Request method.
-// Params type is url.values, so you can init it like this:
-// 	params := Params{
-//  	"key1": {"value1", "value2"},
-//  	"key2": {"value3"},
-//  }
-type Params url.Values
 
 // Get is the most common method of direwolf to initiate a get request.
 // @url: request url, necessary.
