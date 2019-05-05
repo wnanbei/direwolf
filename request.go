@@ -14,10 +14,10 @@ type Request struct {
 	Method   string
 	URL      string
 	Headers  http.Header
-	Cookies  Cookies
 	Data     Data
 	DataForm url.Values
 	Params   url.Values
+	Cookies  Cookies
 }
 
 // setHeader get the key-value from Headers to Request.Headers.
@@ -28,6 +28,12 @@ func (req *Request) setHeader(h Headers) {
 			req.Headers.Add(key, value)
 		}
 	}
+}
+
+// setParams set req.Params.Encode Params and join it to url.
+func (req *Request) setParams(p Params) {
+	req.Params = url.Values(p)
+	req.URL = req.URL + "?" + req.Params.Encode() // add params to url
 }
 
 // Session is the main object in direwolf. This is its main features:
@@ -51,17 +57,16 @@ func (session Session) prepareRequest(method string, URL string, args ...interfa
 		case http.Header:
 			req.Headers = a
 		case Params:
-			req.Params = url.Values(a)
-			req.URL = req.URL + "?" + req.Params.Encode() // add params to url
+			req.setParams(a)
+		case DataForm:
+			req.DataForm = url.Values(a)
+		case Data:
+			req.Data = a
 		case Cookies:
 			req.Cookies = make(map[string]string)
 			for key, value := range a {
 				req.Cookies[key] = value
 			}
-		case DataForm:
-			req.DataForm = url.Values(a)
-		case Data:
-			req.Data = a
 		}
 	}
 	return req
