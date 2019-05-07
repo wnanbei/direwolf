@@ -17,7 +17,7 @@ type Request struct {
 	Data     Data
 	DataForm url.Values
 	Params   url.Values
-	Cookies  Cookies
+	Cookies  []*http.Cookie
 }
 
 // setHeader get the key-value from Headers to Request.Headers.
@@ -30,10 +30,18 @@ func (req *Request) setHeader(h Headers) {
 	}
 }
 
-// setParams set req.Params.Encode Params and join it to url.
+// setParams set Request.Params.Encode Params and join it to url.
 func (req *Request) setParams(p Params) {
 	req.Params = url.Values(p)
 	req.URL = req.URL + "?" + req.Params.Encode() // add params to url
+}
+
+// setCookies set Request.Cookies
+func (req *Request) setCookies(c Cookies) {
+	req.Cookies = []*http.Cookie{}
+	for key, value := range c {
+		req.Cookies = append(req.Cookies, &http.Cookie{Name: key, Value: value})
+	}
 }
 
 // Session is the main object in direwolf. This is its main features:
@@ -63,29 +71,26 @@ func (session Session) prepareRequest(method string, URL string, args ...interfa
 		case Data:
 			req.Data = a
 		case Cookies:
-			req.Cookies = make(map[string]string)
-			for key, value := range a {
-				req.Cookies[key] = value
-			}
+			req.setCookies(a)
 		}
 	}
 	return req
 }
 
 // Request is a generic request method.
-func (session *Session) Request(method string, URL string, args ...interface{}) {
+func (session *Session) request(method string, URL string, args ...interface{}) {
 	preq := session.prepareRequest(method, URL, args...)
 	session.send(preq)
 }
 
 // Get is a get method.
 func (session *Session) Get(URL string, args ...interface{}) {
-	session.Request("Get", URL, args...)
+	session.request("Get", URL, args...)
 }
 
 // Post is a post method.
 func (session *Session) Post(URL string, args ...interface{}) {
-	session.Request("Post", URL, args...)
+	session.request("Post", URL, args...)
 }
 
 // send is responsible for handling some subsequent processing of the PreRequest.
@@ -106,8 +111,12 @@ func (session *Session) send(preq *Request) *Response {
 		req.Body = ioutil.NopCloser(strings.NewReader(data))
 		req.ContentLength = int64(len(data))
 	}
-
-	fmt.Println(string(preq.URL))
+	// Handle Cookies
+	if preq.Cookies != nil {
+		for _, cookie := range preq.Cookies {
+			req.AddCookie(cookie)
+		}
+	}
 
 	resp, err := session.client.Do(req)
 	if err != nil {
