@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"testing"
+	"golang.org/x/net/publicsuffix"
 )
 
 func myCheckRedirect(req *http.Request, via []*http.Request) error {
@@ -18,7 +19,9 @@ func myCheckRedirect(req *http.Request, via []*http.Request) error {
 }
 
 func TestHTTP(t *testing.T) {
-	options := cookiejar.Options{}
+	options := cookiejar.Options{
+		PublicSuffixList: publicsuffix.List,
+	}
 	jar, err := cookiejar.New(&options)
 	// 生成client客户端
 	client := &http.Client{
