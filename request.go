@@ -1,7 +1,6 @@
 package direwolf
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -54,7 +53,7 @@ type Session struct {
 // prepareRequest is to process the parameters from user input.Generate PreRequest object.
 func (session Session) prepareRequest(method string, URL string, args ...interface{}) *Request {
 	req := new(Request)
-	req.Method = method
+	req.Method = strings.ToUpper(method) // Upper the method string
 	req.URL = URL
 
 	// Check the type of the paramter and handle it.
@@ -85,12 +84,12 @@ func (session *Session) request(method string, URL string, args ...interface{}) 
 
 // Get is a get method.
 func (session *Session) Get(URL string, args ...interface{}) {
-	session.request("Get", URL, args...)
+	session.request("GET", URL, args...)
 }
 
 // Post is a post method.
 func (session *Session) Post(URL string, args ...interface{}) {
-	session.request("Post", URL, args...)
+	session.request("POST", URL, args...)
 }
 
 // send is responsible for handling some subsequent processing of the PreRequest.
@@ -123,9 +122,12 @@ func (session *Session) send(preq *Request) *Response {
 		panic(err)
 	}
 
-	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
-	fmt.Println(string(body))
+	session.buildResponse(resp)
 
+	// build response
+	return &Response{}
+}
+
+func (session *Session) buildResponse(resp *http.Response) *Response {
 	return &Response{}
 }

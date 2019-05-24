@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"testing"
+
 	"golang.org/x/net/publicsuffix"
 )
 
