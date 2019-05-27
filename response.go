@@ -1,10 +1,13 @@
 package direwolf
 
 import (
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
 	"regexp"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
 // Response is the response from request.
@@ -14,6 +17,7 @@ type Response struct {
 	Proto      string
 	body       io.ReadCloser
 	content    []byte
+	dom        *goquery.Document
 }
 
 // Content read bytes from Response.body.
@@ -41,13 +45,24 @@ func (resp *Response) Text() string {
 	return text
 }
 
-// func (resp *Response) Css(query string) []string {
+// CSS is a api to goquery, it returns a goquery.Selection object.
+// so you can totally use the api from goquery, like Find().
+func (resp *Response) CSS(query string) *goquery.Selection {
+	text := resp.Text()
+	dom, err := goquery.NewDocument(text)
+	if err != nil {
+		fmt.Println("wrong")
+	}
+	resp.dom = dom
+	queryResult := resp.dom.Find(query)
+	return queryResult
+}
 
-// }
-
-// func (resp *Response) CssFirst(query string) string {
-
-// }
+// CSSFirst return the first node text from query result.
+func (resp *Response) CSSFirst(query string) string {
+	queryResult := resp.CSS(query)
+	return queryResult.First().Text()
+}
 
 // Re extract required data with regexp.
 // It return a slice of string from FindAllString.
@@ -55,8 +70,8 @@ func (resp *Response) Text() string {
 // So please try to extract required data at once.
 func (resp *Response) Re(query string) []string {
 	text := resp.Text()
-	data := regexp.MustCompile(query).FindAllString(text, -1)
-	return data
+	queryResult := regexp.MustCompile(query).FindAllString(text, -1)
+	return queryResult
 }
 
 // ReSubmatch extract required data with regexp.
@@ -66,11 +81,13 @@ func (resp *Response) Re(query string) []string {
 func (resp *Response) ReSubmatch(query string) []string {
 	text := resp.Text()
 	data := regexp.MustCompile(query).FindAllStringSubmatch(text, -1)
-	var subMatchData []string
+	var subMatchResult []string
 	for _, match := range data {
-		subMatchData = append(subMatchData, match[1])
+		if len(match) > 1 { // In case that query has no submatch part
+			subMatchResult = append(subMatchResult, match[1])
+		}
 	}
-	return subMatchData
+	return subMatchResult
 }
 
 // func (resp *Response) ReFirst(query string) string {

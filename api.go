@@ -2,16 +2,16 @@ package direwolf
 
 // Get is the most common method of direwolf to initiate a get request.
 // @url: request url, necessary.
-func Get(url string, args ...interface{}) {
+func Get(url string, args ...interface{}) *Response {
 	session := Session{}
-	session.Get(url, args...)
+	return session.Get(url, args...)
 }
 
 // Post is the method to initiate a post request.
 // @url: request url, necessary.
-func Post(url string, args ...interface{}) {
+func Post(url string, args ...interface{}) *Response {
 	session := Session{}
-	session.Post(url, args...)
+	return session.Post(url, args...)
 }
 
 // Headers is request headers, as parameter in Request method.

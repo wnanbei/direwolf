@@ -77,19 +77,19 @@ func (session Session) prepareRequest(method string, URL string, args ...interfa
 }
 
 // Request is a generic request method.
-func (session *Session) request(method string, URL string, args ...interface{}) {
+func (session *Session) request(method string, URL string, args ...interface{}) *Response {
 	preq := session.prepareRequest(method, URL, args...)
-	session.send(preq)
+	return session.send(preq)
 }
 
 // Get is a get method.
-func (session *Session) Get(URL string, args ...interface{}) {
-	session.request("GET", URL, args...)
+func (session *Session) Get(URL string, args ...interface{}) *Response {
+	return session.request("GET", URL, args...)
 }
 
 // Post is a post method.
-func (session *Session) Post(URL string, args ...interface{}) {
-	session.request("POST", URL, args...)
+func (session *Session) Post(URL string, args ...interface{}) *Response {
+	return session.request("POST", URL, args...)
 }
 
 // send is responsible for handling some subsequent processing of the PreRequest.
@@ -122,12 +122,17 @@ func (session *Session) send(preq *Request) *Response {
 		panic(err)
 	}
 
-	session.buildResponse(resp)
+	buildedResponse := session.buildResponse(preq, resp)
 
 	// build response
-	return &Response{}
+	return buildedResponse
 }
 
-func (session *Session) buildResponse(resp *http.Response) *Response {
-	return &Response{}
+func (session *Session) buildResponse(req *Request, resp *http.Response) *Response {
+	return &Response{
+		URL:        req.URL,
+		StatusCode: resp.StatusCode,
+		Proto:      resp.Proto,
+		body:       resp.Body,
+	}
 }
