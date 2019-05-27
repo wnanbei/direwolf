@@ -18,6 +18,7 @@ type Response struct {
 	body       io.ReadCloser
 	content    []byte
 	dom        *goquery.Document
+	Request    *Request
 }
 
 // Content read bytes from Response.body.
