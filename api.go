@@ -48,3 +48,6 @@ type Cookies map[string]string
 
 // Data is data you want to post, as parameter in Request method.
 type Data string
+
+// Proxy is the proxy server address, like http:127.0.0.1:1080
+type Proxy string
