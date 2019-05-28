@@ -1,6 +1,7 @@
 package direwolf
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -49,10 +50,10 @@ func (resp *Response) Text() string {
 // CSS is a api to goquery, it returns a goquery.Selection object.
 // so you can totally use the api from goquery, like Find().
 func (resp *Response) CSS(query string) *goquery.Selection {
-	text := resp.Text()
-	dom, err := goquery.NewDocument(text)
+	content := bytes.NewReader(resp.Content())
+	dom, err := goquery.NewDocumentFromReader(content)
 	if err != nil {
-		fmt.Println("wrong")
+		fmt.Println(err.Error())
 	}
 	resp.dom = dom
 	queryResult := resp.dom.Find(query)
