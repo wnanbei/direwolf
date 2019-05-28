@@ -12,7 +12,8 @@ func TestHTTP(t *testing.T) {
 	params := Params{
 		"keyxxx": {"valuexxx"},
 	}
-	resp := Get("http://httpbin.org/get", headers, params)
-	result := resp.ReSubmatch(`url": "(.*?)"`)
+	var proxy Proxy = "http://127.0.0.1:12333"
+	resp := Get("http://httpbin.org/get", headers, params, proxy)
+	result := resp.ReSubmatch(`origin": "(.*?)"`)
 	fmt.Println(result)
 }
