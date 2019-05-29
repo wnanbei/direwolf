@@ -24,8 +24,8 @@ type Session struct {
 }
 
 // prepareRequest is to process the parameters from user input.Generate PreRequest object.
-func (session Session) prepareRequest(method string, URL string, args ...interface{}) *Request {
-	req := new(Request)
+func (session Session) prepareRequest(method string, URL string, args ...interface{}) *RequestSetting {
+	req := new(RequestSetting)
 	req.Method = strings.ToUpper(method) // Upper the method string
 	req.URL = URL
 
@@ -68,7 +68,7 @@ func (session *Session) Post(URL string, args ...interface{}) *Response {
 }
 
 // send is responsible for handling some subsequent processing of the PreRequest.
-func (session *Session) send(preq *Request) *Response {
+func (session *Session) send(preq *RequestSetting) *Response {
 	buildedResponse := Download(preq, session.Client, session.Transport)
 
 	// build response

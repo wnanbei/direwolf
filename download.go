@@ -7,12 +7,8 @@ import (
 	"strings"
 )
 
-// Settings is the Request settings
-type Settings struct {
-}
-
 // Download is low level request method
-func Download(reqSetting *Request, client *http.Client, transport *http.Transport) *Response {
+func Download(reqSetting *RequestSetting, client *http.Client, transport *http.Transport) *Response {
 	// New Request
 	req, err := http.NewRequest(reqSetting.Method, reqSetting.URL, nil)
 	if err != nil {
@@ -55,7 +51,7 @@ func Download(reqSetting *Request, client *http.Client, transport *http.Transpor
 }
 
 // buildResponse build response with http.Response after do request.
-func buildResponse(req *Request, resp *http.Response) *Response {
+func buildResponse(req *RequestSetting, resp *http.Response) *Response {
 	return &Response{
 		URL:        req.URL,
 		StatusCode: resp.StatusCode,
