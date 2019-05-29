@@ -1,19 +1,26 @@
 package direwolf
 
 import (
-	"io/ioutil"
 	"net"
 	"net/http"
+	"net/http/cookiejar"
 	"net/url"
 	"strings"
 	"time"
+
+	"golang.org/x/net/publicsuffix"
 )
 
 // Session is the main object in direwolf. This is its main features:
 // 1. handling redirects
 // 2. automatically managing cookies
 type Session struct {
-	client *http.Client
+	Client    *http.Client
+	Transport *http.Transport
+	Cookies   *cookiejar.Jar
+	Headers   *http.Header
+	Proxy     string
+	Timeout   int
 }
 
 // prepareRequest is to process the parameters from user input.Generate PreRequest object.
@@ -62,6 +69,14 @@ func (session *Session) Post(URL string, args ...interface{}) *Response {
 
 // send is responsible for handling some subsequent processing of the PreRequest.
 func (session *Session) send(preq *Request) *Response {
+	buildedResponse := Download(preq, session.Client, session.Transport)
+
+	// build response
+	return buildedResponse
+}
+
+// NewSession make a Session, and set a default Client and Transport.
+func NewSession() *Session {
 	trans := &http.Transport{
 		DialContext: (&net.Dialer{
 			Timeout:   30 * time.Second,
@@ -74,58 +89,22 @@ func (session *Session) send(preq *Request) *Response {
 		ExpectContinueTimeout: 1 * time.Second,
 	}
 
-	session.client = &http.Client{
+	// set CookieJar
+	options := cookiejar.Options{
+		PublicSuffixList: publicsuffix.List,
+	}
+	jar, err := cookiejar.New(&options)
+	if err != nil {
+		panic("proxy url has problem")
+	}
+
+	client := &http.Client{
 		Transport: trans,
-	}
-	// New Request
-	req, err := http.NewRequest(preq.Method, preq.URL, nil)
-	if err != nil {
-		panic(err)
+		Jar:       jar,
 	}
 
-	// Add proxy method to transport
-	if preq.Proxy != "" {
-		proxyURL, err := url.Parse(preq.Proxy)
-		if err != nil {
-			panic("proxy url has problem")
-		}
-		trans.Proxy = http.ProxyURL(proxyURL)
-	}
-
-	// Handle the Headers.
-	req.Header = preq.Headers
-	// Handle the DataForm, convert DataForm to strings.Reader.
-	// add two new headers: Content-Type and ContentLength.
-	if preq.DataForm != nil {
-		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-		data := preq.DataForm.Encode()
-		req.Body = ioutil.NopCloser(strings.NewReader(data))
-		req.ContentLength = int64(len(data))
-	}
-	// Handle Cookies
-	if preq.Cookies != nil {
-		for _, cookie := range preq.Cookies {
-			req.AddCookie(cookie)
-		}
-	}
-
-	resp, err := session.client.Do(req) // do request
-	if err != nil {
-		panic(err)
-	}
-
-	buildedResponse := session.buildResponse(preq, resp)
-
-	// build response
-	return buildedResponse
-}
-
-// buildResponse build response with http.Response after do request.
-func (session *Session) buildResponse(req *Request, resp *http.Response) *Response {
-	return &Response{
-		URL:        req.URL,
-		StatusCode: resp.StatusCode,
-		Proto:      resp.Proto,
-		body:       resp.Body,
+	return &Session{
+		Client:    client,
+		Transport: trans,
 	}
 }
