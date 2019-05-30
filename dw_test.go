@@ -17,3 +17,30 @@ func TestHTTP(t *testing.T) {
 	result := resp.ReSubmatch(`origin": "(.*?)"`)
 	fmt.Println(result)
 }
+
+type myType map[string][]string
+
+func (m myType) add(slice ...[]string) myType {
+	// m = make(map[string][]string, 10)
+	for _, kv := range slice {
+		m[kv[0]] = append(m[kv[0]], kv[1])
+	}
+	return m
+}
+
+func (m myType) all() map[string][]string {
+	return m
+}
+
+type cookie struct {
+	myType
+}
+
+func TestCookie(t *testing.T) {
+	c := cookie{}.add(
+		[]string{"key", "value"},
+		[]string{"key2", "value"},
+		[]string{"key3", "value"},
+	)
+	fmt.Println(c.all())
+}

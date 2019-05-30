@@ -52,19 +52,19 @@ func (session Session) prepareRequest(method string, URL string, args ...interfa
 }
 
 // Request is a generic request method.
-func (session *Session) request(method string, URL string, args ...interface{}) *Response {
+func (session *Session) Request(method string, URL string, args ...interface{}) *Response {
 	preq := session.prepareRequest(method, URL, args...)
 	return session.send(preq)
 }
 
 // Get is a get method.
 func (session *Session) Get(URL string, args ...interface{}) *Response {
-	return session.request("GET", URL, args...)
+	return session.Request("GET", URL, args...)
 }
 
 // Post is a post method.
 func (session *Session) Post(URL string, args ...interface{}) *Response {
-	return session.request("POST", URL, args...)
+	return session.Request("POST", URL, args...)
 }
 
 // send is responsible for handling some subsequent processing of the PreRequest.

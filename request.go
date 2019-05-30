@@ -10,10 +10,10 @@ import (
 type RequestSetting struct {
 	Method      string
 	URL         string
+	Params      url.Values
 	Headers     http.Header
 	Data        Data
 	DataForm    url.Values
-	Params      url.Values
 	Cookies     []*http.Cookie
 	Proxy       string
 	RedirectNum int
@@ -45,6 +45,9 @@ func (req *RequestSetting) setCookies(c Cookies) {
 }
 
 // NewRequestSetting new a default RequestSetting
-func NewRequestSetting() {
-
+func NewRequestSetting() *RequestSetting {
+	return &RequestSetting{
+		RedirectNum: 5,
+		Timeout:     30,
+	}
 }
