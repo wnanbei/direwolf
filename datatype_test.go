@@ -6,7 +6,7 @@ import (
 )
 
 func TestStringSliceMap(t *testing.T) {
-	r := NewRequestSetting()
+	r := NewRequestSetting("Get", "https://www.baidu.com")
 	c := NewCookies(
 		"key1", "key2",
 		"key3", "key4",

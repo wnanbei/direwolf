@@ -147,16 +147,21 @@ func (ssm *StringSliceMap) URLEncode() string {
 	return buf.String()
 }
 
+// NewParams new a Params type
 func NewParams(keyvalue ...string) *Params {
 	var p = &Params{}
 	p.New(keyvalue...)
 	return p
 }
+
+// NewCookies new a Cookies type
 func NewCookies(keyvalue ...string) *Cookies {
 	var c = &Cookies{}
 	c.New(keyvalue...)
 	return c
 }
+
+// NewPostForm new a PostForm type
 func NewPostForm(keyvalue ...string) *PostForm {
 	var p = &PostForm{}
 	p.New(keyvalue...)

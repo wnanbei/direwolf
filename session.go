@@ -4,7 +4,6 @@ import (
 	"net"
 	"net/http"
 	"net/http/cookiejar"
-	"strings"
 	"time"
 
 	"golang.org/x/net/publicsuffix"
@@ -22,38 +21,9 @@ type Session struct {
 	Timeout   int
 }
 
-// prepareRequest is to process the parameters from user input.Generate PreRequest object.
-func (session *Session) prepareRequest(method string, URL string, args ...interface{}) *RequestSetting {
-	reqSetting := NewRequestSetting()
-	reqSetting.Method = strings.ToUpper(method) // Upper the method string
-	reqSetting.URL = URL
-
-	// Check the type of the paramter and handle it.
-	for _, arg := range args {
-		switch a := arg.(type) {
-		case Headers:
-			reqSetting.setHeader(a)
-		case http.Header:
-			reqSetting.Headers = a
-		case *Params:
-			reqSetting.Params = a
-			reqSetting.URL = reqSetting.URL + "?" + reqSetting.Params.URLEncode()
-		case *PostForm:
-			reqSetting.PostForm = a
-		case Data:
-			reqSetting.Data = a
-		case *Cookies:
-			reqSetting.Cookies = a
-		case Proxy:
-			reqSetting.Proxy = string(a)
-		}
-	}
-	return reqSetting
-}
-
 // Request is a generic request method.
 func (session *Session) Request(method string, URL string, args ...interface{}) *Response {
-	preq := session.prepareRequest(method, URL, args...)
+	preq := NewRequestSetting(method, URL, args...)
 	return session.send(preq)
 }
 
