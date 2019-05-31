@@ -20,16 +20,6 @@ type RequestSetting struct {
 	Timeout     int
 }
 
-// setHeader get the key-value from Headers to RequestSetting.Headers.
-func (req *RequestSetting) setHeader(h Headers) {
-	req.Headers = http.Header{}
-	for key, slice := range h {
-		for _, value := range slice {
-			req.Headers.Add(key, value)
-		}
-	}
-}
-
 // // setParams set RequestSetting.Params.Encode Params and join it to url.
 // func (req *RequestSetting) setParams(p Params) {
 // 	// for key, value := range p {
@@ -55,8 +45,6 @@ func NewRequestSetting(method string, URL string, args ...interface{}) *RequestS
 	// Check the type of the paramter and handle it.
 	for _, arg := range args {
 		switch a := arg.(type) {
-		case Headers:
-			reqSetting.setHeader(a)
 		case http.Header:
 			reqSetting.Headers = a
 		case *Params:

@@ -11,17 +11,17 @@ import (
 )
 
 func TestHTTP(t *testing.T) {
-	headers := Headers{
-		"User-Agent": {"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36"},
-	}
+	headers := NewHeaders(
+		"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36",
+	)
 	params := NewParams(
 		"keyxxx", "valuexxx",
 	)
 	cookies := NewCookies(
 		"hello", "world",
 	)
-	var proxy Proxy = "http://127.0.0.1:12333"
-	resp := Get("https://httpbin.org/get", headers, params, cookies, proxy)
+	// var proxy Proxy = "http://127.0.0.1:12333"
+	resp := Get("https://httpbin.org/get", headers, params, cookies)
 	t.Log(resp.Text())
 }
 
@@ -66,3 +66,27 @@ func TestProxy(t *testing.T) {
 
 	Do(trans, client, req)
 }
+
+// type headers http.Header
+
+// func (h *headers) New(keyvalue ...string) {
+// 	h = http.Header{}
+// 	if keyvalue != nil {
+// 		if len(keyvalue)%2 != 0 {
+// 			panic("key and value must be part")
+// 		}
+
+// 		for i := 0; i < len(keyvalue)/2; i++ {
+// 			key := keyvalue[i*2]
+// 			value := keyvalue[i*2+1]
+// 			h[key] = append(h.data[key], value)
+// 		}
+// 	}
+// }
+
+// func TestHeader(t *testing.T) {
+// 	h := &headers{}
+// 	h.New("dxxx", "eeee", "wwww", "xxxx")
+// 	h.Add("a", "b")
+// 	t.Log(h)
+// }

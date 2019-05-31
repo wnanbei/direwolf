@@ -17,14 +17,6 @@ type Params struct {
 	StringSliceMap
 }
 
-// Headers is request headers, as parameter in Request method.
-// You can init it like this:
-// 	headers := Headers{
-// 		"key1": {"value1", "value2"},
-// 		"key2": {"value3"},
-//  }
-type Headers http.Header
-
 // Data is data you want to post, as parameter in Request method.
 type Data string
 
@@ -166,4 +158,21 @@ func NewPostForm(keyvalue ...string) *PostForm {
 	var p = &PostForm{}
 	p.New(keyvalue...)
 	return p
+}
+
+// NewHeaders new a http.Header type
+func NewHeaders(keyvalue ...string) http.Header {
+	h := http.Header{}
+	if keyvalue != nil {
+		if len(keyvalue)%2 != 0 {
+			panic("key and value must be part")
+		}
+
+		for i := 0; i < len(keyvalue)/2; i++ {
+			key := keyvalue[i*2]
+			value := keyvalue[i*2+1]
+			h.Add(key, value)
+		}
+	}
+	return h
 }
