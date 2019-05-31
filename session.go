@@ -23,8 +23,8 @@ type Session struct {
 }
 
 // prepareRequest is to process the parameters from user input.Generate PreRequest object.
-func (session Session) prepareRequest(method string, URL string, args ...interface{}) *RequestSetting {
-	reqSetting := new(RequestSetting)
+func (session *Session) prepareRequest(method string, URL string, args ...interface{}) *RequestSetting {
+	reqSetting := NewRequestSetting()
 	reqSetting.Method = strings.ToUpper(method) // Upper the method string
 	reqSetting.URL = URL
 
@@ -35,13 +35,14 @@ func (session Session) prepareRequest(method string, URL string, args ...interfa
 			reqSetting.setHeader(a)
 		case http.Header:
 			reqSetting.Headers = a
-		case Params:
+		case *Params:
 			reqSetting.Params = a
-		case PostForm:
+			reqSetting.URL = reqSetting.URL + "?" + reqSetting.Params.URLEncode()
+		case *PostForm:
 			reqSetting.PostForm = a
 		case Data:
 			reqSetting.Data = a
-		case Cookies:
+		case *Cookies:
 			reqSetting.Cookies = a
 		case Proxy:
 			reqSetting.Proxy = string(a)

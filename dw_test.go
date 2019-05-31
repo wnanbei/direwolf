@@ -2,7 +2,12 @@ package direwolf
 
 import (
 	"fmt"
+	"io/ioutil"
+	"net"
+	"net/http"
+	"net/url"
 	"testing"
+	"time"
 )
 
 func TestHTTP(t *testing.T) {
@@ -16,50 +21,48 @@ func TestHTTP(t *testing.T) {
 		"hello", "world",
 	)
 	var proxy Proxy = "http://127.0.0.1:12333"
-	resp := Get("http://httpbin.org/get", headers, params, proxy, cookies)
-	fmt.Println(resp.Text())
+	resp := Get("https://httpbin.org/get", headers, params, cookies, proxy)
+	t.Log(resp.Text())
 }
 
-type myType map[string][]string
-
-func (m myType) new(slice ...[]string) {
-	m = make(map[string][]string, 10)
-	for _, kv := range slice {
-		m[kv[0]] = append(m[kv[0]], kv[1])
+func Do(trans *http.Transport, client *http.Client, req *http.Request) {
+	proxyURL, err := url.Parse("http://127.0.0.1:12333")
+	if err != nil {
+		panic("proxy url has problem")
 	}
+	trans.Proxy = http.ProxyURL(proxyURL)
+
+	resp, err := client.Do(req)
+
+	content, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	fmt.Println(string(content))
+	resp.Body.Close()
 }
 
-// func (m myType) all() map[string][]string {
-// 	return m
-// }
+func TestProxy(t *testing.T) {
+	req, err := http.NewRequest("GET", "https://httpbin.org/get", nil)
+	if err != nil {
+		t.Log("fail")
+	}
+	req.Header.Add("xxxxx", "yyyyy")
 
-type cookie struct {
-	myType
-}
+	trans := &http.Transport{
+		DialContext: (&net.Dialer{
+			Timeout:   30 * time.Second,
+			KeepAlive: 30 * time.Second,
+			DualStack: true,
+		}).DialContext,
+		MaxIdleConns:          100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+	}
+	client := &http.Client{
+		Transport: trans,
+	}
 
-func newCookie(slice ...[]string) cookie {
-	var c = cookie{}
-	c.new(slice...)
-	return c
-}
-
-// func x(c cookie) {
-// 	for key, value := range c {
-// 		fmt.Println(key)
-// 		fmt.Println(value)
-// 	}
-// }
-
-func TestCookie(t *testing.T) {
-	c := newCookie(
-		[]string{"key", "value"},
-		[]string{"key2", "value"},
-		[]string{"key3", "value"},
-	)
-	// b := c.new(
-	// 	[]string{"key", "value"},
-	// 	[]string{"key2", "value"},
-	// 	[]string{"key3", "value"},
-	// )
-	fmt.Println(c)
+	Do(trans, client, req)
 }

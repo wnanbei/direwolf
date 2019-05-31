@@ -28,14 +28,14 @@ func Download(reqSetting *RequestSetting, client *http.Client, transport *http.T
 	req.Header = reqSetting.Headers
 	// Handle the DataForm, convert DataForm to strings.Reader.
 	// add two new headers: Content-Type and ContentLength.
-	if reqSetting.PostForm.data != nil {
+	if reqSetting.PostForm != nil {
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 		data := reqSetting.PostForm.URLEncode()
 		req.Body = ioutil.NopCloser(strings.NewReader(data))
 		req.ContentLength = int64(len(data))
 	}
 	// Handle Cookies
-	if reqSetting.Cookies.data != nil {
+	if reqSetting.Cookies != nil {
 		for key, values := range reqSetting.Cookies.data {
 			for _, value := range values {
 				req.AddCookie(&http.Cookie{Name: key, Value: value})
