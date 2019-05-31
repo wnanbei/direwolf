@@ -4,7 +4,6 @@ import (
 	"net"
 	"net/http"
 	"net/http/cookiejar"
-	"net/url"
 	"strings"
 	"time"
 
@@ -25,30 +24,30 @@ type Session struct {
 
 // prepareRequest is to process the parameters from user input.Generate PreRequest object.
 func (session Session) prepareRequest(method string, URL string, args ...interface{}) *RequestSetting {
-	req := new(RequestSetting)
-	req.Method = strings.ToUpper(method) // Upper the method string
-	req.URL = URL
+	reqSetting := new(RequestSetting)
+	reqSetting.Method = strings.ToUpper(method) // Upper the method string
+	reqSetting.URL = URL
 
 	// Check the type of the paramter and handle it.
 	for _, arg := range args {
 		switch a := arg.(type) {
 		case Headers:
-			req.setHeader(a)
+			reqSetting.setHeader(a)
 		case http.Header:
-			req.Headers = a
+			reqSetting.Headers = a
 		case Params:
-			req.setParams(a)
-		case DataForm:
-			req.DataForm = url.Values(a)
+			reqSetting.Params = a
+		case PostForm:
+			reqSetting.PostForm = a
 		case Data:
-			req.Data = a
+			reqSetting.Data = a
 		case Cookies:
-			req.setCookies(a)
+			reqSetting.Cookies = a
 		case Proxy:
-			req.Proxy = string(a)
+			reqSetting.Proxy = string(a)
 		}
 	}
-	return req
+	return reqSetting
 }
 
 // Request is a generic request method.

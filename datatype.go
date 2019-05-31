@@ -13,7 +13,9 @@ import (
 //  	"key1": {"value1", "value2"},
 //  	"key2": {"value3"},
 //  }
-type Params url.Values
+type Params struct {
+	StringSliceMap
+}
 
 // Headers is request headers, as parameter in Request method.
 // You can init it like this:
@@ -26,13 +28,15 @@ type Headers http.Header
 // Data is data you want to post, as parameter in Request method.
 type Data string
 
-// DataForm is the form you want to post, as parameter in Request method.
+// PostForm is the form you want to post, as parameter in Request method.
 // You can init it like this:
 // 	df := DataForm{
 // 		"key1": {"value1", "value2"},
 // 		"key2": {"value3"},
 //  }
-type DataForm url.Values
+type PostForm struct {
+	StringSliceMap
+}
 
 // Cookies is request cookies, as parameter in Request method.
 // You can init it like this:
@@ -40,7 +44,9 @@ type DataForm url.Values
 // 		"key1": "value1",
 // 		"key2": "value2",
 //  }
-type Cookies map[string]string
+type Cookies struct {
+	StringSliceMap
+}
 
 // Proxy is the proxy server address, like "http://127.0.0.1:1080"
 type Proxy string
@@ -54,7 +60,9 @@ type Timeout int
 // StringSliceMap type is map[string][]string, used for Params, PostForms, Cookies.
 // you should new it like this:
 //   StringSliceMap{}.New()
-type StringSliceMap map[string][]string
+type StringSliceMap struct {
+	data map[string][]string
+}
 
 // New is the most convenient way to create a StringSliceMap.
 // You can set key-value pair when you init it by sent params. Just like this:
@@ -64,8 +72,8 @@ type StringSliceMap map[string][]string
 // )
 // But be careful, between the key and value is a comma.
 // And if the number of parameters is not a multiple of 2, it will panic.
-func (ssm StringSliceMap) New(keyvalue ...string) StringSliceMap {
-	ssm = make(map[string][]string)
+func (ssm *StringSliceMap) New(keyvalue ...string) {
+	ssm.data = make(map[string][]string)
 	if keyvalue != nil {
 		if len(keyvalue)%2 != 0 {
 			panic("key and value must be part")
@@ -74,36 +82,35 @@ func (ssm StringSliceMap) New(keyvalue ...string) StringSliceMap {
 		for i := 0; i < len(keyvalue)/2; i++ {
 			key := keyvalue[i*2]
 			value := keyvalue[i*2+1]
-			ssm[key] = append(ssm[key], value)
+			ssm.data[key] = append(ssm.data[key], value)
 		}
 	}
-	return ssm
 }
 
 // Add key and value to StringSliceMap.
 // If key exiests, value will append to slice.
-func (ssm StringSliceMap) Add(key, value string) {
-	ssm[key] = append(ssm[key], value)
+func (ssm *StringSliceMap) Add(key, value string) {
+	ssm.data[key] = append(ssm.data[key], value)
 }
 
 // Set key and value to StringSliceMap.
 // If key exiests, existed value will drop and new value will set.
-func (ssm StringSliceMap) Set(key, value string) {
-	ssm[key] = []string{value}
+func (ssm *StringSliceMap) Set(key, value string) {
+	ssm.data[key] = []string{value}
 }
 
 // Del delete the given key.
-func (ssm StringSliceMap) Del(key string) {
-	delete(ssm, key)
+func (ssm *StringSliceMap) Del(key string) {
+	delete(ssm.data, key)
 }
 
 // Get get the value pair to given key.
 // You can pass index to assign which value to get, when there are multiple values.
-func (ssm StringSliceMap) Get(key string, index ...int) string {
-	if ssm == nil {
+func (ssm *StringSliceMap) Get(key string, index ...int) string {
+	if ssm.data == nil {
 		return ""
 	}
-	ssmValue := ssm[key]
+	ssmValue := ssm.data[key]
 	if len(ssmValue) == 0 {
 		return ""
 	}
@@ -115,18 +122,18 @@ func (ssm StringSliceMap) Get(key string, index ...int) string {
 
 // URLEncode encodes the values into ``URL encoded'' form
 // ("bar=baz&foo=quux") sorted by key.
-func (ssm StringSliceMap) URLEncode() string {
-	if ssm == nil {
+func (ssm *StringSliceMap) URLEncode() string {
+	if ssm.data == nil {
 		return ""
 	}
 	var buf strings.Builder
-	keys := make([]string, 0, len(ssm))
-	for k := range ssm {
+	keys := make([]string, 0, len(ssm.data))
+	for k := range ssm.data {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)
 	for _, k := range keys {
-		ssmValue := ssm[k]
+		ssmValue := ssm.data[k]
 		keyEscaped := url.QueryEscape(k)
 		for _, v := range ssmValue {
 			if buf.Len() > 0 {
@@ -138,4 +145,20 @@ func (ssm StringSliceMap) URLEncode() string {
 		}
 	}
 	return buf.String()
+}
+
+func NewParams(keyvalue ...string) *Params {
+	var p = &Params{}
+	p.New(keyvalue...)
+	return p
+}
+func NewCookies(keyvalue ...string) *Cookies {
+	var c = &Cookies{}
+	c.New(keyvalue...)
+	return c
+}
+func NewPostForm(keyvalue ...string) *PostForm {
+	var p = &PostForm{}
+	p.New(keyvalue...)
+	return p
 }

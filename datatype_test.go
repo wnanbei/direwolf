@@ -6,14 +6,14 @@ import (
 )
 
 func TestStringSliceMap(t *testing.T) {
-	s := StringSliceMap{}.New(
+	c := NewCookies(
 		"key1", "key2",
-		"key3", "key4", "key5",
+		"key3", "key4",
 	)
 	// s.Add("hello", "world")
 	// s.Add("hello", "world")
 	// s.Add("hello", "world")
 	// s.Add("hello", "world")
 
-	fmt.Println(s.URLEncode())
+	fmt.Println(c.URLEncode())
 }
