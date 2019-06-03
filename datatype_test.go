@@ -12,11 +12,14 @@ func TestStringSliceMap(t *testing.T) {
 		"key3", "key4",
 	)
 	r.Cookies = c
-	// s.Add("hello", "world")
-	// s.Add("hello", "world")
-	// s.Add("hello", "world")
-	// s.Add("hello", "world")
 	if r.Cookies.data != nil {
 		fmt.Println(c.URLEncode())
 	}
+}
+
+func TestBody(t *testing.T) {
+	body := Body("ddd")
+	req := NewRequestSetting("get", "http")
+	req.Body = body
+	t.Log(req.Body)
 }

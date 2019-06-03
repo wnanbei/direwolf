@@ -12,7 +12,7 @@ type RequestSetting struct {
 	URL         string
 	Params      *Params
 	Headers     http.Header
-	Data        Data
+	Body        Body
 	PostForm    *PostForm
 	Cookies     *Cookies
 	Proxy       string
@@ -52,8 +52,8 @@ func NewRequestSetting(method string, URL string, args ...interface{}) *RequestS
 			reqSetting.URL = reqSetting.URL + "?" + reqSetting.Params.URLEncode()
 		case *PostForm:
 			reqSetting.PostForm = a
-		case Data:
-			reqSetting.Data = a
+		case Body:
+			reqSetting.Body = a
 		case *Cookies:
 			reqSetting.Cookies = a
 		case Proxy:

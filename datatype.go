@@ -17,8 +17,8 @@ type Params struct {
 	StringSliceMap
 }
 
-// Data is data you want to post, as parameter in Request method.
-type Data string
+// Body is data you want to post, as parameter in Request method.
+type Body []byte
 
 // PostForm is the form you want to post, as parameter in Request method.
 // You can init it like this:

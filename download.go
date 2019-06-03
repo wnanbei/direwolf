@@ -1,6 +1,7 @@
 package direwolf
 
 import (
+	"bytes"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -26,14 +27,19 @@ func Download(reqSetting *RequestSetting, client *http.Client, transport *http.T
 
 	// Handle the Headers.
 	req.Header = reqSetting.Headers
+
 	// Handle the DataForm, convert DataForm to strings.Reader.
 	// add two new headers: Content-Type and ContentLength.
-	if reqSetting.PostForm != nil {
+	if reqSetting.Body != nil && reqSetting.PostForm != nil {
+		panic("Body can`t exists with PostForm")
+	} else if reqSetting.PostForm != nil {
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 		data := reqSetting.PostForm.URLEncode()
 		req.Body = ioutil.NopCloser(strings.NewReader(data))
-		req.ContentLength = int64(len(data))
+	} else if reqSetting.Body != nil {
+		req.Body = ioutil.NopCloser(bytes.NewReader(reqSetting.Body))
 	}
+
 	// Handle Cookies
 	if reqSetting.Cookies != nil {
 		for key, values := range reqSetting.Cookies.data {

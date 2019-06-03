@@ -20,8 +20,10 @@ func TestHTTP(t *testing.T) {
 	cookies := NewCookies(
 		"hello", "world",
 	)
-	// var proxy Proxy = "http://127.0.0.1:12333"
-	resp := Get("https://httpbin.org/get", headers, params, cookies)
+	data := NewPostForm(
+		"this is body", "yes",
+	)
+	resp := Post("https://httpbin.org/post", headers, params, cookies, data)
 	t.Log(resp.Text())
 }
 
