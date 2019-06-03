@@ -23,7 +23,8 @@ func TestHTTP(t *testing.T) {
 	data := NewPostForm(
 		"this is body", "yes",
 	)
-	resp := Post("https://httpbin.org/post", headers, params, cookies, data)
+	proxy := Proxy("http://127.0.0.1:12333")
+	resp := Post("https://httpbin.org/post", headers, params, cookies, data, proxy)
 	t.Log(resp.Text())
 }
 
