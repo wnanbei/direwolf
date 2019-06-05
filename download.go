@@ -9,18 +9,18 @@ import (
 )
 
 // Download is low level request method
-func Download(reqSetting *RequestSetting, client *http.Client, transport *http.Transport) *Response {
-	// New Request
+func Download(reqSetting *RequestSetting, client *http.Client, transport *http.Transport) (*Response, error) {
+	// Make new http.Request
 	req, err := http.NewRequest(reqSetting.Method, reqSetting.URL, nil)
 	if err != nil {
-		panic(err)
+		return nil, MakeError(err, "NewRequestError", "Build Request error, please check request url or request method")
 	}
 
 	// Add proxy method to transport
 	if reqSetting.Proxy != "" {
 		proxyURL, err := url.Parse(reqSetting.Proxy)
 		if err != nil {
-			panic("proxy url has problem")
+			return nil, MakeError(err, "ProxyConnectError", "Proxy URL error, please check proxy url")
 		}
 		transport.Proxy = http.ProxyURL(proxyURL)
 	}
@@ -29,9 +29,9 @@ func Download(reqSetting *RequestSetting, client *http.Client, transport *http.T
 	req.Header = reqSetting.Headers
 
 	// Handle the DataForm, convert DataForm to strings.Reader.
-	// add two new headers: Content-Type and ContentLength.
+	// Set Content-Type to application/x-www-form-urlencoded.
 	if reqSetting.Body != nil && reqSetting.PostForm != nil {
-		panic("Body can`t exists with PostForm")
+		return nil, MakeError(nil, "RequestBodyError", "Body can`t exists with PostForm")
 	} else if reqSetting.PostForm != nil {
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 		data := reqSetting.PostForm.URLEncode()
@@ -51,11 +51,11 @@ func Download(reqSetting *RequestSetting, client *http.Client, transport *http.T
 
 	resp, err := client.Do(req) // do request
 	if err != nil {
-		panic(err)
+		return nil, MakeError(err, "HTTPError", "Request Error")
 	}
 
 	buildedResponse := buildResponse(reqSetting, resp)
-	return buildedResponse
+	return buildedResponse, nil
 }
 
 // buildResponse build response with http.Response after do request.

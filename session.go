@@ -22,27 +22,33 @@ type Session struct {
 }
 
 // Request is a generic request method.
-func (session *Session) Request(method string, URL string, args ...interface{}) *Response {
+func (session *Session) Request(method string, URL string, args ...interface{}) (*Response, error) {
 	preq := NewRequestSetting(method, URL, args...)
-	return session.send(preq)
+	resp, err := session.send(preq)
+	if err != nil {
+		return nil, MakeErrorStack(err, "direwolf.Session.Request()")
+	}
+	return resp, nil
 }
 
 // Get is a get method.
-func (session *Session) Get(URL string, args ...interface{}) *Response {
+func (session *Session) Get(URL string, args ...interface{}) (*Response, error) {
 	return session.Request("GET", URL, args...)
 }
 
 // Post is a post method.
-func (session *Session) Post(URL string, args ...interface{}) *Response {
+func (session *Session) Post(URL string, args ...interface{}) (*Response, error) {
 	return session.Request("POST", URL, args...)
 }
 
 // send is responsible for handling some subsequent processing of the PreRequest.
-func (session *Session) send(preq *RequestSetting) *Response {
-	buildedResponse := Download(preq, session.Client, session.Transport)
-
+func (session *Session) send(preq *RequestSetting) (*Response, error) {
+	response, err := Download(preq, session.Client, session.Transport)
+	if err != nil {
+		return nil, MakeErrorStack(err, "direwolf.Session.send()")
+	}
 	// build response
-	return buildedResponse
+	return response, nil
 }
 
 // NewSession make a Session, and set a default Client and Transport.
@@ -65,7 +71,7 @@ func NewSession() *Session {
 	}
 	jar, err := cookiejar.New(&options)
 	if err != nil {
-		panic("proxy url has problem")
+		return nil
 	}
 
 	client := &http.Client{

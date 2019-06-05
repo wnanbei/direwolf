@@ -24,8 +24,12 @@ func TestHTTP(t *testing.T) {
 		"this is body", "yes",
 	)
 	proxy := Proxy("http://127.0.0.1:12333")
-	resp := Post("https://httpbin.org/post", headers, params, cookies, data, proxy)
-	t.Log(resp.Text())
+	resp, err := Post("https://httpbin.org/post", headers, params, cookies, data, proxy)
+	if err != nil {
+		t.Error(err)
+	} else {
+		t.Log(resp.Text())
+	}
 }
 
 func Do(trans *http.Transport, client *http.Client, req *http.Request) {

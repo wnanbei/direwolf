@@ -68,7 +68,7 @@ func (ssm *StringSliceMap) New(keyvalue ...string) {
 	ssm.data = make(map[string][]string)
 	if keyvalue != nil {
 		if len(keyvalue)%2 != 0 {
-			panic("key and value must be part")
+			panic("key and value must be pair")
 		}
 
 		for i := 0; i < len(keyvalue)/2; i++ {

@@ -5,17 +5,19 @@ import (
 	"testing"
 )
 
-func first1() error {
-	err := first2()
-	return MakeErr(err, "next", "first1")
+func f1() error {
+	err := f2()
+	if err != nil {
+		return MakeErrorStack(err, "msg")
+	}
+	return nil
 }
 
-func first2() error {
-	return MakeErr(nil, "Error", "wrong")
+func f2() error {
+	return MakeError(nil, "HTTPError", "msg")
 }
 
 func TestError(t *testing.T) {
-	err := first1()
-	fmt.Println(err.Error())
-	// fmt.Println(err.Msg)
+	err := f1()
+	fmt.Println(err)
 }

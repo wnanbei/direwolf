@@ -20,19 +20,6 @@ type RequestSetting struct {
 	Timeout     int
 }
 
-// // setParams set RequestSetting.Params.Encode Params and join it to url.
-// func (req *RequestSetting) setParams(p Params) {
-// 	// for key, value := range p {
-
-// 	// }
-// 	req.URL = req.URL + "?" + req.Params.URLEncode() // add params to url
-// }
-
-// // setCookies set RequestSetting.Cookies
-// func (req *RequestSetting) setCookies(c Cookies) {
-// 	req.Cookies = url.Values(c)
-// }
-
 // NewRequestSetting is to process the parameters from user input.Generate PreRequest object.
 func NewRequestSetting(method string, URL string, args ...interface{}) *RequestSetting {
 	reqSetting := &RequestSetting{ // new a RequestSetting and set default field
@@ -58,6 +45,10 @@ func NewRequestSetting(method string, URL string, args ...interface{}) *RequestS
 			reqSetting.Cookies = a
 		case Proxy:
 			reqSetting.Proxy = string(a)
+		case RedirectNum:
+			reqSetting.RedirectNum = int(a)
+		case Timeout:
+			reqSetting.Timeout = int(a)
 		}
 	}
 	return reqSetting
