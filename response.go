@@ -1,10 +1,9 @@
 package direwolf
 
 import (
-	"fmt"
+	"bytes"
 	"io"
 	"io/ioutil"
-	"log"
 	"regexp"
 
 	"github.com/PuerkitoBio/goquery"
@@ -18,18 +17,19 @@ type Response struct {
 	body       io.ReadCloser
 	content    []byte
 	dom        *goquery.Document
-	Request    *Request
+	Request    *RequestSetting
 }
 
-// Content read bytes from Response.body.
+// Content read bytes from Response.body. If something wrong, it returns nil.
 func (resp *Response) Content() []byte {
 	if resp.content == nil {
+		defer resp.body.Close()
 		content, err := ioutil.ReadAll(resp.body)
 		if err != nil {
-			log.Fatal(err.Error())
+			resp.content = nil
+		} else {
+			resp.content = content
 		}
-		resp.body.Close()
-		resp.content = content
 	}
 	return resp.content
 }
@@ -49,10 +49,10 @@ func (resp *Response) Text() string {
 // CSS is a api to goquery, it returns a goquery.Selection object.
 // so you can totally use the api from goquery, like Find().
 func (resp *Response) CSS(query string) *goquery.Selection {
-	text := resp.Text()
-	dom, err := goquery.NewDocument(text)
+	content := bytes.NewReader(resp.Content())
+	dom, err := goquery.NewDocumentFromReader(content)
 	if err != nil {
-		fmt.Println("wrong")
+		return nil
 	}
 	resp.dom = dom
 	queryResult := resp.dom.Find(query)
@@ -61,8 +61,10 @@ func (resp *Response) CSS(query string) *goquery.Selection {
 
 // CSSFirst return the first node text from query result.
 func (resp *Response) CSSFirst(query string) string {
-	queryResult := resp.CSS(query)
-	return queryResult.First().Text()
+	if queryResult := resp.CSS(query); queryResult != nil {
+		return queryResult.First().Text()
+	}
+	return ""
 }
 
 // Re extract required data with regexp.
@@ -71,8 +73,7 @@ func (resp *Response) CSSFirst(query string) string {
 // So please try to extract required data at once.
 func (resp *Response) Re(query string) []string {
 	text := resp.Text()
-	queryResult := regexp.MustCompile(query).FindAllString(text, -1)
-	return queryResult
+	return regexp.MustCompile(query).FindAllString(text, -1)
 }
 
 // ReSubmatch extract required data with regexp.
