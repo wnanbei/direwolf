@@ -35,7 +35,7 @@ func (session *Session) Get(URL string, args ...interface{}) (*Response, error) 
 	reqSetting := NewRequestSetting("GET", URL, args...)
 	resp, err := session.Request(reqSetting)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Session.Request()")
+		return nil, MakeErrorStack(err, "direwolf.Session.Get()")
 	}
 	return resp, nil
 }
@@ -45,7 +45,7 @@ func (session *Session) Post(URL string, args ...interface{}) (*Response, error)
 	reqSetting := NewRequestSetting("POST", URL, args...)
 	resp, err := session.Request(reqSetting)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Session.Request()")
+		return nil, MakeErrorStack(err, "direwolf.Session.Post()")
 	}
 	return resp, nil
 }

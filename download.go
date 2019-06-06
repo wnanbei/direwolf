@@ -28,6 +28,9 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 		session.transport.Proxy = http.ProxyFromEnvironment
 	}
 
+	// set redirect
+	session.client.CheckRedirect = getRedirectFunc(reqSetting.RedirectNum, session.RedirectNum)
+
 	// set timeout
 	// if timeout > 0, it means a time limit for requests.
 	// if timeout < 0, it means no limit.
@@ -124,4 +127,22 @@ func getProxyFunc(p1, p2 string) (func(*http.Request) (*url.URL, error), error) 
 		return nil, MakeError(err, "ProxyURLError", "Proxy URL error, please check proxy url")
 	}
 	return http.ProxyURL(proxyURL), nil
+}
+
+func getRedirectFunc(r1, r2 int) func(req *http.Request, via []*http.Request) error {
+	r := 5
+	if r1 > 0 || r1 < 0 {
+		r = r1
+	} else if r2 > 0 || r2 < 0 {
+		r = r2
+	}
+
+	redirectFunc := func(req *http.Request, via []*http.Request) error {
+		if len(via) >= r {
+			return MakeError(nil, "RedirectError", "Exceeded the maximum number of redirects")
+		}
+		return nil
+	}
+
+	return redirectFunc
 }
