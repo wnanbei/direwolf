@@ -22,10 +22,7 @@ type RequestSetting struct {
 
 // NewRequestSetting is to process the parameters from user input.Generate PreRequest object.
 func NewRequestSetting(method string, URL string, args ...interface{}) *RequestSetting {
-	reqSetting := &RequestSetting{ // new a RequestSetting and set default field
-		RedirectNum: 5,
-		Timeout:     30,
-	}
+	reqSetting := &RequestSetting{}             // new a RequestSetting and set default field
 	reqSetting.Method = strings.ToUpper(method) // Upper the method string
 	reqSetting.URL = URL
 

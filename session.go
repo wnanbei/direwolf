@@ -13,12 +13,12 @@ import (
 // 1. handling redirects
 // 2. automatically managing cookies
 type Session struct {
-	Client    *http.Client
-	Transport *http.Transport
-	Cookies   *cookiejar.Jar
-	Headers   *http.Header
-	Proxy     string
-	Timeout   int
+	Client      *http.Client
+	Transport   *http.Transport
+	Headers     http.Header
+	Proxy       string
+	Timeout     int
+	RedirectNum int
 }
 
 // Request is a generic request method.
@@ -47,16 +47,6 @@ func (session *Session) Post(URL string, args ...interface{}) (*Response, error)
 	if err != nil {
 		return nil, MakeErrorStack(err, "direwolf.Session.Request()")
 	}
-	return resp, nil
-}
-
-// send is responsible for handling some subsequent processing of the PreRequest.
-func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
-	resp, err := Download(reqSetting, session.Client, session.Transport)
-	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Session.send()")
-	}
-	// build response
 	return resp, nil
 }
 

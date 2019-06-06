@@ -6,10 +6,11 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
-// Download is low level request method
-func Download(reqSetting *RequestSetting, client *http.Client, transport *http.Transport) (*Response, error) {
+// send is low level request method
+func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 	// Make new http.Request
 	req, err := http.NewRequest(reqSetting.Method, reqSetting.URL, nil)
 	if err != nil {
@@ -17,16 +18,34 @@ func Download(reqSetting *RequestSetting, client *http.Client, transport *http.T
 	}
 
 	// Add proxy method to transport
-	if reqSetting.Proxy != "" {
-		proxyURL, err := url.Parse(reqSetting.Proxy)
-		if err != nil {
-			return nil, MakeError(err, "ProxyConnectError", "Proxy URL error, please check proxy url")
-		}
-		transport.Proxy = http.ProxyURL(proxyURL)
+	proxyFunc, err := getProxyFunc(reqSetting.Proxy, session.Proxy)
+	if err != nil {
+		return nil, MakeErrorStack(err, "direwolf.Session.send()")
+	}
+	if proxyFunc != nil {
+		session.Transport.Proxy = proxyFunc
+	} else {
+		session.Transport.Proxy = http.ProxyFromEnvironment
+	}
+
+	// set timeout
+	// if timeout > 0, it means a time limit for requests.
+	// if timeout < 0, it means no limit.
+	// if timeout = 0, it means keep default 30 second timeout.
+	if reqSetting.Timeout > 0 {
+		session.Client.Timeout = time.Duration(reqSetting.Timeout) * time.Second
+	} else if reqSetting.Timeout < 0 {
+		session.Client.Timeout = 0
+	} else if session.Timeout > 0 {
+		session.Client.Timeout = time.Duration(session.Timeout) * time.Second
+	} else if session.Timeout < 0 {
+		session.Client.Timeout = 0
+	} else {
+		session.Client.Timeout = 30 * time.Second
 	}
 
 	// Handle the Headers.
-	req.Header = reqSetting.Headers
+	req.Header = mergeHeaders(reqSetting.Headers, session.Headers)
 
 	// Handle the DataForm, convert DataForm to strings.Reader.
 	// Set Content-Type to application/x-www-form-urlencoded.
@@ -49,7 +68,7 @@ func Download(reqSetting *RequestSetting, client *http.Client, transport *http.T
 		}
 	}
 
-	resp, err := client.Do(req) // do request
+	resp, err := session.Client.Do(req) // do request
 	if err != nil {
 		return nil, MakeError(err, "HTTPError", "Request Error")
 	}
@@ -66,4 +85,43 @@ func buildResponse(req *RequestSetting, resp *http.Response) *Response {
 		Proto:      resp.Proto,
 		body:       resp.Body,
 	}
+}
+
+func mergeHeaders(h1, h2 http.Header) http.Header {
+	h := http.Header{}
+	if h1 != nil && h2 != nil {
+		for key, values := range h1 {
+			for _, value := range values {
+				h.Add(key, value)
+			}
+		}
+		for key, values := range h2 {
+			for _, value := range values {
+				h.Add(key, value)
+			}
+		}
+	} else if h1 != nil {
+		h = h1
+	} else if h2 != nil {
+		h = h2
+	}
+	return h
+}
+
+func getProxyFunc(p1, p2 string) (func(*http.Request) (*url.URL, error), error) {
+	// Add proxy method to transport
+	var p string
+	if p1 != "" {
+		p = p1
+	} else if p2 != "" {
+		p = p2
+	} else {
+		return nil, nil
+	}
+
+	proxyURL, err := url.Parse(p)
+	if err != nil {
+		return nil, MakeError(err, "ProxyURLError", "Proxy URL error, please check proxy url")
+	}
+	return http.ProxyURL(proxyURL), nil
 }
