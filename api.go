@@ -21,3 +21,13 @@ func Post(url string, args ...interface{}) (*Response, error) {
 	}
 	return resp, nil
 }
+
+// Request is the method to initiate a request.
+func Request(reqSetting *RequestSetting) (*Response, error) {
+	session := NewSession()
+	resp, err := session.Request(reqSetting)
+	if err != nil {
+		return nil, MakeErrorStack(err, "direwolf.Request()")
+	}
+	return resp, nil
+}

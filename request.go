@@ -10,9 +10,9 @@ import (
 type RequestSetting struct {
 	Method      string
 	URL         string
-	Params      *Params
 	Headers     http.Header
 	Body        Body
+	Params      *Params
 	PostForm    *PostForm
 	Cookies     *Cookies
 	Proxy       string

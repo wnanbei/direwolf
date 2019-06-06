@@ -22,9 +22,8 @@ type Session struct {
 }
 
 // Request is a generic request method.
-func (session *Session) Request(method string, URL string, args ...interface{}) (*Response, error) {
-	preq := NewRequestSetting(method, URL, args...)
-	resp, err := session.send(preq)
+func (session *Session) Request(reqSetting *RequestSetting) (*Response, error) {
+	resp, err := session.send(reqSetting)
 	if err != nil {
 		return nil, MakeErrorStack(err, "direwolf.Session.Request()")
 	}
@@ -33,22 +32,32 @@ func (session *Session) Request(method string, URL string, args ...interface{}) 
 
 // Get is a get method.
 func (session *Session) Get(URL string, args ...interface{}) (*Response, error) {
-	return session.Request("GET", URL, args...)
+	reqSetting := NewRequestSetting("GET", URL, args...)
+	resp, err := session.Request(reqSetting)
+	if err != nil {
+		return nil, MakeErrorStack(err, "direwolf.Session.Request()")
+	}
+	return resp, nil
 }
 
 // Post is a post method.
 func (session *Session) Post(URL string, args ...interface{}) (*Response, error) {
-	return session.Request("POST", URL, args...)
+	reqSetting := NewRequestSetting("POST", URL, args...)
+	resp, err := session.Request(reqSetting)
+	if err != nil {
+		return nil, MakeErrorStack(err, "direwolf.Session.Request()")
+	}
+	return resp, nil
 }
 
 // send is responsible for handling some subsequent processing of the PreRequest.
-func (session *Session) send(preq *RequestSetting) (*Response, error) {
-	response, err := Download(preq, session.Client, session.Transport)
+func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
+	resp, err := Download(reqSetting, session.Client, session.Transport)
 	if err != nil {
 		return nil, MakeErrorStack(err, "direwolf.Session.send()")
 	}
 	// build response
-	return response, nil
+	return resp, nil
 }
 
 // NewSession make a Session, and set a default Client and Transport.
