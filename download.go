@@ -23,9 +23,9 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 		return nil, MakeErrorStack(err, "direwolf.Session.send()")
 	}
 	if proxyFunc != nil {
-		session.Transport.Proxy = proxyFunc
+		session.transport.Proxy = proxyFunc
 	} else {
-		session.Transport.Proxy = http.ProxyFromEnvironment
+		session.transport.Proxy = http.ProxyFromEnvironment
 	}
 
 	// set timeout
@@ -33,15 +33,15 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 	// if timeout < 0, it means no limit.
 	// if timeout = 0, it means keep default 30 second timeout.
 	if reqSetting.Timeout > 0 {
-		session.Client.Timeout = time.Duration(reqSetting.Timeout) * time.Second
+		session.client.Timeout = time.Duration(reqSetting.Timeout) * time.Second
 	} else if reqSetting.Timeout < 0 {
-		session.Client.Timeout = 0
+		session.client.Timeout = 0
 	} else if session.Timeout > 0 {
-		session.Client.Timeout = time.Duration(session.Timeout) * time.Second
+		session.client.Timeout = time.Duration(session.Timeout) * time.Second
 	} else if session.Timeout < 0 {
-		session.Client.Timeout = 0
+		session.client.Timeout = 0
 	} else {
-		session.Client.Timeout = 30 * time.Second
+		session.client.Timeout = 30 * time.Second
 	}
 
 	// Handle the Headers.
@@ -68,7 +68,7 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 		}
 	}
 
-	resp, err := session.Client.Do(req) // do request
+	resp, err := session.client.Do(req) // do request
 	if err != nil {
 		return nil, MakeError(err, "HTTPError", "Request Error")
 	}

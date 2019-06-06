@@ -13,8 +13,8 @@ import (
 // 1. handling redirects
 // 2. automatically managing cookies
 type Session struct {
-	Client      *http.Client
-	Transport   *http.Transport
+	client      *http.Client
+	transport   *http.Transport
 	Headers     http.Header
 	Proxy       string
 	Timeout     int
@@ -79,7 +79,7 @@ func NewSession() *Session {
 	}
 
 	return &Session{
-		Client:    client,
-		Transport: trans,
+		client:    client,
+		transport: trans,
 	}
 }
