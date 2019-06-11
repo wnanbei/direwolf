@@ -14,7 +14,7 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 	// Make new http.Request
 	req, err := http.NewRequest(reqSetting.Method, reqSetting.URL, nil)
 	if err != nil {
-		return nil, MakeError(err, "NewRequestError", "Build Request error, please check request url or request method")
+		return nil, MakeError(err, NewRequestError, "Build Request error, please check request url or request method")
 	}
 
 	// Handle the Headers.
@@ -53,7 +53,7 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 	// Handle the DataForm, convert DataForm to strings.Reader.
 	// Set Content-Type to application/x-www-form-urlencoded.
 	if reqSetting.Body != nil && reqSetting.PostForm != nil {
-		return nil, MakeError(nil, "RequestBodyError", "Body can`t exists with PostForm")
+		return nil, MakeError(nil, RequestBodyError, "Body can`t exists with PostForm")
 	} else if reqSetting.PostForm != nil {
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 		data := reqSetting.PostForm.URLEncode()
@@ -80,7 +80,7 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 
 	resp, err := session.client.Do(req) // do request
 	if err != nil {
-		return nil, MakeError(err, "HTTPError", "Request Error")
+		return nil, MakeError(err, HTTPError, "Request Error")
 	}
 
 	buildedResponse := buildResponse(reqSetting, resp)
@@ -125,7 +125,7 @@ func getProxyFunc(p1, p2 string) (func(*http.Request) (*url.URL, error), error) 
 
 	proxyURL, err := url.Parse(p)
 	if err != nil {
-		return nil, MakeError(err, "ProxyURLError", "Proxy URL error, please check proxy url")
+		return nil, MakeError(err, ProxyURLError, "Proxy URL error, please check proxy url")
 	}
 	return http.ProxyURL(proxyURL), nil
 }
@@ -140,7 +140,7 @@ func getRedirectFunc(r1, r2 int) func(req *http.Request, via []*http.Request) er
 
 	redirectFunc := func(req *http.Request, via []*http.Request) error {
 		if len(via) >= r {
-			return MakeError(nil, "RedirectError", "Exceeded the maximum number of redirects")
+			return MakeError(nil, RedirectError, "Exceeded the maximum number of redirects")
 		}
 		return nil
 	}
