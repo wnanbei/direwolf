@@ -51,6 +51,46 @@ func (session *Session) Post(URL string, args ...interface{}) (*Response, error)
 	return resp, nil
 }
 
+// Head is a post method.
+func (session *Session) Head(URL string, args ...interface{}) (*Response, error) {
+	reqSetting := NewRequestSetting("HEAD", URL, args...)
+	resp, err := session.Request(reqSetting)
+	if err != nil {
+		return nil, MakeErrorStack(err, "direwolf.Session.Head()")
+	}
+	return resp, nil
+}
+
+// Put is a post method.
+func (session *Session) Put(URL string, args ...interface{}) (*Response, error) {
+	reqSetting := NewRequestSetting("PUT", URL, args...)
+	resp, err := session.Request(reqSetting)
+	if err != nil {
+		return nil, MakeErrorStack(err, "direwolf.Session.Put()")
+	}
+	return resp, nil
+}
+
+// Patch is a post method.
+func (session *Session) Patch(URL string, args ...interface{}) (*Response, error) {
+	reqSetting := NewRequestSetting("PATCH", URL, args...)
+	resp, err := session.Request(reqSetting)
+	if err != nil {
+		return nil, MakeErrorStack(err, "direwolf.Session.Put()")
+	}
+	return resp, nil
+}
+
+// Delete is a post method.
+func (session *Session) Delete(URL string, args ...interface{}) (*Response, error) {
+	reqSetting := NewRequestSetting("DELETE", URL, args...)
+	resp, err := session.Request(reqSetting)
+	if err != nil {
+		return nil, MakeErrorStack(err, "direwolf.Session.Delete()")
+	}
+	return resp, nil
+}
+
 // NewSession make a Session, and set a default Client and Transport.
 func NewSession() *Session {
 	trans := &http.Transport{
@@ -80,11 +120,13 @@ func NewSession() *Session {
 	}
 
 	cookies := NewCookies()
+	headers := http.Header{}
+	headers.Add("User-Agent", "direwolf - winter is coming")
 
 	return &Session{
 		client:    client,
 		transport: trans,
-		Headers:   http.Header{},
+		Headers:   headers,
 		Cookies:   cookies,
 	}
 }

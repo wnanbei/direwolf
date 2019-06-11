@@ -15,22 +15,7 @@ func TestSession(t *testing.T) {
 		"hello", "world",
 		"key", "value",
 	)
-	resp, err := session.Get("https://httpbin.org/get")
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(resp.Text())
-
-	cookies := NewCookies(
-		"xxx", "yyy",
-	)
-	resp, err = session.Get("https://httpbin.org/get", cookies)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(resp.Text())
-
-	resp, err = session.Get("https://httpbin.org/get")
+	resp, err := session.Post("https://httpbin.org/post")
 	if err != nil {
 		fmt.Println(err)
 	}
