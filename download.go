@@ -17,6 +17,9 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 		return nil, MakeError(err, "NewRequestError", "Build Request error, please check request url or request method")
 	}
 
+	// Handle the Headers.
+	req.Header = mergeHeaders(reqSetting.Headers, session.Headers)
+
 	// Add proxy method to transport
 	proxyFunc, err := getProxyFunc(reqSetting.Proxy, session.Proxy)
 	if err != nil {
@@ -47,9 +50,6 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 		session.client.Timeout = 30 * time.Second
 	}
 
-	// Handle the Headers.
-	req.Header = mergeHeaders(reqSetting.Headers, session.Headers)
-
 	// Handle the DataForm, convert DataForm to strings.Reader.
 	// Set Content-Type to application/x-www-form-urlencoded.
 	if reqSetting.Body != nil && reqSetting.PostForm != nil {
@@ -65,6 +65,13 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 	// Handle Cookies
 	if reqSetting.Cookies != nil {
 		for key, values := range reqSetting.Cookies.data {
+			for _, value := range values {
+				req.AddCookie(&http.Cookie{Name: key, Value: value})
+			}
+		}
+	}
+	if session.Cookies != nil {
+		for key, values := range session.Cookies.data {
 			for _, value := range values {
 				req.AddCookie(&http.Cookie{Name: key, Value: value})
 			}
@@ -92,21 +99,15 @@ func buildResponse(req *RequestSetting, resp *http.Response) *Response {
 
 func mergeHeaders(h1, h2 http.Header) http.Header {
 	h := http.Header{}
-	if h1 != nil && h2 != nil {
-		for key, values := range h1 {
-			for _, value := range values {
-				h.Add(key, value)
-			}
+	for key, values := range h1 {
+		for _, value := range values {
+			h.Add(key, value)
 		}
-		for key, values := range h2 {
-			for _, value := range values {
-				h.Add(key, value)
-			}
+	}
+	for key, values := range h2 {
+		for _, value := range values {
+			h.Add(key, value)
 		}
-	} else if h1 != nil {
-		h = h1
-	} else if h2 != nil {
-		h = h2
 	}
 	return h
 }

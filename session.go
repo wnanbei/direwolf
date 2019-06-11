@@ -19,6 +19,7 @@ type Session struct {
 	Proxy       string
 	Timeout     int
 	RedirectNum int
+	Cookies     *Cookies
 }
 
 // Request is a generic request method.
@@ -78,8 +79,12 @@ func NewSession() *Session {
 		Jar:       jar,
 	}
 
+	cookies := NewCookies()
+
 	return &Session{
 		client:    client,
 		transport: trans,
+		Headers:   http.Header{},
+		Cookies:   cookies,
 	}
 }

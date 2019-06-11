@@ -5,9 +5,11 @@ import (
 	"io/ioutil"
 	"net"
 	"net/http"
-	"net/url"
+	"net/http/cookiejar"
 	"testing"
 	"time"
+
+	"golang.org/x/net/publicsuffix"
 )
 
 func TestHTTP(t *testing.T) {
@@ -34,11 +36,11 @@ func TestHTTP(t *testing.T) {
 }
 
 func Do(trans *http.Transport, client *http.Client, req *http.Request) {
-	proxyURL, err := url.Parse("http://127.0.0.1:12333")
-	if err != nil {
-		panic("proxy url has problem")
-	}
-	trans.Proxy = http.ProxyURL(proxyURL)
+	// proxyURL, err := url.Parse("http://127.0.0.1:12333")
+	// if err != nil {
+	// 	panic("proxy url has problem")
+	// }
+	// trans.Proxy = http.ProxyURL(proxyURL)
 
 	resp, err := client.Do(req)
 
@@ -51,11 +53,15 @@ func Do(trans *http.Transport, client *http.Client, req *http.Request) {
 }
 
 func TestProxy(t *testing.T) {
-	req, err := http.NewRequest("GET", "https://httpbin.org/get", nil)
+	req, err := http.NewRequest("GET", "https://httpbin.org/cookies/set/test/result", nil)
 	if err != nil {
 		t.Log("fail")
 	}
 	req.Header.Add("xxxxx", "yyyyy")
+	req.AddCookie(&http.Cookie{
+		Name:  "hello",
+		Value: "world",
+	})
 
 	trans := &http.Transport{
 		DialContext: (&net.Dialer{
@@ -68,9 +74,29 @@ func TestProxy(t *testing.T) {
 		TLSHandshakeTimeout:   10 * time.Second,
 		ExpectContinueTimeout: 1 * time.Second,
 	}
-	client := &http.Client{
-		Transport: trans,
+	// set CookieJar
+	options := cookiejar.Options{
+		PublicSuffixList: publicsuffix.List,
+	}
+	jar, err := cookiejar.New(&options)
+	if err != nil {
+		panic(err)
 	}
 
+	client := &http.Client{
+		Transport: trans,
+		Jar:       jar,
+	}
+
+	Do(trans, client, req)
+
+	req, err = http.NewRequest("GET", "https://httpbin.org/cookies", nil)
+	if err != nil {
+		t.Log("fail")
+	}
+	// req.AddCookie(&http.Cookie{
+	// 	Name:  "hello",
+	// 	Value: "world",
+	// })
 	Do(trans, client, req)
 }
