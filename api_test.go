@@ -1,0 +1,93 @@
+package direwolf
+
+import (
+	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+)
+
+func TestGet(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// check method is GET before going to check other features
+		if r.Method != "GET" {
+			t.Fatalf("Expected method %q; got %q", "GET", r.Method)
+		}
+		if r.URL.Path == "/test" {
+			w.Write([]byte("passed"))
+		}
+	}))
+	defer ts.Close()
+
+	resp, err := Get(ts.URL + "/test")
+	if err != nil {
+		t.Fatal(err)
+	}
+	text := resp.Text()
+	if text != "passed" {
+		t.Fatal("response was wrong, not", text)
+	}
+	t.Log("Get test passed")
+}
+
+func TestPost(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// check method is POST before going to check other features
+		if r.Method != "POST" {
+			t.Fatalf("Expected method %q; got %q", "POST", r.Method)
+		}
+		if r.URL.Path == "/test" {
+			w.Write([]byte("passed"))
+		}
+		body, _ := ioutil.ReadAll(r.Body)
+		bodyString := string(body)
+		if bodyString != "direwolf" {
+			t.Fatal("Request body was wrong, not", bodyString)
+		}
+	}))
+	defer ts.Close()
+
+	body := Body("direwolf")
+	resp, err := Post(ts.URL+"/test", body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	text := resp.Text()
+	if text != "passed" {
+		t.Fatal("response was wrong, not", text)
+	}
+	t.Log("Post test passed")
+}
+
+func TestCookie(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// check method is GET before going to check other features
+		if r.Method != "GET" {
+			t.Fatalf("Expected method %q; got %q", "GET", r.Method)
+		}
+		if r.URL.Path == "/test" {
+			w.Write([]byte("passed"))
+		}
+		cookie, err := r.Cookie("name")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if cookie.Value != "direwolf" {
+			t.Fatalf("Expected value %q; got %q", "direwolf", cookie)
+		}
+	}))
+	defer ts.Close()
+
+	cookies := NewCookies(
+		"name", "direwolf",
+	)
+	resp, err := Get(ts.URL+"/test", cookies)
+	if err != nil {
+		t.Fatal(err)
+	}
+	text := resp.Text()
+	if text != "passed" {
+		t.Fatal("response was wrong, not", text)
+	}
+	t.Log("request cookies test passed")
+}

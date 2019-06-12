@@ -1,23 +1,31 @@
 package direwolf
 
 import (
-	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 )
 
-type myType struct {
-	m map[string]string
-}
+func TestSessionGet(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// check method is GET before going to check other features
+		if r.Method != "GET" {
+			t.Fatalf("Expected method %q; got %q", "GET", r.Method)
+		}
+		if r.URL.Path == "/test" {
+			w.Write([]byte("passed"))
+		}
+	}))
+	defer ts.Close()
 
-func TestSession(t *testing.T) {
 	session := NewSession()
-	session.Cookies.New(
-		"hello", "world",
-		"key", "value",
-	)
-	resp, err := session.Post("https://httpbin.org/post")
+	resp, err := session.Get(ts.URL + "/test")
 	if err != nil {
-		fmt.Println(err)
+		t.Fatal(err)
 	}
-	fmt.Println(resp.Text())
+	text := resp.Text()
+	if text != "passed" {
+		t.Fatal("response was wrong, not", text)
+	}
+	t.Log("Session.Get test passed")
 }
