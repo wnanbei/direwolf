@@ -7,6 +7,12 @@ import (
 	"testing"
 )
 
+// func TestAll(t *testing.T) {
+// 	resp, _ := Get("https://www.west.cn/cms/wiki/know/2018-11-01/48235.html")
+// 	decodeBytes, _ := simplifiedchinese.GBK.NewDecoder().Bytes(resp.Content())
+// 	t.Log(string(decodeBytes))
+// }
+
 func TestGet(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// check method is GET before going to check other features
