@@ -5,8 +5,11 @@ import (
 	"io"
 	"io/ioutil"
 	"regexp"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"golang.org/x/text/encoding/charmap"
+	"golang.org/x/text/encoding/simplifiedchinese"
 )
 
 // Response is the response from request.
@@ -36,13 +39,41 @@ func (resp *Response) Content() []byte {
 
 // Text decode content to string.
 // if Response.content doesn`t exists, call Response.Content at first.
-func (resp *Response) Text() string {
+func (resp *Response) Text(encoding ...string) string {
 	var text = ""
-	if resp.content == nil {
-		text = string(resp.Content())
-	} else {
-		text = string(resp.content)
+	var encodingType = "UTF-8"
+
+	if len(encoding) > 0 {
+		encodingType = strings.ToUpper(encoding[0])
 	}
+
+	if resp.content == nil {
+		resp.Content()
+	}
+
+	switch encodingType {
+	case "UTF-8", "UTF8":
+		text = string(resp.content)
+	case "GBK":
+		decodeBytes, err := simplifiedchinese.GBK.NewDecoder().Bytes(resp.content)
+		if err != nil {
+			return ""
+		}
+		text = string(decodeBytes)
+	case "GB18030":
+		decodeBytes, err := simplifiedchinese.GB18030.NewDecoder().Bytes(resp.content)
+		if err != nil {
+			return ""
+		}
+		text = string(decodeBytes)
+	case "latin1":
+		decodeBytes, err := charmap.ISO8859_1.NewDecoder().Bytes(resp.content)
+		if err != nil {
+			return ""
+		}
+		text = string(decodeBytes)
+	}
+
 	return text
 }
 
