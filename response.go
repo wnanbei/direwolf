@@ -17,6 +17,7 @@ type Response struct {
 	URL        string
 	StatusCode int
 	Proto      string
+	Encoding   string
 	body       io.ReadCloser
 	content    []byte
 	dom        *goquery.Document
@@ -41,7 +42,7 @@ func (resp *Response) Content() []byte {
 // if Response.content doesn`t exists, call Response.Content at first.
 func (resp *Response) Text(encoding ...string) string {
 	var text = ""
-	var encodingType = "UTF-8"
+	var encodingType = strings.ToUpper(resp.Encoding)
 
 	if len(encoding) > 0 {
 		encodingType = strings.ToUpper(encoding[0])
@@ -66,7 +67,7 @@ func (resp *Response) Text(encoding ...string) string {
 			return ""
 		}
 		text = string(decodeBytes)
-	case "latin1":
+	case "LATIN1":
 		decodeBytes, err := charmap.ISO8859_1.NewDecoder().Bytes(resp.content)
 		if err != nil {
 			return ""

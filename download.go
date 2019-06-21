@@ -93,6 +93,7 @@ func buildResponse(req *RequestSetting, resp *http.Response) *Response {
 		URL:        req.URL,
 		StatusCode: resp.StatusCode,
 		Proto:      resp.Proto,
+		Encoding:   "UTF-8",
 		body:       resp.Body,
 	}
 }
