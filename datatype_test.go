@@ -63,5 +63,4 @@ func TestStringSliceMap(t *testing.T) {
 	if postform.Get("key1") != "value1" {
 		t.Fatal("postform.Get() failed.")
 	}
-
 }

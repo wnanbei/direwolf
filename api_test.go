@@ -64,6 +64,30 @@ func TestPost(t *testing.T) {
 	t.Log("Post test passed")
 }
 
+func TestRequest(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// check method is GET before going to check other features
+		if r.Method != "GET" {
+			t.Fatalf("Expected method %q; got %q", "GET", r.Method)
+		}
+		if r.URL.Path == "/test" {
+			w.Write([]byte("passed"))
+		}
+	}))
+	defer ts.Close()
+
+	req := NewRequestSetting("Get", ts.URL+"/test")
+	resp, err := Request(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	text := resp.Text()
+	if text != "passed" {
+		t.Fatal("response was wrong, not", text)
+	}
+	t.Log("Request test passed")
+}
+
 func TestCookie(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// check method is GET before going to check other features
@@ -95,4 +119,60 @@ func TestCookie(t *testing.T) {
 		t.Fatal("response was wrong, not", text)
 	}
 	t.Log("request cookies test passed")
+}
+
+func TestRequestHeaders(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// check method is GET before going to check other features
+		if r.Method != "GET" {
+			t.Fatalf("Expected method %q; got %q", "GET", r.Method)
+		}
+		if r.URL.Path == "/test" {
+			if r.Header.Get("User-Agent") == "direwolf" {
+				w.Write([]byte("passed"))
+			}
+		}
+	}))
+	defer ts.Close()
+
+	headers := NewHeaders(
+		"User-Agent", "direwolf",
+	)
+	resp, err := Get(ts.URL+"/test", headers)
+	if err != nil {
+		t.Fatal(err)
+	}
+	text := resp.Text()
+	if text != "passed" {
+		t.Fatal("response was wrong, not", text)
+	}
+	t.Log("request headers test passed")
+}
+
+func TestParams(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// check method is GET before going to check other features
+		if r.Method != "GET" {
+			t.Fatalf("Expected method %q; got %q", "GET", r.Method)
+		}
+		if r.URL.Path == "/test" {
+			if r.FormValue("key") == "value" {
+				w.Write([]byte("passed"))
+			}
+		}
+	}))
+	defer ts.Close()
+
+	params := NewParams(
+		"key", "value",
+	)
+	resp, err := Get(ts.URL+"/test", params)
+	if err != nil {
+		t.Fatal(err)
+	}
+	text := resp.Text()
+	if text != "passed" {
+		t.Fatal("response was wrong, not", text)
+	}
+	t.Log("request headers test passed")
 }
