@@ -10,9 +10,9 @@ import (
 // Params is url params you want to join to url, as parameter in Request method.
 // You can init it like this:
 // 	params := Params{
-//  	"key1": {"value1", "value2"},
-//  	"key2": {"value3"},
-//  }
+// 		"key1": {"value1", "value2"},
+// 		"key2": {"value3"},
+// 	}
 type Params struct {
 	stringSliceMap
 }
@@ -25,7 +25,7 @@ type Body []byte
 // 	df := DataForm{
 // 		"key1": {"value1", "value2"},
 // 		"key2": {"value3"},
-//  }
+// 	}
 type PostForm struct {
 	stringSliceMap
 }
@@ -35,7 +35,7 @@ type PostForm struct {
 // 	c := Cookies{
 // 		"key1": "value1",
 // 		"key2": "value2",
-//  }
+// 	}
 type Cookies struct {
 	stringSliceMap
 }
@@ -58,10 +58,10 @@ type stringSliceMap struct {
 
 // New is the most convenient way to create a stringSliceMap.
 // You can set key-value pair when you init it by sent params. Just like this:
-// stringSliceMap{}.New(
-// 	"key1", "value1",
-// 	"key2", "value2",
-// )
+// 	stringSliceMap{}.New(
+// 		"key1", "value1",
+// 		"key2", "value2",
+// 	)
 // But be careful, between the key and value is a comma.
 // And if the number of parameters is not a multiple of 2, it will panic.
 func (ssm *stringSliceMap) New(keyvalue ...string) {
