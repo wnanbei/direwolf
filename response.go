@@ -5,8 +5,11 @@ import (
 	"io"
 	"io/ioutil"
 	"regexp"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"golang.org/x/text/encoding/charmap"
+	"golang.org/x/text/encoding/simplifiedchinese"
 )
 
 // Response is the response from request.
@@ -14,6 +17,7 @@ type Response struct {
 	URL        string
 	StatusCode int
 	Proto      string
+	Encoding   string
 	body       io.ReadCloser
 	content    []byte
 	dom        *goquery.Document
@@ -34,20 +38,50 @@ func (resp *Response) Content() []byte {
 	return resp.content
 }
 
-// Text decode content to string.
-// if Response.content doesn`t exists, call Response.Content at first.
-func (resp *Response) Text() string {
+// Text decode content to string. You can specified encoding type. Such as GBK, GB18030,
+// latin1. Default is UTF-8.
+//
+// If Response.content doesn`t exists, it will call Response.Content() at first.
+func (resp *Response) Text(encoding ...string) string {
 	var text = ""
-	if resp.content == nil {
-		text = string(resp.Content())
-	} else {
-		text = string(resp.content)
+	var encodingType = strings.ToUpper(resp.Encoding)
+
+	if len(encoding) > 0 {
+		encodingType = strings.ToUpper(encoding[0])
 	}
+
+	if resp.content == nil {
+		resp.Content()
+	}
+
+	switch encodingType {
+	case "UTF-8", "UTF8":
+		text = string(resp.content)
+	case "GBK":
+		decodeBytes, err := simplifiedchinese.GBK.NewDecoder().Bytes(resp.content)
+		if err != nil {
+			return ""
+		}
+		text = string(decodeBytes)
+	case "GB18030":
+		decodeBytes, err := simplifiedchinese.GB18030.NewDecoder().Bytes(resp.content)
+		if err != nil {
+			return ""
+		}
+		text = string(decodeBytes)
+	case "LATIN1":
+		decodeBytes, err := charmap.ISO8859_1.NewDecoder().Bytes(resp.content)
+		if err != nil {
+			return ""
+		}
+		text = string(decodeBytes)
+	}
+
 	return text
 }
 
 // CSS is a api to goquery, it returns a goquery.Selection object.
-// so you can totally use the api from goquery, like Find().
+// So you can totally use the api from goquery, like Find().
 func (resp *Response) CSS(query string) *goquery.Selection {
 	content := bytes.NewReader(resp.Content())
 	dom, err := goquery.NewDocumentFromReader(content)

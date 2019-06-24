@@ -8,63 +8,64 @@ import (
 )
 
 // Params is url params you want to join to url, as parameter in Request method.
-// You can init it like this:
-// 	params := Params{
-//  	"key1": {"value1", "value2"},
-//  	"key2": {"value3"},
-//  }
+// You should init it by using NewParams like this:
+// 	params := dw.NewParams(
+//		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// Note: mid symbol is comma.
 type Params struct {
-	StringSliceMap
+	stringSliceMap
 }
 
 // Body is data you want to post, as parameter in Request method.
 type Body []byte
 
 // PostForm is the form you want to post, as parameter in Request method.
-// You can init it like this:
-// 	df := DataForm{
-// 		"key1": {"value1", "value2"},
-// 		"key2": {"value3"},
-//  }
+// You should init it by using NewPostForm like this:
+// 	postform := dw.NewPostForm(
+//		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// Note: mid symbol is comma.
 type PostForm struct {
-	StringSliceMap
+	stringSliceMap
 }
 
 // Cookies is request cookies, as parameter in Request method.
-// You can init it like this:
-// 	c := Cookies{
-// 		"key1": "value1",
-// 		"key2": "value2",
-//  }
+// You should init it by using NewCookies like this:
+// 	cookies := dw.NewCookies(
+//		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// Note: mid symbol is comma.
 type Cookies struct {
-	StringSliceMap
+	stringSliceMap
 }
 
-// Proxy is the proxy server address, like "http://127.0.0.1:1080"
+// Proxy is the proxy server address, like "http://127.0.0.1:1080".
 type Proxy string
 
-// RedirectNum is the number of redirect
+// RedirectNum is the number of request redirect allowed.
 type RedirectNum int
 
 // Timeout is the number of time to timeout request.
 type Timeout int
 
-// StringSliceMap type is map[string][]string, used for Params, PostForms, Cookies.
-// you should new it like this:
-//   StringSliceMap{}.New()
-type StringSliceMap struct {
+// stringSliceMap type is map[string][]string, used for Params, PostForm, Cookies.
+type stringSliceMap struct {
 	data map[string][]string
 }
 
-// New is the most convenient way to create a StringSliceMap.
+// New is the way to create a stringSliceMap.
 // You can set key-value pair when you init it by sent params. Just like this:
-// StringSliceMap{}.New(
-// 	"key1", "value1",
-// 	"key2", "value2",
-// )
+// 	stringSliceMap{}.New(
+// 		"key1", "value1",
+// 		"key2", "value2",
+// 	)
 // But be careful, between the key and value is a comma.
 // And if the number of parameters is not a multiple of 2, it will panic.
-func (ssm *StringSliceMap) New(keyvalue ...string) {
+func (ssm *stringSliceMap) New(keyvalue ...string) {
 	ssm.data = make(map[string][]string)
 	if keyvalue != nil {
 		if len(keyvalue)%2 != 0 {
@@ -79,26 +80,26 @@ func (ssm *StringSliceMap) New(keyvalue ...string) {
 	}
 }
 
-// Add key and value to StringSliceMap.
+// Add key and value to stringSliceMap.
 // If key exiests, value will append to slice.
-func (ssm *StringSliceMap) Add(key, value string) {
+func (ssm *stringSliceMap) Add(key, value string) {
 	ssm.data[key] = append(ssm.data[key], value)
 }
 
-// Set key and value to StringSliceMap.
+// Set key and value to stringSliceMap.
 // If key exiests, existed value will drop and new value will set.
-func (ssm *StringSliceMap) Set(key, value string) {
+func (ssm *stringSliceMap) Set(key, value string) {
 	ssm.data[key] = []string{value}
 }
 
 // Del delete the given key.
-func (ssm *StringSliceMap) Del(key string) {
+func (ssm *stringSliceMap) Del(key string) {
 	delete(ssm.data, key)
 }
 
 // Get get the value pair to given key.
 // You can pass index to assign which value to get, when there are multiple values.
-func (ssm *StringSliceMap) Get(key string, index ...int) string {
+func (ssm *stringSliceMap) Get(key string, index ...int) string {
 	if ssm.data == nil {
 		return ""
 	}
@@ -114,7 +115,7 @@ func (ssm *StringSliceMap) Get(key string, index ...int) string {
 
 // URLEncode encodes the values into ``URL encoded'' form
 // ("bar=baz&foo=quux") sorted by key.
-func (ssm *StringSliceMap) URLEncode() string {
+func (ssm *stringSliceMap) URLEncode() string {
 	if ssm.data == nil {
 		return ""
 	}
@@ -139,28 +140,60 @@ func (ssm *StringSliceMap) URLEncode() string {
 	return buf.String()
 }
 
-// NewParams new a Params type
+// NewParams new a Params type.
+//
+// You can set key-value pair when you init it by sent parameters. Just like this:
+// 	params := NewParams(
+// 		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// But be careful, between the key and value is a comma.
+// And if the number of parameters is not a multiple of 2, it will panic.
 func NewParams(keyvalue ...string) *Params {
 	var p = &Params{}
 	p.New(keyvalue...)
 	return p
 }
 
-// NewCookies new a Cookies type
+// NewCookies new a Cookies type.
+//
+// You can set key-value pair when you init it by sent parameters. Just like this:
+// 	cookies := NewCookies(
+// 		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// But be careful, between the key and value is a comma.
+// And if the number of parameters is not a multiple of 2, it will panic.
 func NewCookies(keyvalue ...string) *Cookies {
 	var c = &Cookies{}
 	c.New(keyvalue...)
 	return c
 }
 
-// NewPostForm new a PostForm type
+// NewPostForm new a PostForm type.
+//
+// You can set key-value pair when you init it by sent parameters. Just like this:
+// 	postform := NewPostForm(
+// 		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// But be careful, between the key and value is a comma.
+// And if the number of parameters is not a multiple of 2, it will panic.
 func NewPostForm(keyvalue ...string) *PostForm {
 	var p = &PostForm{}
 	p.New(keyvalue...)
 	return p
 }
 
-// NewHeaders new a http.Header type
+// NewHeaders new a http.Header type.
+//
+// You can set key-value pair when you init it by sent parameters. Just like this:
+// 	headers := NewHeaders(
+// 		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// But be careful, between the key and value is a comma.
+// And if the number of parameters is not a multiple of 2, it will panic.
 func NewHeaders(keyvalue ...string) http.Header {
 	h := http.Header{}
 	if keyvalue != nil {

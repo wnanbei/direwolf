@@ -5,11 +5,20 @@ import (
 	"runtime"
 )
 
-// var HTTPError = "HTTPError"
-// var EncodeError = "EncodeError"
-// var TypeError = "TypeError"
+const (
+	// HTTPError means some thing wrong while request.
+	HTTPError = "HTTPError"
+	// NewRequestError means create request method field.
+	NewRequestError = "NewRequestError"
+	// RequestBodyError means request body can`t exists with postform.
+	RequestBodyError = "RequestBodyError"
+	// ProxyURLError means that proxy url was wrong.
+	ProxyURLError = "ProxyURLError"
+	// RedirectError means over the max number of redirect.
+	RedirectError = "RedirectError"
+)
 
-// ErrorStack is a wrapped error type, contain stack info, like file name and code line
+// ErrorStack is a wrapped error type, contain stack info, like file name and code line.
 type ErrorStack struct {
 	Prev error
 	Msg  string

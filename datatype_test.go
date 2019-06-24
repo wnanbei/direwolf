@@ -1,25 +1,66 @@
 package direwolf
 
 import (
-	"fmt"
 	"testing"
 )
 
-func TestStringSliceMap(t *testing.T) {
-	r := NewRequestSetting("Get", "https://www.baidu.com")
-	c := NewCookies(
-		"key1", "key2",
-		"key3", "key4",
+func TestHeaders(t *testing.T) {
+	headers := NewHeaders(
+		"key1", "value1",
+		"key2", "value2",
 	)
-	r.Cookies = c
-	if r.Cookies.data != nil {
-		fmt.Println(c.URLEncode())
+	if headers.Get("key1") != "value1" {
+		t.Fatal("Headers.Get() failed.")
+	}
+	if headers.Get("key3") != "" {
+		t.Fatal("Headers.Get() failed.")
 	}
 }
 
-func TestBody(t *testing.T) {
-	body := Body("ddd")
-	req := NewRequestSetting("get", "http")
-	req.Body = body
-	t.Log(req.Body)
+func TestStringSliceMap(t *testing.T) {
+	params := NewParams(
+		"key1", "value1",
+		"key2", "value2",
+	)
+	if params.Get("key1") != "value1" {
+		t.Fatal("params.Get() failed.")
+	}
+	if params.Get("key3") != "" {
+		t.Fatal("params.Get() failed.")
+	}
+
+	if params.URLEncode() != "key1=value1&key2=value2" {
+		t.Fatal("params.URLEncode() failed.")
+	}
+
+	params.Add("key1", "value3")
+	if params.Get("key1", 1) != "value3" {
+		t.Fatal("params.Add() failed.")
+	}
+
+	params.Set("key1", "value4")
+	if params.Get("key1") != "value4" {
+		t.Fatal("params.Set() failed.")
+	}
+
+	params.Del("key2")
+	if params.Get("key2") != "" {
+		t.Fatal("params.Del() failed.")
+	}
+
+	cookies := NewCookies(
+		"key1", "value1",
+		"key2", "value2",
+	)
+	if cookies.Get("key1") != "value1" {
+		t.Fatal("cookies.Get() failed.")
+	}
+
+	postform := NewPostForm(
+		"key1", "value1",
+		"key2", "value2",
+	)
+	if postform.Get("key1") != "value1" {
+		t.Fatal("postform.Get() failed.")
+	}
 }

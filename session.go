@@ -13,18 +13,18 @@ import (
 // 1. handling redirects
 // 2. automatically managing cookies
 type Session struct {
-	Client    *http.Client
-	Transport *http.Transport
-	Cookies   *cookiejar.Jar
-	Headers   *http.Header
-	Proxy     string
-	Timeout   int
+	client      *http.Client
+	transport   *http.Transport
+	Headers     http.Header
+	Proxy       string
+	Timeout     int
+	RedirectNum int
+	Cookies     *Cookies
 }
 
 // Request is a generic request method.
-func (session *Session) Request(method string, URL string, args ...interface{}) (*Response, error) {
-	preq := NewRequestSetting(method, URL, args...)
-	resp, err := session.send(preq)
+func (session *Session) Request(reqSetting *RequestSetting) (*Response, error) {
+	resp, err := session.send(reqSetting)
 	if err != nil {
 		return nil, MakeErrorStack(err, "direwolf.Session.Request()")
 	}
@@ -33,25 +33,65 @@ func (session *Session) Request(method string, URL string, args ...interface{}) 
 
 // Get is a get method.
 func (session *Session) Get(URL string, args ...interface{}) (*Response, error) {
-	return session.Request("GET", URL, args...)
+	reqSetting := NewRequestSetting("GET", URL, args...)
+	resp, err := session.Request(reqSetting)
+	if err != nil {
+		return nil, MakeErrorStack(err, "direwolf.Session.Get()")
+	}
+	return resp, nil
 }
 
 // Post is a post method.
 func (session *Session) Post(URL string, args ...interface{}) (*Response, error) {
-	return session.Request("POST", URL, args...)
-}
-
-// send is responsible for handling some subsequent processing of the PreRequest.
-func (session *Session) send(preq *RequestSetting) (*Response, error) {
-	response, err := Download(preq, session.Client, session.Transport)
+	reqSetting := NewRequestSetting("POST", URL, args...)
+	resp, err := session.Request(reqSetting)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Session.send()")
+		return nil, MakeErrorStack(err, "direwolf.Session.Post()")
 	}
-	// build response
-	return response, nil
+	return resp, nil
 }
 
-// NewSession make a Session, and set a default Client and Transport.
+// Head is a post method.
+func (session *Session) Head(URL string, args ...interface{}) (*Response, error) {
+	reqSetting := NewRequestSetting("HEAD", URL, args...)
+	resp, err := session.Request(reqSetting)
+	if err != nil {
+		return nil, MakeErrorStack(err, "direwolf.Session.Head()")
+	}
+	return resp, nil
+}
+
+// Put is a post method.
+func (session *Session) Put(URL string, args ...interface{}) (*Response, error) {
+	reqSetting := NewRequestSetting("PUT", URL, args...)
+	resp, err := session.Request(reqSetting)
+	if err != nil {
+		return nil, MakeErrorStack(err, "direwolf.Session.Put()")
+	}
+	return resp, nil
+}
+
+// Patch is a post method.
+func (session *Session) Patch(URL string, args ...interface{}) (*Response, error) {
+	reqSetting := NewRequestSetting("PATCH", URL, args...)
+	resp, err := session.Request(reqSetting)
+	if err != nil {
+		return nil, MakeErrorStack(err, "direwolf.Session.Put()")
+	}
+	return resp, nil
+}
+
+// Delete is a post method.
+func (session *Session) Delete(URL string, args ...interface{}) (*Response, error) {
+	reqSetting := NewRequestSetting("DELETE", URL, args...)
+	resp, err := session.Request(reqSetting)
+	if err != nil {
+		return nil, MakeErrorStack(err, "direwolf.Session.Delete()")
+	}
+	return resp, nil
+}
+
+// NewSession new a Session object, and set a default Client and Transport.
 func NewSession() *Session {
 	trans := &http.Transport{
 		DialContext: (&net.Dialer{
@@ -79,8 +119,14 @@ func NewSession() *Session {
 		Jar:       jar,
 	}
 
+	cookies := NewCookies()
+	headers := http.Header{}
+	headers.Add("User-Agent", "direwolf - winter is coming")
+
 	return &Session{
-		Client:    client,
-		Transport: trans,
+		client:    client,
+		transport: trans,
+		Headers:   headers,
+		Cookies:   cookies,
 	}
 }
