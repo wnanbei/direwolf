@@ -8,11 +8,12 @@ import (
 )
 
 // Params is url params you want to join to url, as parameter in Request method.
-// You can init it like this:
-// 	params := Params{
-// 		"key1": {"value1", "value2"},
-// 		"key2": {"value3"},
-// 	}
+// You should init it by using NewParams like this:
+// 	params := dw.NewParams(
+//		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// Note: mid symbol is comma.
 type Params struct {
 	stringSliceMap
 }
@@ -21,42 +22,42 @@ type Params struct {
 type Body []byte
 
 // PostForm is the form you want to post, as parameter in Request method.
-// You can init it like this:
-// 	df := DataForm{
-// 		"key1": {"value1", "value2"},
-// 		"key2": {"value3"},
-// 	}
+// You should init it by using NewPostForm like this:
+// 	postform := dw.NewPostForm(
+//		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// Note: mid symbol is comma.
 type PostForm struct {
 	stringSliceMap
 }
 
 // Cookies is request cookies, as parameter in Request method.
-// You can init it like this:
-// 	c := Cookies{
-// 		"key1": "value1",
-// 		"key2": "value2",
-// 	}
+// You should init it by using NewCookies like this:
+// 	cookies := dw.NewCookies(
+//		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// Note: mid symbol is comma.
 type Cookies struct {
 	stringSliceMap
 }
 
-// Proxy is the proxy server address, like "http://127.0.0.1:1080"
+// Proxy is the proxy server address, like "http://127.0.0.1:1080".
 type Proxy string
 
-// RedirectNum is the number of redirect
+// RedirectNum is the number of request redirect allowed.
 type RedirectNum int
 
 // Timeout is the number of time to timeout request.
 type Timeout int
 
-// stringSliceMap type is map[string][]string, used for Params, PostForms, Cookies.
-// you should new it like this:
-//   stringSliceMap{}.New()
+// stringSliceMap type is map[string][]string, used for Params, PostForm, Cookies.
 type stringSliceMap struct {
 	data map[string][]string
 }
 
-// New is the most convenient way to create a stringSliceMap.
+// New is the way to create a stringSliceMap.
 // You can set key-value pair when you init it by sent params. Just like this:
 // 	stringSliceMap{}.New(
 // 		"key1", "value1",
@@ -139,28 +140,60 @@ func (ssm *stringSliceMap) URLEncode() string {
 	return buf.String()
 }
 
-// NewParams new a Params type
+// NewParams new a Params type.
+//
+// You can set key-value pair when you init it by sent parameters. Just like this:
+// 	params := NewParams(
+// 		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// But be careful, between the key and value is a comma.
+// And if the number of parameters is not a multiple of 2, it will panic.
 func NewParams(keyvalue ...string) *Params {
 	var p = &Params{}
 	p.New(keyvalue...)
 	return p
 }
 
-// NewCookies new a Cookies type
+// NewCookies new a Cookies type.
+//
+// You can set key-value pair when you init it by sent parameters. Just like this:
+// 	cookies := NewCookies(
+// 		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// But be careful, between the key and value is a comma.
+// And if the number of parameters is not a multiple of 2, it will panic.
 func NewCookies(keyvalue ...string) *Cookies {
 	var c = &Cookies{}
 	c.New(keyvalue...)
 	return c
 }
 
-// NewPostForm new a PostForm type
+// NewPostForm new a PostForm type.
+//
+// You can set key-value pair when you init it by sent parameters. Just like this:
+// 	postform := NewPostForm(
+// 		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// But be careful, between the key and value is a comma.
+// And if the number of parameters is not a multiple of 2, it will panic.
 func NewPostForm(keyvalue ...string) *PostForm {
 	var p = &PostForm{}
 	p.New(keyvalue...)
 	return p
 }
 
-// NewHeaders new a http.Header type
+// NewHeaders new a http.Header type.
+//
+// You can set key-value pair when you init it by sent parameters. Just like this:
+// 	headers := NewHeaders(
+// 		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// But be careful, between the key and value is a comma.
+// And if the number of parameters is not a multiple of 2, it will panic.
 func NewHeaders(keyvalue ...string) http.Header {
 	h := http.Header{}
 	if keyvalue != nil {

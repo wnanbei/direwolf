@@ -38,8 +38,10 @@ func (resp *Response) Content() []byte {
 	return resp.content
 }
 
-// Text decode content to string.
-// if Response.content doesn`t exists, call Response.Content at first.
+// Text decode content to string. You can specified encoding type. Such as GBK, GB18030,
+// latin1. Default is UTF-8.
+//
+// If Response.content doesn`t exists, it will call Response.Content() at first.
 func (resp *Response) Text(encoding ...string) string {
 	var text = ""
 	var encodingType = strings.ToUpper(resp.Encoding)
@@ -79,7 +81,7 @@ func (resp *Response) Text(encoding ...string) string {
 }
 
 // CSS is a api to goquery, it returns a goquery.Selection object.
-// so you can totally use the api from goquery, like Find().
+// So you can totally use the api from goquery, like Find().
 func (resp *Response) CSS(query string) *goquery.Selection {
 	content := bytes.NewReader(resp.Content())
 	dom, err := goquery.NewDocumentFromReader(content)

@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// send is low level request method
+// send is low level request method.
 func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 	// Make new http.Request
 	req, err := http.NewRequest(reqSetting.Method, reqSetting.URL, nil)
@@ -98,21 +98,24 @@ func buildResponse(req *RequestSetting, resp *http.Response) *Response {
 	}
 }
 
+// mergeHeaders merge RequestSetting headers and Session Headers.
+// RequestSetting has higher priority.
 func mergeHeaders(h1, h2 http.Header) http.Header {
 	h := http.Header{}
-	for key, values := range h1 {
-		for _, value := range values {
-			h.Add(key, value)
-		}
-	}
 	for key, values := range h2 {
 		for _, value := range values {
-			h.Add(key, value)
+			h.Set(key, value)
+		}
+	}
+	for key, values := range h1 {
+		for _, value := range values {
+			h.Set(key, value)
 		}
 	}
 	return h
 }
 
+// getProxyFunc return a Proxy Function. RequestSetting has higher priority.
 func getProxyFunc(p1, p2 string) (func(*http.Request) (*url.URL, error), error) {
 	// Add proxy method to transport
 	var p string
@@ -131,6 +134,7 @@ func getProxyFunc(p1, p2 string) (func(*http.Request) (*url.URL, error), error) 
 	return http.ProxyURL(proxyURL), nil
 }
 
+// getRedirectFunc return a redirect control function. Default redirect number is 5.
 func getRedirectFunc(r1, r2 int) func(req *http.Request, via []*http.Request) error {
 	r := 5
 	if r1 > 0 || r1 < 0 {

@@ -18,7 +18,7 @@ const (
 	RedirectError = "RedirectError"
 )
 
-// ErrorStack is a wrapped error type, contain stack info, like file name and code line
+// ErrorStack is a wrapped error type, contain stack info, like file name and code line.
 type ErrorStack struct {
 	Prev error
 	Msg  string

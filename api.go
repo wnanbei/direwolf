@@ -70,8 +70,8 @@ package direwolf
 // 	direwolf.Postform: Post dataform to send.
 // 	direwolf.Body: Post body to send.
 // 	direwolf.Proxy: Proxy url to use.
-// 	direwolf.Timeout: Request Timeout.
-// 	direwolf.RedirectNum: Number of Request allowed to redirect.
+// 	direwolf.Timeout: Request Timeout. Default value is 30.
+// 	direwolf.RedirectNum: Number of Request allowed to redirect. Default value is 5.
 func Get(url string, args ...interface{}) (*Response, error) {
 	session := NewSession()
 	resp, err := session.Get(url, args...)
