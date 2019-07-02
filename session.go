@@ -93,7 +93,7 @@ func (session *Session) Delete(URL string, args ...interface{}) (*Response, erro
 
 // NewSession new a Session object, and set a default Client and Transport.
 func NewSession() *Session {
-	trans := &http.Transport{
+	defaultTransport := &http.Transport{
 		DialContext: (&net.Dialer{
 			Timeout:   30 * time.Second,
 			KeepAlive: 30 * time.Second,
@@ -115,7 +115,7 @@ func NewSession() *Session {
 	}
 
 	client := &http.Client{
-		Transport: trans,
+		Transport: defaultTransport,
 		Jar:       jar,
 	}
 
@@ -125,7 +125,7 @@ func NewSession() *Session {
 
 	return &Session{
 		client:    client,
-		transport: trans,
+		transport: defaultTransport,
 		Headers:   headers,
 		Cookies:   cookies,
 	}

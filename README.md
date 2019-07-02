@@ -1,8 +1,12 @@
-Package direwolf is the most convient and esay to use http client in golang.
+# Direwolf
+
+Package direwolf is a convient and esay to use http client written in Golang.
+
+## Quick Start
 
 You can easily send a request like this:
 
-```golang
+```go
 import (
     dw "github.com/wnanbei/direwolf"
 )
@@ -19,7 +23,7 @@ func main() {
 Besides, direwolf provide a convient way to add parameters to request. Such
 as Headers, Cookies, Params, etc.
 
-```golang
+```go
 import (
     dw "github.com/wnanbei/direwolf"
 )
@@ -61,3 +65,23 @@ Output:
     "url": "https://httpbin.org/get?age=18&name=wnanbei"
 }
 ```
+
+## Feature Support
+
+- Clean and Convient API
+- Sessions with Cookie Persistence
+- Elegant Key/Value Cookies
+- Keep-Alive & Connection Pooling
+- HTTP(S) Proxy Support
+- Redirect Control
+- Timeout Control
+- Support extract result from response body with css selector, regexp, json
+- Content Decoding
+
+## Installation
+
+```
+go get github.com/wnanbei/direwolf
+```
+
+## API examples

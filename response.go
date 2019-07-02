@@ -24,6 +24,11 @@ type Response struct {
 	Request    *RequestSetting
 }
 
+// Body return the body of the response
+func (resp *Response) Body() io.ReadCloser {
+	return resp.body
+}
+
 // Content read bytes from Response.body. If something wrong, it returns nil.
 func (resp *Response) Content() []byte {
 	if resp.content == nil {
