@@ -36,7 +36,7 @@ import (
 func main() {
     resp, err := dw.Get("https://www.google.com")
     if err != nil {
-        ...
+        return
     }
     fmt.Println(resp.Text())
 }
@@ -65,7 +65,7 @@ func main() {
     )
     resp, err := dw.Get("https://httpbin.org/get", headers, params, cookies)
     if err != nil {
-        ...
+        return
     }
     fmt.Println(resp.Text())
 }
@@ -85,12 +85,12 @@ Output:
         "Host": "httpbin.org",
         "User-Agent": "direwolf"
     },
-    "origin": "118.116.15.151, 118.116.15.151",
+    "origin": "1.1.1.1, 1.1.1.1",
     "url": "https://httpbin.org/get?age=18&name=wnanbei"
 }
 ```
 
-## API examples
+## How to Use
 
 ### 1. Make Request
 
@@ -130,7 +130,7 @@ func main() {
     params := dw.NewParams("key", "value")
     resp, err := dw.Get("https://httpbin.org/get", params)
     if err != nil {
-        ...
+        return
     }
     fmt.Println(resp.URL)
 }
@@ -168,5 +168,195 @@ Output:
 
 ```
 https://httpbin.org/get?key1=value1&key1=value2
+```
+
+### 3. Set Headers
+
+Set headers is similar to add parameters, use `NewHeaders()`:
+
+```go
+import (
+    "fmt"
+
+    dw "github.com/wnanbei/direwolf"
+)
+
+func main() {
+    headers := dw.NewHeaders(
+        "key", "value",
+        "User-Agent", "direwolf",
+    )
+    resp, err := dw.Get("https://httpbin.org/get", headers)
+    if err != nil {
+        return
+    }
+    fmt.Println(resp.Text())
+}
+```
+
+Output:
+
+```json
+{
+  "args": {},
+  "headers": {
+    "Accept-Encoding": "gzip",
+    "Host": "httpbin.org",
+    "Key": "value",
+    "User-Agent": "direwolf"
+  },
+  "origin": "1.1.1.1, 1.1.1.1",
+  "url": "https://httpbin.org/get"
+}
+```
+
+If you did not set `User-Agent`, direwolf will use default `User-Agent`: `direwolf - winter is coming`.
+
+### 4. Add Cookies
+
+Add cookies is similar to add parameters, too.
+
+```go
+import (
+	"fmt"
+
+	dw "github.com/wnanbei/direwolf"
+)
+
+func main() {
+	cookies := dw.NewCookies(
+		"key1", "value1",
+		"key2", "value2",
+	)
+	resp, err := dw.Get("https://httpbin.org/get", cookies)
+	if err != nil {
+		return
+	}
+	fmt.Println(resp.Text())
+}
+```
+
+Output:
+
+```json
+{
+  "args": {},
+  "headers": {
+    "Accept-Encoding": "gzip",
+    "Cookie": "key2=value2; key1=value1",
+    "Host": "httpbin.org",
+    "User-Agent": "direwolf - winter is coming"
+  },
+  "origin": "1.1.1.1, 1.1.1.1",
+  "url": "https://httpbin.org/get"
+}
+```
+
+### 5. Post Form
+
+If you want post form data, use `direwolf.NewPostForm()`:
+
+```go
+import (
+	"fmt"
+
+	dw "github.com/wnanbei/direwolf"
+)
+
+func main() {
+	postForm := dw.NewPostForm(
+		"uid", "123456789",
+		"pw", "666888",
+	)
+	resp, err := dw.Post("https://httpbin.org/post", postForm)
+	if err != nil {
+		return
+	}
+	fmt.Println(resp.Text())
+}
+```
+
+Output:
+
+```json
+{
+  "args": {},
+  "data": "",
+  "files": {},
+  "form": {
+    "pw": "666888",
+    "uid": "123456789"
+  },
+  "headers": {
+    "Accept-Encoding": "gzip",
+    "Content-Length": "23",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "Host": "httpbin.org",
+    "User-Agent": "direwolf - winter is coming"
+  },
+  "json": null,
+  "origin": "1.1.1.1, 1.1.1.1",
+  "url": "https://httpbin.org/post"
+}
+```
+
+### 6. Post Body
+
+If you want post bytes type data, you can use `direwolf.Body`, its original type is `[]byte`, like this:
+
+```go
+import (
+	"fmt"
+
+	dw "github.com/wnanbei/direwolf"
+)
+
+func main() {
+	body := dw.Body("Hello World")
+	resp, err := dw.Post("https://httpbin.org/post", body)
+	if err != nil {
+		return
+	}
+	fmt.Println(resp.Text())
+}
+```
+
+Output:
+
+```json
+{
+  "args": {},
+  "data": "Hello World",
+  "files": {},
+  "form": {},
+  "headers": {
+    "Accept-Encoding": "gzip",
+    "Content-Length": "11",
+    "Host": "httpbin.org",
+    "User-Agent": "direwolf - winter is coming"
+  },
+  "json": null,
+  "origin": "1.1.1.1, 1.1.1.1",
+  "url": "https://httpbin.org/post"
+}
+```
+
+### 7. Set Timeout
+
+```go
+import (
+	"fmt"
+
+	dw "github.com/wnanbei/direwolf"
+)
+
+func main() {
+	timeout := dw.Timeout(5)
+	resp, err := dw.Get("https://httpbin.org/delay/10", timeout)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(resp.Text())
+}
 ```
 
