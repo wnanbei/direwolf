@@ -32,7 +32,7 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 	}
 
 	// set redirect
-	session.client.CheckRedirect = getRedirectFunc(reqSetting.RedirectNum, session.RedirectNum)
+	session.client.CheckRedirect = getRedirectFunc(reqSetting.RedirectNum)
 
 	// set timeout
 	// if timeout > 0, it means a time limit for requests.
@@ -135,16 +135,13 @@ func getProxyFunc(p1, p2 string) (func(*http.Request) (*url.URL, error), error) 
 }
 
 // getRedirectFunc return a redirect control function. Default redirect number is 5.
-func getRedirectFunc(r1, r2 int) func(req *http.Request, via []*http.Request) error {
-	r := 5
-	if r1 > 0 || r1 < 0 {
-		r = r1
-	} else if r2 > 0 || r2 < 0 {
-		r = r2
+func getRedirectFunc(r int) func(req *http.Request, via []*http.Request) error {
+	if r <= 0 {
+		r = 0
 	}
 
 	redirectFunc := func(req *http.Request, via []*http.Request) error {
-		if len(via) >= r {
+		if len(via) > r {
 			return MakeError(nil, RedirectError, "Exceeded the maximum number of redirects")
 		}
 		return nil

@@ -13,13 +13,12 @@ import (
 // 1. handling redirects
 // 2. automatically managing cookies
 type Session struct {
-	client      *http.Client
-	transport   *http.Transport
-	Headers     http.Header
-	Proxy       string
-	Timeout     int
-	RedirectNum int
-	Cookies     *Cookies
+	client    *http.Client
+	transport *http.Transport
+	Headers   http.Header
+	Proxy     string
+	Timeout   int
+	Cookies   *Cookies
 }
 
 // Request is a generic request method.
