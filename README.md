@@ -7,7 +7,7 @@ Package direwolf is a convient and esay to use http client written in Golang.
 ## Feature Support
 
 - Clean and Convient API
-- Simple to Set Headers, Cookies, Parameters, Post Forms 
+- Simple to Set Headers, Cookies, Parameters, Post Forms
 - Sessions with Cookie Persistence
 - Elegant Key/Value Cookies
 - Keep-Alive & Connection Pooling
@@ -345,20 +345,27 @@ Output:
 
 ### 7. Set Timeout
 
+`Timeout` specifies a time limit for request. The timeout includes connection time, any redirects, and reading the response body. 
+
+The timer remains running after Get, Head, Post, or Do return and will interrupt reading of the Response.Body.
+
+- if timeout > 0, it means a time limit for requests.
+- if timeout < 0, it means no limit.
+- if timeout = 0, it means keep default 30 second timeout.
+
 ```go
-import (
-	"fmt"
-
-	dw "github.com/wnanbei/direwolf"
-)
-
-func main() {
-	timeout := dw.Timeout(5)
-	resp, err := dw.Get("https://httpbin.org/delay/10", timeout)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(resp.Text())
-}
+timeout := dw.Timeout(5)
+resp, err := dw.Get("https://httpbin.org/delay/10", timeout)
 ```
+
+or
+
+```go
+resp, err := dw.Get(
+    "https://httpbin.org/delay/10",
+    dw.Timeout(5),
+)
+```
+
+### 8. Redirect
 
