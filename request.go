@@ -37,6 +37,7 @@ func NewRequestSetting(method string, URL string, args ...interface{}) *RequestS
 	reqSetting := &RequestSetting{}             // new a RequestSetting and set default field
 	reqSetting.Method = strings.ToUpper(method) // Upper the method string
 	reqSetting.URL = URL
+	reqSetting.RedirectNum = 5
 
 	// Check the type of the parameter and handle it.
 	for _, arg := range args {
