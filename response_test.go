@@ -47,7 +47,7 @@ func newTestResponseServer() *httptest.Server {
 	return ts
 }
 
-func TestResponseExtract(t *testing.T) {
+func TestReExtract(t *testing.T) {
 	ts := newTestResponseServer()
 	defer ts.Close()
 
@@ -69,18 +69,45 @@ func TestResponseExtract(t *testing.T) {
 		t.Fatal("Response.ReSubmatch() failed.")
 	}
 	t.Log("Response.ReSubmatch() passed.")
+}
 
-	result3 := resp.CSS(`a`).Last().Text()
-	if result3 != "2019-06-21" {
+func TestCssExtract(t *testing.T) {
+	ts := newTestResponseServer()
+	defer ts.Close()
+
+	resp, err := Get(ts.URL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	result1 := resp.CSS(`a`).First().Text()
+	if result1 != "is the most convenient" {
+		t.Fatal("Response.CSS().First().Text() failed.")
+	}
+	t.Log("Response.CSS().First().Text() passed.")
+
+	result2 := resp.CSS(`body`).CSS(`li`).CSS(`a[href=\/time\/]`).First().Text()
+	if result2 != "2019-06-21" {
 		t.Fatal("Response.CSS() failed.")
 	}
 	t.Log("Response.CSS() passed.")
 
-	result4 := resp.CSSFirst(`a`)
-	if result4 != "is the most convenient" {
-		t.Fatal("Response.CSSFirst() failed.")
+	result3 := resp.CSS(`a`).First().Attr("href")
+	if result3 != "/convenient/" {
+		t.Fatal("Response.CSS().First().Attr() failed.")
 	}
-	t.Log("Response.CSSFirst() passed.")
+	t.Log("Response.CSS().First().Attr() passed.")
+
+	result4 := resp.CSS(`a`).First().AttrOr("noExists", "none")
+	if result4 != "none" {
+		t.Fatal("Response.CSS().First().AttrOr() failed.")
+	}
+	t.Log("Response.CSS().First().AttrOr() passed.")
+
+	result5 := resp.CSS(`a`).At(2).Text()
+	if result5 != "南北" {
+		t.Fatal("Response.CSS().At() failed.")
+	}
+	t.Log("Response.CSS().At() passed.")
 }
 
 func TestResponseEncoding(t *testing.T) {
