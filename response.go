@@ -24,6 +24,11 @@ type Response struct {
 	Request    *RequestSetting
 }
 
+// Body return the body of the response
+func (resp *Response) Body() io.ReadCloser {
+	return resp.body
+}
+
 // Content read bytes from Response.body. If something wrong, it returns nil.
 func (resp *Response) Content() []byte {
 	if resp.content == nil {
@@ -80,27 +85,6 @@ func (resp *Response) Text(encoding ...string) string {
 	return text
 }
 
-// CSS is a api to goquery, it returns a goquery.Selection object.
-// So you can totally use the api from goquery, like Find().
-func (resp *Response) CSS(query string) *goquery.Selection {
-	content := bytes.NewReader(resp.Content())
-	dom, err := goquery.NewDocumentFromReader(content)
-	if err != nil {
-		return nil
-	}
-	resp.dom = dom
-	queryResult := resp.dom.Find(query)
-	return queryResult
-}
-
-// CSSFirst return the first node text from query result.
-func (resp *Response) CSSFirst(query string) string {
-	if queryResult := resp.CSS(query); queryResult != nil {
-		return queryResult.First().Text()
-	}
-	return ""
-}
-
 // Re extract required data with regexp.
 // It return a slice of string from FindAllString.
 // Every time you call this method, it will transcode the Response.content to text once.
@@ -126,6 +110,114 @@ func (resp *Response) ReSubmatch(query string) []string {
 	return subMatchResult
 }
 
-// func (resp *Response) ReFirst(query string) string {
+// CSS is a method to extract data with css selector, it returns a CSSNodeList.
+func (resp *Response) CSS(queryStr string) *CSSNodeList {
+	content := bytes.NewReader(resp.Content())
+	dom, err := goquery.NewDocumentFromReader(content)
+	if err != nil {
+		return nil
+	}
+	resp.dom = dom
 
-// }
+	newNodeList := []CSSNode{}
+	resp.dom.Find(queryStr).Each(func(i int, selection *goquery.Selection) {
+		newNode := CSSNode{selection: selection}
+		newNodeList = append(newNodeList, newNode)
+	})
+	return &CSSNodeList{container: newNodeList}
+}
+
+// CSSNode is a container that stores single selected results
+type CSSNode struct {
+	selection *goquery.Selection
+}
+
+// Text return the text of the CSSNode
+func (node *CSSNode) Text() string {
+	if node.selection != nil {
+		return node.selection.Text()
+	}
+	return ""
+}
+
+// Attr return the attribute value of the CSSNode
+func (node *CSSNode) Attr(attrName string) string {
+	if node.selection != nil {
+		attr, exists := node.selection.Attr(attrName)
+		if exists {
+			return attr
+		}
+	}
+	return ""
+}
+
+// AttrOr return the attribute value of the CSSNode,
+// if value isn`t exists, return default value
+func (node *CSSNode) AttrOr(attrName, defaultValue string) string {
+	if node.selection != nil {
+		return node.selection.AttrOr(attrName, defaultValue)
+	}
+	return defaultValue
+}
+
+// CSSNodeList is a container that stores selected results
+type CSSNodeList struct {
+	container []CSSNode
+}
+
+// Text return a list of text
+func (nodeList *CSSNodeList) Text() (textList []string) {
+	for _, node := range nodeList.container {
+		text := node.Text()
+		textList = append(textList, text)
+	}
+	return
+}
+
+// Attr return a list of attribute value
+func (nodeList *CSSNodeList) Attr(attrName string) (valueList []string) {
+	for _, node := range nodeList.container {
+		value := node.Attr(attrName)
+		valueList = append(valueList, value)
+	}
+	return
+}
+
+// AttrOr return a list of attribute value, if value isn`t exists, return default value
+func (nodeList *CSSNodeList) AttrOr(attrName, defaultValue string) (valueList []string) {
+	for _, node := range nodeList.container {
+		value := node.AttrOr(attrName, defaultValue)
+		valueList = append(valueList, value)
+	}
+	return
+}
+
+// CSS return a CSSNodeList, so you can chain CSS
+func (nodeList *CSSNodeList) CSS(queryStr string) *CSSNodeList {
+	newNodeList := []CSSNode{}
+	for _, node := range nodeList.container {
+		node.selection.Find(queryStr).Each(func(i int, selection *goquery.Selection) {
+			newNode := CSSNode{selection: selection}
+			newNodeList = append(newNodeList, newNode)
+		})
+	}
+	return &CSSNodeList{container: newNodeList}
+}
+
+// First return the frist cssNode of CSSNodeList.
+// Return a empty cssNode if there is no cssNode in CSSNodeList
+func (nodeList *CSSNodeList) First() *CSSNode {
+	if len(nodeList.container) > 0 {
+		return &nodeList.container[0]
+	}
+	return &CSSNode{}
+}
+
+// At return the cssNode of specified index position.
+// Return a empty cssNode if there is no cssNode in CSSNodeList
+func (nodeList *CSSNodeList) At(index int) *CSSNode {
+	if len(nodeList.container) > index {
+		return &nodeList.container[index]
+	}
+	return &CSSNode{}
+}

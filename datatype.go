@@ -50,6 +50,9 @@ type Proxy string
 type RedirectNum int
 
 // Timeout is the number of time to timeout request.
+// if timeout > 0, it means a time limit for requests.
+// if timeout < 0, it means no limit.
+// if timeout = 0, it means keep default 30 second timeout.
 type Timeout int
 
 // stringSliceMap type is map[string][]string, used for Params, PostForm, Cookies.

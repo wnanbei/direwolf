@@ -137,9 +137,9 @@ func getProxyFunc(p1, p2 string) (func(*http.Request) (*url.URL, error), error) 
 // getRedirectFunc return a redirect control function. Default redirect number is 5.
 func getRedirectFunc(r1, r2 int) func(req *http.Request, via []*http.Request) error {
 	r := 5
-	if r1 > 0 || r1 < 0 {
+	if r1 != 0 {
 		r = r1
-	} else if r2 > 0 || r2 < 0 {
+	} else if r2 != 0 {
 		r = r2
 	}
 
