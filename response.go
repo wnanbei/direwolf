@@ -132,8 +132,22 @@ type CSSNode struct {
 	selection *goquery.Selection
 }
 
-// Text return the text of the CSSNode
+// Text return the text of the CSSNode. Only include stright children node text
 func (node *CSSNode) Text() string {
+	if node.selection != nil {
+		var text string
+		node.selection.Contents().Each(func(i int, s *goquery.Selection) {
+			if goquery.NodeName(s) == "#text" {
+				text = text + s.Text()
+			}
+		})
+		return text
+	}
+	return ""
+}
+
+// TextAll return the text of the CSSNode. Include all children node text
+func (node *CSSNode) TextAll() string {
 	if node.selection != nil {
 		return node.selection.Text()
 	}
@@ -165,10 +179,19 @@ type CSSNodeList struct {
 	container []CSSNode
 }
 
-// Text return a list of text
+// Text return a list of text. Only include stright children node text
 func (nodeList *CSSNodeList) Text() (textList []string) {
 	for _, node := range nodeList.container {
 		text := node.Text()
+		textList = append(textList, text)
+	}
+	return
+}
+
+// TextAll return a list of text. Include all children node text
+func (nodeList *CSSNodeList) TextAll() (textList []string) {
+	for _, node := range nodeList.container {
+		text := node.TextAll()
 		textList = append(textList, text)
 	}
 	return
