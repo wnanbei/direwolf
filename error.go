@@ -16,6 +16,8 @@ const (
 	ProxyURLError = "ProxyURLError"
 	// RedirectError means over the max number of redirect.
 	RedirectError = "RedirectError"
+	// URLError means url is wrong.
+	URLError = "URLError"
 )
 
 // ErrorStack is a wrapped error type, contain stack info, like file name and code line.

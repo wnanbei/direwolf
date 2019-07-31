@@ -15,7 +15,7 @@ type RequestSetting struct {
 	Params      *Params
 	PostForm    *PostForm
 	Cookies     *Cookies
-	Proxy       string
+	Proxy       *Proxy
 	RedirectNum int
 	Timeout     int
 }
@@ -53,8 +53,8 @@ func NewRequestSetting(method string, URL string, args ...interface{}) *RequestS
 			reqSetting.Body = a
 		case *Cookies:
 			reqSetting.Cookies = a
-		case Proxy:
-			reqSetting.Proxy = string(a)
+		case *Proxy:
+			reqSetting.Proxy = a
 		case RedirectNum:
 			reqSetting.RedirectNum = int(a)
 		case Timeout:

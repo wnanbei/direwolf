@@ -44,9 +44,16 @@ type Cookies struct {
 }
 
 // Proxy is the proxy server address, like "http://127.0.0.1:1080".
-type Proxy string
+// You can set different proxies for HTTP and HTTPS sites.
+type Proxy struct {
+	HTTP  string
+	HTTPS string
+}
 
 // RedirectNum is the number of request redirect allowed.
+// If RedirectNum > 0, it means a redirect number limit for requests.
+// If RedirectNum = 0, it means ban redirect.
+// If RedirectNum is not set, it means default 5 times redirect limit.
 type RedirectNum int
 
 // Timeout is the number of time to timeout request.

@@ -116,22 +116,37 @@ func mergeHeaders(h1, h2 http.Header) http.Header {
 }
 
 // getProxyFunc return a Proxy Function. RequestSetting has higher priority.
-func getProxyFunc(p1, p2 string) (func(*http.Request) (*url.URL, error), error) {
-	// Add proxy method to transport
-	var p string
-	if p1 != "" {
+func getProxyFunc(p1, p2 *Proxy) (func(*http.Request) (*url.URL, error), error) {
+	var p *Proxy // choose which Proxy to use
+	if p1 != nil {
 		p = p1
-	} else if p2 != "" {
+	} else if p2 != nil {
 		p = p2
 	} else {
 		return nil, nil
 	}
 
-	proxyURL, err := url.Parse(p)
-	if err != nil {
-		return nil, MakeError(err, ProxyURLError, "Proxy URL error, please check proxy url")
+	if p.HTTP != "" && p.HTTPS != "" { // Parse HTTP and HTTPS proxy url
+		httpURL, err := url.Parse(p.HTTP)
+		if err != nil {
+			return nil, MakeError(err, ProxyURLError, "Proxy URL error, please check proxy url")
+		}
+		httpsURL, err := url.Parse(p.HTTPS)
+		if err != nil {
+			return nil, MakeError(err, ProxyURLError, "Proxy URL error, please check proxy url")
+		}
+
+		return func(req *http.Request) (*url.URL, error) { // Create a function to choose proxy when transport start request
+			if req.URL.Scheme == "http" {
+				return httpURL, nil
+			} else if req.URL.Scheme == "https" {
+				return httpsURL, nil
+			}
+			return nil, MakeError(nil, URLError, "URL scheme is wrong. Not http or https.")
+		}, nil
+
 	}
-	return http.ProxyURL(proxyURL), nil
+	return nil, MakeError(nil, ProxyURLError, "Proxy URL error, please check proxy url")
 }
 
 // getRedirectFunc return a redirect control function. Default redirect number is 5.

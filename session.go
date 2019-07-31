@@ -16,7 +16,7 @@ type Session struct {
 	client    *http.Client
 	transport *http.Transport
 	Headers   http.Header
-	Proxy     string
+	Proxy     *Proxy
 	Timeout   int
 	Cookies   *Cookies
 }
