@@ -97,12 +97,6 @@ func TestCssExtract(t *testing.T) {
 	}
 	t.Log("Response.CSS().First().Attr() passed.")
 
-	result4 := resp.CSS(`a`).First().AttrOr("noExists", "none")
-	if result4 != "none" {
-		t.Fatal("Response.CSS().First().AttrOr() failed.")
-	}
-	t.Log("Response.CSS().First().AttrOr() passed.")
-
 	result5 := resp.CSS(`a`).At(2).Text()
 	if result5 != "南北" {
 		t.Fatal("Response.CSS().At() failed.")

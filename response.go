@@ -138,7 +138,10 @@ func (node *CSSNode) Text() string {
 		var text string
 		node.selection.Contents().Each(func(i int, s *goquery.Selection) {
 			if goquery.NodeName(s) == "#text" {
-				text = text + s.Text()
+				t := s.Text()
+				if t != "" {
+					text = text + t
+				}
 			}
 		})
 		return text
@@ -154,24 +157,17 @@ func (node *CSSNode) TextAll() string {
 	return ""
 }
 
-// Attr return the attribute value of the CSSNode
-func (node *CSSNode) Attr(attrName string) string {
+// Attr return the attribute value of the CSSNode.
+// You can set default value, if value isn`t exists, return default value.
+func (node *CSSNode) Attr(attrName string, defaultValue ...string) string {
+	var d, attrValue string
 	if node.selection != nil {
-		attr, exists := node.selection.Attr(attrName)
-		if exists {
-			return attr
+		if len(defaultValue) > 0 {
+			d = defaultValue[0]
 		}
+		attrValue = node.selection.AttrOr(attrName, d)
 	}
-	return ""
-}
-
-// AttrOr return the attribute value of the CSSNode,
-// if value isn`t exists, return default value
-func (node *CSSNode) AttrOr(attrName, defaultValue string) string {
-	if node.selection != nil {
-		return node.selection.AttrOr(attrName, defaultValue)
-	}
-	return defaultValue
+	return attrValue
 }
 
 // CSSNodeList is a container that stores selected results
@@ -183,7 +179,9 @@ type CSSNodeList struct {
 func (nodeList *CSSNodeList) Text() (textList []string) {
 	for _, node := range nodeList.container {
 		text := node.Text()
-		textList = append(textList, text)
+		if text != "" {
+			textList = append(textList, text)
+		}
 	}
 	return
 }
@@ -192,25 +190,20 @@ func (nodeList *CSSNodeList) Text() (textList []string) {
 func (nodeList *CSSNodeList) TextAll() (textList []string) {
 	for _, node := range nodeList.container {
 		text := node.TextAll()
-		textList = append(textList, text)
+		if text != "" {
+			textList = append(textList, text)
+		}
 	}
 	return
 }
 
 // Attr return a list of attribute value
-func (nodeList *CSSNodeList) Attr(attrName string) (valueList []string) {
+func (nodeList *CSSNodeList) Attr(attrName string, defaultValue ...string) (valueList []string) {
 	for _, node := range nodeList.container {
-		value := node.Attr(attrName)
-		valueList = append(valueList, value)
-	}
-	return
-}
-
-// AttrOr return a list of attribute value, if value isn`t exists, return default value
-func (nodeList *CSSNodeList) AttrOr(attrName, defaultValue string) (valueList []string) {
-	for _, node := range nodeList.container {
-		value := node.AttrOr(attrName, defaultValue)
-		valueList = append(valueList, value)
+		value := node.Attr(attrName, defaultValue...)
+		if value != "" {
+			valueList = append(valueList, value)
+		}
 	}
 	return
 }

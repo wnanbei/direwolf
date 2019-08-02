@@ -82,6 +82,7 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 	if err != nil {
 		return nil, MakeError(err, HTTPError, "Request Error")
 	}
+	// defer resp.Body.Close()
 
 	buildedResponse := buildResponse(reqSetting, resp)
 	return buildedResponse, nil
