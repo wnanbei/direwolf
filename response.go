@@ -86,25 +86,25 @@ func (resp *Response) Text(encoding ...string) string {
 }
 
 // Re extract required data with regexp.
-// It return a slice of string from FindAllString.
+// It return a slice of string.
 // Every time you call this method, it will transcode the Response.content to text once.
 // So please try to extract required data at once.
-func (resp *Response) Re(query string) []string {
+func (resp *Response) Re(queryStr string) []string {
 	text := resp.Text()
-	return regexp.MustCompile(query).FindAllString(text, -1)
+	return regexp.MustCompile(queryStr).FindAllString(text, -1)
 }
 
 // ReSubmatch extract required data with regexp.
 // It return a slice of string from FindAllStringSubmatch.
 // Every time you call this method, it will transcode the Response.content to text once.
 // So please try to extract required data at once.
-func (resp *Response) ReSubmatch(query string) []string {
+func (resp *Response) ReSubmatch(queryStr string) [][]string {
 	text := resp.Text()
-	data := regexp.MustCompile(query).FindAllStringSubmatch(text, -1)
-	var subMatchResult []string
+	data := regexp.MustCompile(queryStr).FindAllStringSubmatch(text, -1)
+	var subMatchResult [][]string
 	for _, match := range data {
 		if len(match) > 1 { // In case that query has no submatch part
-			subMatchResult = append(subMatchResult, match[1])
+			subMatchResult = append(subMatchResult, match[1:len(match)])
 		}
 	}
 	return subMatchResult

@@ -16,7 +16,7 @@ func newTestResponseServer() *httptest.Server {
 	<title>Direwolf</title>
 	</head>
 	<body>
-	<li><a href="/convenient/">is the most convenient</a></li>
+	<li><a href="/convenient/">is a convenient</a></li>
 	<li><a href="/easy/">and easy to use http client with Golang</a></li>
 	<li><a href="/author/">南北</a></li>
 	<li><a href="/time/">2019-06-21</a></li>
@@ -65,7 +65,7 @@ func TestReExtract(t *testing.T) {
 	if len(result2) != 4 {
 		t.Fatal("Response.ReSubmatch() failed.")
 	}
-	if result2[3] != "2019-06-21" {
+	if result2[3][0] != "2019-06-21" {
 		t.Fatal("Response.ReSubmatch() failed.")
 	}
 	t.Log("Response.ReSubmatch() passed.")
@@ -115,7 +115,7 @@ func TestResponseEncoding(t *testing.T) {
 	resp3.Encoding = "latin1"
 	result3 := resp3.ReSubmatch(`<a href="/author/">(.*?)</a>`)
 	// t.Log(resp3.Text())
-	if result3[0] != "..." {
+	if result3[0][0] != "..." {
 		t.Fatal("Response latin1 failed.")
 	}
 	t.Log("Response latin1 passed.")
@@ -126,7 +126,7 @@ func TestResponseEncoding(t *testing.T) {
 	}
 	resp.Encoding = "GBK"
 	result1 := resp.ReSubmatch(`<a href="/author/">(.*?)</a>`)
-	if result1[0] != "南北" {
+	if result1[0][0] != "南北" {
 		t.Fatal("Response GBK failed.")
 	}
 	t.Log("Response GBK passed.")
@@ -137,7 +137,7 @@ func TestResponseEncoding(t *testing.T) {
 	}
 	resp2.Encoding = "GB18030"
 	result2 := resp2.ReSubmatch(`<a href="/author/">(.*?)</a>`)
-	if result2[0] != "南北" {
+	if result2[0][0] != "南北" {
 		t.Fatal("Response GB18030 failed.")
 	}
 	t.Log("Response GB18030 passed.")
