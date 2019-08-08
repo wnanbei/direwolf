@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"regexp"
 	"strings"
 
@@ -18,10 +19,11 @@ type Response struct {
 	StatusCode int
 	Proto      string
 	Encoding   string
+	Headers    http.Header
+	Request    *RequestSetting
 	body       io.ReadCloser
 	content    []byte
 	dom        *goquery.Document
-	Request    *RequestSetting
 }
 
 // Body return the body of the response

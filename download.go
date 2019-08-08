@@ -95,6 +95,8 @@ func buildResponse(req *RequestSetting, resp *http.Response) *Response {
 		StatusCode: resp.StatusCode,
 		Proto:      resp.Proto,
 		Encoding:   "UTF-8",
+		Headers:    resp.Header,
+		Request:    req,
 		body:       resp.Body,
 	}
 }
