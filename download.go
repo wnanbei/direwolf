@@ -82,14 +82,21 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 	if err != nil {
 		return nil, MakeError(err, HTTPError, "Request Error")
 	}
-	// defer resp.Body.Close()
+	defer resp.Body.Close()
 
-	buildedResponse := buildResponse(reqSetting, resp)
+	buildedResponse, err := buildResponse(reqSetting, resp)
+	if err != nil {
+		return nil, MakeErrorStack(err, "Response Error")
+	}
 	return buildedResponse, nil
 }
 
 // buildResponse build response with http.Response after do request.
-func buildResponse(req *RequestSetting, resp *http.Response) *Response {
+func buildResponse(req *RequestSetting, resp *http.Response) (*Response, error) {
+	content, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, MakeError(err, "ErrReadBody", "Read Response.Body failed.")
+	}
 	return &Response{
 		URL:        req.URL,
 		StatusCode: resp.StatusCode,
@@ -97,8 +104,8 @@ func buildResponse(req *RequestSetting, resp *http.Response) *Response {
 		Encoding:   "UTF-8",
 		Headers:    resp.Header,
 		Request:    req,
-		body:       resp.Body,
-	}
+		content:    content,
+	}, nil
 }
 
 // mergeHeaders merge RequestSetting headers and Session Headers.

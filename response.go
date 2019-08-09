@@ -2,8 +2,6 @@ package direwolf
 
 import (
 	"bytes"
-	"io"
-	"io/ioutil"
 	"net/http"
 	"regexp"
 	"strings"
@@ -21,27 +19,12 @@ type Response struct {
 	Encoding   string
 	Headers    http.Header
 	Request    *RequestSetting
-	body       io.ReadCloser
 	content    []byte
 	dom        *goquery.Document
 }
 
-// Body return the body of the response
-func (resp *Response) Body() io.ReadCloser {
-	return resp.body
-}
-
-// Content read bytes from Response.body. If something wrong, it returns nil.
+// Content read bytes from Response.body.
 func (resp *Response) Content() []byte {
-	if resp.content == nil {
-		defer resp.body.Close()
-		content, err := ioutil.ReadAll(resp.body)
-		if err != nil {
-			resp.content = nil
-		} else {
-			resp.content = content
-		}
-	}
 	return resp.content
 }
 
