@@ -80,7 +80,8 @@ func TestCssExtract(t *testing.T) {
 		t.Fatal(err)
 	}
 	result1 := resp.CSS(`a`).First().Text()
-	if result1 != "is the most convenient" {
+	t.Log(result1)
+	if result1 != "is a convenient" {
 		t.Fatal("Response.CSS().First().Text() failed.")
 	}
 	t.Log("Response.CSS().First().Text() passed.")
