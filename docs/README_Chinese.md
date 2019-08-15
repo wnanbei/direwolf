@@ -1,10 +1,10 @@
-# Direwolf HTTP Client: Save your time
+# Direwolf HTTP 客户端
 
-Package direwolf is a convient and esay to use http client written in Golang. 
+Direwolf 是一个由 Golang 编写的简单易用的 HTTP 客户端。
 
-![direwolf](docs/cover.png)
+![direwolf](cover.png)
 
-## Contents
+## 目录
 
 - [Feature Support](#Feature Support)
 - [Installation](#Installation)
@@ -24,28 +24,28 @@ Package direwolf is a convient and esay to use http client written in Golang.
   - [12. Extract Data by CSS Selector](#12. Extract Data by CSS Selector)
   - [13. Extract Data by Regexp](#13. Extract Data by Regexp)
 
-## Feature Support
+## 支持特性
 
-- Clean and Convient API
-- Simple to Set Headers, Cookies, Parameters, Post Forms
-- Sessions with Cookie Persistence
-- Keep-Alive & Connection Pooling
-- HTTP(S) Proxy Support
-- Redirect Control
-- Timeout Control
-- Support extract result from response body with css selector, regexp, json
-- Content Decoding
-- More to come...
+- 干净方便的 API
+- 设置 Headers, Cookies, URL参数, Post表单非常简单
+- 支持 Cookie 管理的 Session
+- Keep-Alive 和连接池
+- 支持 HTTP(S) 代理
+- 重定向控制
+- 超时控制
+- 支持使用正则表达式、CSS选择器从响应提取内容
+- 响应内容解码
+- 更多...
 
-## Installation
+## 安装
 
 ```
 go get github.com/wnanbei/direwolf
 ```
 
-## Quick Start
+## 速览
 
-You can easily send a request like this:
+你可以像下方这样非常简单的发起一个请求：
 
 ```go
 import (
@@ -63,8 +63,7 @@ func main() {
 }
 ```
 
-Besides, direwolf provide a convient way to add parameters to request. Such
-as Headers, Cookies, Params, etc.
+除此之外，direwolf 可以很方便的给一个请求添加参数，例如 Headers、Cookies、Params。
 
 ```go
 import (
@@ -92,7 +91,7 @@ func main() {
 }
 ```
 
-Output:
+输出:
 
 ```json
 {
@@ -111,9 +110,9 @@ Output:
 }
 ```
 
-## How to Use
+## 基础用法
 
-First of all, you can import `direwolf` like this for later use:
+首先，你可以像这样导入 direwolf 以方便之后使用：
 
 ```go
 import (
@@ -121,11 +120,11 @@ import (
 )
 ```
 
-This is just a recommended usage.
+这只是推荐用法。
 
-### 1. Make Request
+### 1. 发起请求
 
-You can start a request like this:
+你可以像这样发起一个请求：
 
 ```go
 resp, err := dw.Get("https://httpbin.org/get")
@@ -134,9 +133,9 @@ if err != nil {
 }
 ```
 
-You will get a `Response` object if err is equal to nil.
+如果 err 等于 nil，那么你会得到一个 `Response`。
 
-Other HTTP request types: 
+其他请求方法：
 
 ```go
 resp, err := dw.Post("https://httpbin.org/post", dw.NewPostForm("key", "value"))
@@ -145,9 +144,9 @@ resp, err := dw.Put("https://httpbin.org/put", dw.NewPostForm("key", "value"))
 resp, err := dw.Delete("https://httpbin.org/delete")
 ```
 
-### 2. Passing Parameters In URLs
+### 2. 传递URL参数
 
-Passing parameters in URLs is very easy, you only need to new a Params and pass it to request method.
+在请求中加入URL参数非常简单，你只需要使用 `NewParams()` 创建一个URL参数对象，并将其传入请求方法中即可：
 
 ```go
 params := dw.NewParams("key", "value")
@@ -158,13 +157,13 @@ if err != nil {
 fmt.Println(resp.URL)
 ```
 
-Output:
+输出:
 
 ```
 https://httpbin.org/get?key=value
 ```
 
-If you want pass more parameters to URLs, just like this:
+如果希望传入多个参数，可以像这样:
 
 ```go
 params := dw.NewParams(
@@ -173,11 +172,11 @@ params := dw.NewParams(
 )
 ```
 
-**Note: Remember the comma between key and value.** 
+**注: 记住 Key 和 Value 之间的逗号.** 
 
-**Note: Key must to match Value one by one, if not, will report an error.**
+**注: Key 必须与 Value 成对匹配, 如果没有的话将会报错.**
 
-If the parameters have the same key, it`s ok:
+参数中有同名的 Key 是没有问题的：
 
 ```go
 params := dw.NewParams(
@@ -186,15 +185,15 @@ params := dw.NewParams(
 )
 ```
 
-Output:
+输出:
 
 ```
 https://httpbin.org/get?key1=value1&key1=value2
 ```
 
-### 3. Set Headers
+### 3. 设置Headers
 
-Set headers is similar to add parameters, use `NewHeaders()`:
+设置 Headers 与传入URL参数非常相似, 使用`NewHeaders()`:
 
 ```go
 headers := dw.NewHeaders(
