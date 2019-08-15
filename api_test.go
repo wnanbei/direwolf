@@ -83,7 +83,7 @@ func TestRequest(t *testing.T) {
 	t.Log("Request test passed")
 }
 
-func TestCookie(t *testing.T) {
+func TestSendCookie(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// check method is GET before going to check other features
 		if r.Method != "GET" {

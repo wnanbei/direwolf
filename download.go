@@ -64,17 +64,8 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 
 	// Handle Cookies
 	if reqSetting.Cookies != nil {
-		for key, values := range reqSetting.Cookies.data {
-			for _, value := range values {
-				req.AddCookie(&http.Cookie{Name: key, Value: value})
-			}
-		}
-	}
-	if session.Cookies != nil {
-		for key, values := range session.Cookies.data {
-			for _, value := range values {
-				req.AddCookie(&http.Cookie{Name: key, Value: value})
-			}
+		for _, cookie := range reqSetting.Cookies {
+			req.AddCookie(cookie)
 		}
 	}
 
@@ -98,13 +89,15 @@ func buildResponse(req *RequestSetting, resp *http.Response) (*Response, error) 
 		return nil, MakeError(err, "ErrReadBody", "Read Response.Body failed.")
 	}
 	return &Response{
-		URL:        req.URL,
-		StatusCode: resp.StatusCode,
-		Proto:      resp.Proto,
-		Encoding:   "UTF-8",
-		Headers:    resp.Header,
-		Request:    req,
-		content:    content,
+		URL:           req.URL,
+		StatusCode:    resp.StatusCode,
+		Proto:         resp.Proto,
+		Encoding:      "UTF-8",
+		Headers:       resp.Header,
+		Cookies:       Cookies(resp.Cookies()),
+		Request:       req,
+		ContentLength: resp.ContentLength,
+		content:       content,
 	}, nil
 }
 

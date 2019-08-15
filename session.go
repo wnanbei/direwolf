@@ -4,6 +4,7 @@ import (
 	"net"
 	"net/http"
 	"net/http/cookiejar"
+	"net/url"
 	"time"
 
 	"golang.org/x/net/publicsuffix"
@@ -18,7 +19,6 @@ type Session struct {
 	Headers   http.Header
 	Proxy     *Proxy
 	Timeout   int
-	Cookies   *Cookies
 }
 
 // Request is a generic request method.
@@ -90,6 +90,36 @@ func (session *Session) Delete(URL string, args ...interface{}) (*Response, erro
 	return resp, nil
 }
 
+// Cookies returns the cookies of the given url in Session.
+func (session *Session) Cookies(u string) (Cookies, error) {
+	if session.client.Jar == nil {
+		return nil, MakeError(nil, "ErrCookieJar", "Cookie Jar was disabled.")
+	}
+	URL, err := url.Parse(u)
+	if err != nil {
+		return nil, MakeErrorStack(err, "Parse URL failed")
+	}
+	return session.client.Jar.Cookies(URL), nil
+}
+
+// SetCookies set cookies of the url in Session.
+func (session *Session) SetCookies(u string, c Cookies) error {
+	if session.client.Jar == nil {
+		return MakeError(nil, "ErrCookieJar", "Cookie Jar was disabled.")
+	}
+	URL, err := url.Parse(u)
+	if err != nil {
+		return MakeErrorStack(err, "Parse URL failed")
+	}
+	session.client.Jar.SetCookies(URL, []*http.Cookie(c))
+	return nil
+}
+
+// DisableCookieJar disable the Cookiejar of session
+func (session *Session) DisableCookieJar() {
+	session.client.Jar = nil
+}
+
 // NewSession new a Session object, and set a default Client and Transport.
 func NewSession() *Session {
 	defaultTransport := &http.Transport{
@@ -99,6 +129,7 @@ func NewSession() *Session {
 			DualStack: true,
 		}).DialContext,
 		MaxIdleConns:          100,
+		MaxIdleConnsPerHost:   2,
 		IdleConnTimeout:       90 * time.Second,
 		TLSHandshakeTimeout:   10 * time.Second,
 		ExpectContinueTimeout: 1 * time.Second,
@@ -118,7 +149,6 @@ func NewSession() *Session {
 		Jar:       jar,
 	}
 
-	cookies := NewCookies()
 	headers := http.Header{}
 	headers.Add("User-Agent", "direwolf - winter is coming")
 
@@ -126,6 +156,5 @@ func NewSession() *Session {
 		client:    client,
 		transport: defaultTransport,
 		Headers:   headers,
-		Cookies:   cookies,
 	}
 }

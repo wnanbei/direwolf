@@ -32,18 +32,18 @@ func startLoadTest() {
 	}
 }
 
-func TestSession(t *testing.T) {
-	// start a webserver in a goroutine
-	// s = NewSession()
-	// s.transport.MaxIdleConnsPerHost = 100
-	// s.transport.DisableKeepAlives = true
+// func TestSession(t *testing.T) {
+// 	// start a webserver in a goroutine
+// 	// s = NewSession()
+// 	// s.transport.MaxIdleConnsPerHost = 100
+// 	// s.transport.DisableKeepAlives = true
 
-	startWebserver()
-	for i := 0; i < 100; i++ {
-		go startLoadTest()
-	}
-	time.Sleep(time.Second * 2400)
-}
+// 	startWebserver()
+// 	for i := 0; i < 100; i++ {
+// 		go startLoadTest()
+// 	}
+// 	time.Sleep(time.Second * 2400)
+// }
 
 func TestSessionGet(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -108,4 +108,33 @@ func TestSessionPost(t *testing.T) {
 	}
 
 	t.Log("Session.Post test passed")
+}
+
+func TestCookieJar(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// check method is GET before going to check other features
+		if r.Method != "GET" {
+			t.Fatalf("Expected method %q; got %q", "GET", r.Method)
+		}
+		if r.URL.Path == "/cookie" {
+			http.SetCookie(w, &http.Cookie{Name: "key", Value: "value"})
+			w.Write([]byte("passed"))
+		}
+	}))
+	defer ts.Close()
+
+	session := NewSession()
+	_, err := session.Get(ts.URL + "/cookie")
+	if err != nil {
+		t.Fatal(err)
+	}
+	cookie, err := session.Cookies(ts.URL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if cookie[0].Name != "key" {
+		t.Fatal("Cookies() failed.")
+		return
+	}
+	t.Log("Cookies() passed.")
 }

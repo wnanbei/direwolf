@@ -32,17 +32,6 @@ type PostForm struct {
 	stringSliceMap
 }
 
-// Cookies is request cookies, as parameter in Request method.
-// You should init it by using NewCookies like this:
-// 	cookies := dw.NewCookies(
-//		"key1", "value1",
-// 		"key2", "value2",
-// 	)
-// Note: mid symbol is comma.
-type Cookies struct {
-	stringSliceMap
-}
-
 // Proxy is the proxy server address, like "http://127.0.0.1:1080".
 // You can set different proxies for HTTP and HTTPS sites.
 type Proxy struct {
@@ -165,21 +154,6 @@ func NewParams(keyvalue ...string) *Params {
 	return p
 }
 
-// NewCookies new a Cookies type.
-//
-// You can set key-value pair when you init it by sent parameters. Just like this:
-// 	cookies := NewCookies(
-// 		"key1", "value1",
-// 		"key2", "value2",
-// 	)
-// But be careful, between the key and value is a comma.
-// And if the number of parameters is not a multiple of 2, it will panic.
-func NewCookies(keyvalue ...string) *Cookies {
-	var c = &Cookies{}
-	c.New(keyvalue...)
-	return c
-}
-
 // NewPostForm new a PostForm type.
 //
 // You can set key-value pair when you init it by sent parameters. Just like this:
@@ -218,4 +192,44 @@ func NewHeaders(keyvalue ...string) http.Header {
 		}
 	}
 	return h
+}
+
+// Cookies is request cookies, as parameter in Request method.
+// You should init it by using NewCookies like this:
+// 	cookies := dw.NewCookies(
+//		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// Note: mid symbol is comma.
+type Cookies []*http.Cookie
+
+// Add append a new cookie to Cookies.
+func (c Cookies) Add(key, value string) {
+	c = append(c, &http.Cookie{Name: key, Value: value})
+}
+
+// NewCookies new a Cookies type.
+//
+// You can set key-value pair when you init it by sent parameters. Just like this:
+// 	cookies := NewCookies(
+// 		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// But be careful, between the key and value is a comma.
+// And if the number of parameters is not a multiple of 2, it will panic.
+func NewCookies(keyvalue ...string) Cookies {
+	c := make(Cookies, 0)
+	if keyvalue != nil {
+		if len(keyvalue)%2 != 0 {
+			panic("key and value must be part")
+		}
+
+		for i := 0; i < len(keyvalue)/2; i++ {
+			key := keyvalue[i*2]
+			value := keyvalue[i*2+1]
+			cookie := &http.Cookie{Name: key, Value: value}
+			c = append(c, cookie)
+		}
+	}
+	return c
 }

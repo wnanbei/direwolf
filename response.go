@@ -13,14 +13,16 @@ import (
 
 // Response is the response from request.
 type Response struct {
-	URL        string
-	StatusCode int
-	Proto      string
-	Encoding   string
-	Headers    http.Header
-	Request    *RequestSetting
-	content    []byte
-	dom        *goquery.Document
+	URL           string
+	StatusCode    int
+	Proto         string
+	Encoding      string
+	Headers       http.Header
+	Cookies       Cookies
+	Request       *RequestSetting
+	ContentLength int64
+	content       []byte
+	dom           *goquery.Document
 }
 
 // Content read bytes from Response.body.

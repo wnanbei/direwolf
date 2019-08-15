@@ -48,14 +48,6 @@ func TestStringSliceMap(t *testing.T) {
 		t.Fatal("params.Del() failed.")
 	}
 
-	cookies := NewCookies(
-		"key1", "value1",
-		"key2", "value2",
-	)
-	if cookies.Get("key1") != "value1" {
-		t.Fatal("cookies.Get() failed.")
-	}
-
 	postform := NewPostForm(
 		"key1", "value1",
 		"key2", "value2",
