@@ -126,9 +126,7 @@ func (node *CSSNode) Text() string {
 		node.selection.Contents().Each(func(i int, s *goquery.Selection) {
 			if goquery.NodeName(s) == "#text" {
 				t := s.Text()
-				if t != "" {
-					text = text + t
-				}
+				text = text + t
 			}
 		})
 		return text

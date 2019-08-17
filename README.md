@@ -111,9 +111,9 @@ Output:
 }
 ```
 
-## How to Use
+## The User Guide
 
-First of all, you can import `direwolf` like this for later use:
+First of all, you can import `direwolf` like this for later use. This is just a recommended usage.
 
 ```go
 import (
@@ -121,9 +121,9 @@ import (
 )
 ```
 
-This is just a recommended usage.
+### Quickstart
 
-### 1. Make Request
+#### 1. Make Request
 
 You can start a request like this:
 
@@ -145,7 +145,7 @@ resp, err := dw.Put("https://httpbin.org/put", dw.NewPostForm("key", "value"))
 resp, err := dw.Delete("https://httpbin.org/delete")
 ```
 
-### 2. Passing Parameters In URLs
+#### 2. Passing Parameters In URLs
 
 Passing parameters in URLs is very easy, you only need to new a Params and pass it to request method.
 
@@ -192,7 +192,7 @@ Output:
 https://httpbin.org/get?key1=value1&key1=value2
 ```
 
-### 3. Set Headers
+#### 3. Set Headers
 
 Set headers is similar to add parameters, use `NewHeaders()`:
 
@@ -224,11 +224,11 @@ Output:
 }
 ```
 
-This method will return a `http.Header`, it`s ok if you want to construct it by yourself.
+This `NewHeaders()` method will return a `http.Header`, it`s ok if you want to construct it by yourself.
 
 If you did not set `User-Agent`, direwolf will use default `User-Agent`: `direwolf - winter is coming`.
 
-### 4. Add Cookies
+#### 4. Add Cookies
 
 Add cookies is similar to add parameters, too.
 
@@ -260,9 +260,9 @@ Output:
 }
 ```
 
-### 5. Post Form
+#### 5. Post Form
 
-If you want post form data, use `direwolf.NewPostForm()`:
+If you want post form data, use `NewPostForm()`:
 
 ```go
 postForm := dw.NewPostForm(
@@ -300,9 +300,9 @@ Output:
 }
 ```
 
-### 6. Post Body
+#### 6. Post Body
 
-If you want post bytes type data, you can use `direwolf.Body`, its original type is `[]byte`, like this:
+If you want post bytes type data, you can use `Body`, its original type is `[]byte`, like this:
 
 ```go
 body := dw.Body("Hello World")
@@ -333,7 +333,7 @@ Output:
 }
 ```
 
-### 7. Set Timeout
+#### 7. Set Timeout
 
 `Timeout` specifies a time limit for request. The timeout includes connection time, any redirects, and reading the response body. 
 
@@ -357,7 +357,7 @@ resp, err := dw.Get(
 )
 ```
 
-### 8. Redirect
+#### 8. Redirect
 
 RedirectNum is the number of request redirect allowed.
 
@@ -381,7 +381,7 @@ resp, err := dw.Get(
 )
 ```
 
-### 9. Proxy
+#### 9. Proxy
 
 Set proxy is esay, too. You can set different proxies for HTTP and HTTPS sites.
 
@@ -397,7 +397,7 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-### 10. Response
+#### 10. Response
 
 After request, you will get a `Response` object if no error return.
 
@@ -419,13 +419,19 @@ Get response headers:
 resp.Headers
 ```
 
+Get response cookies:
+
+```go
+resp.Cookies
+```
+
 If you want get request of response:
 
 ```go
 resp.Request
 ```
 
-### 11. Extract Data
+#### 11. Extract Data
 
 You can easily extract data using direwolf after sending a request, as we did above:
 
@@ -445,7 +451,7 @@ resp.Text("GBK")
 
 It only support `UTF8`, `GBK`, `GB18030`, `Latin1` now.
 
-Note: Text() will decode content everytime you call it. If you want reuse content, you would better store the content in a variable.
+Note: Text() will decode content everytime you call it. If you want reuse text, you would better store the text in a variable.
 
 ```go
 text := resp.Text()
@@ -457,9 +463,9 @@ Besides, if you want get raw content, you can use `Content()` method, it will re
 resp.Content()
 ```
 
-### 12. Extract Data by CSS Selector
+#### 12. Extract Data by CSS Selector
 
-#### Text
+##### Text
 
 Direwolf has a built-in Css selector via `goquery`, which makes it easy to extract data.
 
@@ -484,7 +490,7 @@ Using these two methods will return a single string. If no matching values was f
 text := resp.CSS("a").TextAll()
 ```
 
-#### Attribute
+##### Attribute
 
 In addition to text, direwolf can alse extract attributes.
 
@@ -500,9 +506,9 @@ The same with `Text()`, it retrun a slice of attribute values. It can use `First
 attr := resp.CSS("a").Attr("class", "default value")
 ```
 
-### 13. Extract Data by Regexp
+#### 13. Extract Data by Regexp
 
-Except css selector, direwolf also integrates regular expressions to extract data. It has two methods.
+Direwolf also integrates regular expressions to extract data. It has two methods.
 
 This is sample data:
 
@@ -527,6 +533,10 @@ fmt.Println(resp.ReSubmatch("-(.*?)--(.*?)-"))
 // Output:
 // [[Hello World] [direwolf wnanbei]]
 ```
+
+***
+
+### Advanced Usage
 
 ***
 

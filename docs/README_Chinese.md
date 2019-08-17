@@ -24,7 +24,7 @@ Direwolf 是一个由 Golang 编写的简单易用的 HTTP 客户端。
   - [12. Extract Data by CSS Selector](#12. Extract Data by CSS Selector)
   - [13. Extract Data by Regexp](#13. Extract Data by Regexp)
 
-## 支持特性
+## 功能特性
 
 - 干净方便的 API
 - 设置 Headers, Cookies, URL参数, Post表单非常简单
@@ -91,7 +91,7 @@ func main() {
 }
 ```
 
-输出:
+输出：
 
 ```json
 {
@@ -110,9 +110,9 @@ func main() {
 }
 ```
 
-## 基础用法
+## 用户指南
 
-首先，你可以像这样导入 direwolf 以方便之后使用：
+首先，你可以像这样导入 direwolf 以方便之后使用，这只是推荐用法。
 
 ```go
 import (
@@ -120,9 +120,9 @@ import (
 )
 ```
 
-这只是推荐用法。
+### 快速上手
 
-### 1. 发起请求
+#### 1. 发起请求
 
 你可以像这样发起一个请求：
 
@@ -133,7 +133,7 @@ if err != nil {
 }
 ```
 
-如果 err 等于 nil，那么你会得到一个 `Response`。
+如果 err 等于 nil，那么你会得到一个 `Response` 对象。
 
 其他请求方法：
 
@@ -144,7 +144,7 @@ resp, err := dw.Put("https://httpbin.org/put", dw.NewPostForm("key", "value"))
 resp, err := dw.Delete("https://httpbin.org/delete")
 ```
 
-### 2. 传递URL参数
+#### 2. 传递URL参数
 
 在请求中加入URL参数非常简单，你只需要使用 `NewParams()` 创建一个URL参数对象，并将其传入请求方法中即可：
 
@@ -157,13 +157,13 @@ if err != nil {
 fmt.Println(resp.URL)
 ```
 
-输出:
+输出：
 
 ```
 https://httpbin.org/get?key=value
 ```
 
-如果希望传入多个参数，可以像这样:
+如果希望传入多个参数，可以像这样：
 
 ```go
 params := dw.NewParams(
@@ -172,9 +172,9 @@ params := dw.NewParams(
 )
 ```
 
-**注: 记住 Key 和 Value 之间的逗号.** 
+**注：记住 Key 和 Value 之间的逗号。**
 
-**注: Key 必须与 Value 成对匹配, 如果没有的话将会报错.**
+**注：Key 必须与 Value 成对匹配, 如果没有的话将会报错。**
 
 参数中有同名的 Key 是没有问题的：
 
@@ -185,15 +185,15 @@ params := dw.NewParams(
 )
 ```
 
-输出:
+输出：
 
 ```
 https://httpbin.org/get?key1=value1&key1=value2
 ```
 
-### 3. 设置Headers
+#### 3. 设置 Headers
 
-设置 Headers 与传入URL参数非常相似, 使用`NewHeaders()`:
+设置 Headers 与传入URL参数非常相似, 使用 `NewHeaders()`：
 
 ```go
 headers := dw.NewHeaders(
@@ -207,7 +207,7 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-Output:
+输出：
 
 ```json
 {
@@ -223,13 +223,13 @@ Output:
 }
 ```
 
-This method will return a `http.Header`, it`s ok if you want to construct it by yourself.
+这个 `NewHeaders()` 方法返回的是一个 `http.Header` 对象，如果你想要自己构造也是可以的。
 
-If you did not set `User-Agent`, direwolf will use default `User-Agent`: `direwolf - winter is coming`.
+如果你没有设置 `User-Agent`，direwolf 会自动使用默认的 `User-Agent`: `direwolf - winter is coming`。
 
-### 4. Add Cookies
+#### 4. 添加 Cookies
 
-Add cookies is similar to add parameters, too.
+添加 Cookies 与传入URL参数也是类似的：
 
 ```go
 cookies := dw.NewCookies(
@@ -243,7 +243,7 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-Output:
+输出：
 
 ```json
 {
@@ -259,9 +259,9 @@ Output:
 }
 ```
 
-### 5. Post Form
+#### 5. Post 表单
 
-If you want post form data, use `direwolf.NewPostForm()`:
+如果你想要使用 Post 方法提交表单，请使用 `NewPostForm()`：
 
 ```go
 postForm := dw.NewPostForm(
@@ -275,7 +275,7 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-Output:
+输出：
 
 ```json
 {
@@ -299,9 +299,9 @@ Output:
 }
 ```
 
-### 6. Post Body
+#### 6. Post 请求体
 
-If you want post bytes type data, you can use `direwolf.Body`, its original type is `[]byte`, like this:
+如果你想要使用 Post 直接提交数据，你可以使用 `Body`，它的原始类型是 `[]byte`，如下所示：
 
 ```go
 body := dw.Body("Hello World")
@@ -312,7 +312,7 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-Output:
+输出：
 
 ```json
 {
@@ -332,22 +332,22 @@ Output:
 }
 ```
 
-### 7. Set Timeout
+#### 7. 设置超时
 
-`Timeout` specifies a time limit for request. The timeout includes connection time, any redirects, and reading the response body. 
+`Timeout` 指定了一个请求的超时时间，这个超时包含了连接时间、任何的重定向、和读取响应体的时间。
 
-The timer remains running after Get, Head, Post, or Do return and will interrupt reading of the Response.Body.
+计时器在 Get、Head、Post 等方法返回之后仍在运行，并且可能会打断 Response.Body 的读取，在 Response.Body 读取完毕后计时结束。
 
-- if timeout > 0, it means a time limit for requests.
-- if timeout < 0, it means no limit.
-- if timeout = 0, it means keep default 30 second timeout.
+- 如果 timeout > 0, 表示设置了一个超时时间。
+- 如果 timeout < 0, 表示不设置超时。
+- 如果 timeout = 0, 表示使用默认的30秒超时。
 
 ```go
 timeout := dw.Timeout(5)
 resp, err := dw.Get("https://httpbin.org/delay/10", timeout)
 ```
 
-or
+或者
 
 ```go
 resp, err := dw.Get(
@@ -356,22 +356,22 @@ resp, err := dw.Get(
 )
 ```
 
-### 8. Redirect
+#### 8. 重定向
 
-RedirectNum is the number of request redirect allowed.
+RedirectNum 是允许重定向的次数。
 
-- If RedirectNum > 0, it means a redirect number limit for requests.
+- 如果 RedirectNum > 0, 表示设置一个允许重定向的次数。
 
-- If RedirectNum = 0, it means ban redirect.
+- 如果 RedirectNum = 0, 表示禁止重定向。
 
-- If RedirectNum is not set, it means default 5 times redirect limit.
+- 如果没有设置 RedirectNum, 表示默认允许5次重定向。
 
 ```go
 redirect := dw.RedirectNum(10)
 resp, err := dw.Get("https://httpbin.org/delay/10", redirect)
 ```
 
-or
+或者
 
 ```go
 resp, err := dw.Get(
@@ -380,9 +380,9 @@ resp, err := dw.Get(
 )
 ```
 
-### 9. Proxy
+#### 9. 代理
 
-Set proxy is esay, too. You can set different proxies for HTTP and HTTPS sites.
+设置代理同样非常简单，你可以为 HTTP 和 HTTPS 网页分别设置不同的代理：
 
 ```go
 proxies := dw.Proxy{
@@ -396,37 +396,43 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-### 10. Response
+#### 10. Response 响应
 
-After request, you will get a `Response` object if no error return.
+发起请求之后，如果没有返回异常，那么你会得到一个 `Response` 对象。
 
-You can get Original request url from response:
+你可以从 response 得到原始的请求地址：
 
 ```go
 resp.URL
 ```
 
-You can also get request status code from response, only numbers:
+也可以获取请求的状态码, 仅数字部分:
 
 ```go
 resp.StatusCode
 ```
 
-Get response headers:
+获取请求返回的 headers:
 
 ```go
 resp.Headers
 ```
 
-If you want get request of response:
+获取请求返回的 cookies：
+
+```go
+resp.Cookies
+```
+
+获取得到这个响应的请求:
 
 ```go
 resp.Request
 ```
 
-### 11. Extract Data
+#### 11. 提取数据
 
-You can easily extract data using direwolf after sending a request, as we did above:
+你使用 direwolf 发送请求之后可以非常方便的提取数据，正如我们上面所做的一样：
 
 ```go
 resp, err := dw.Get("https://httpbin.org/get")
@@ -436,74 +442,74 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-`Text()` will use `UTF8` to decode content by default. You can also specify decode method yourself:
+`Text()` 会默认使用 `UTF8` 编码来解码内容，你也可以自行指定解码的编码：
 
 ```go
 resp.Text("GBK")
 ```
 
-It only support `UTF8`, `GBK`, `GB18030`, `Latin1` now.
+目前仅支持 `UTF8`, `GBK`, `GB18030`, `Latin1` 这几种编码。
 
-Note: Text() will decode content everytime you call it. If you want reuse content, you would better store the content in a variable.
+注：Text() 在你每次调用时都会解码一次响应内容，如果你希望重用 text，你最好将 text 存到一个变量中。
 
 ```go
 text := resp.Text()
 ```
 
-Besides, if you want get raw content, you can use `Content()` method, it will return a `[]byte`:
+除此之外，如果你想要获取原始的 content，可以使用 `Content()` 方法，它会返回一个 `[]byte`:
 
 ```go
 resp.Content()
 ```
 
-### 12. Extract Data by CSS Selector
+#### 12. 使用 CSS 选择器提取数据
 
-#### Text
+##### Text 文本
 
-Direwolf has a built-in Css selector via `goquery`, which makes it easy to extract data.
+Direwolf 使用 `goquery` 在内部集成了 Css 选择器，可以使提取数据更加简单。
 
 ```go
 text := resp.CSS("a").Text()
 ```
 
-It will find all matching values, put them in a slice and return it. If no matching values was found, it will return a empty slice.
+这会查找所有匹配的数据, 将其放入一个切片中并返回。如果没有找到匹配的数据，它会返回一个空切片。
 
-In many cases, we only looking for a single match result, then we can use `First()` or `At()` to extract single result:
+在很多情况下，我们仅仅查找一个单个的匹配结果, 这样我们可以使用 `First()` 或者 `At()` 来提取单个匹配结果：
 
 ```go
 text1 := resp.CSS("a").First().Text()
 text2 := resp.CSS("a").At(3).Text()
 ```
 
-Using these two methods will return a single string. If no matching values was found, it will return a empty string.
+使用这两个方法会返回单个的字符串，如果没有找到结果，会返回一个空字符串。
 
-`Text()` method only return the text under the current node, not contains the text in the child node. If you need text in all child node, consider `TextAll()`.
+`Text()` 方法仅返回当前节点下的所有文本内容，不包含子节点中的文本。如果你需要所有子节点中的文本，请考虑 `TextAll()`。
 
 ```go
 text := resp.CSS("a").TextAll()
 ```
 
-#### Attribute
+##### Attribute 属性
 
-In addition to text, direwolf can alse extract attributes.
+除了文本内容，direwolf 也可以提取属性内容：
 
 ```go
 attr := resp.CSS("a").Attr("href")
 ```
 
-The same with `Text()`, it retrun a slice of attribute values. It can use `First()` or `At()` to extract single value, too.
+与 `Text()` 相同，它返回一个包含属性值的列表。它也可以使用 `First()` 或者 `At()` 来提取单个数据。
 
-`Attr()` can set a default value, if not match value is found, it will return the default value.
+`Attr()` 可以设置一个默认值，如果没有找到匹配的值，就会返回默认值。
 
 ```go
 attr := resp.CSS("a").Attr("class", "default value")
 ```
 
-### 13. Extract Data by Regexp
+#### 13. 使用正则提取数据
 
-Except css selector, direwolf also integrates regular expressions to extract data. It has two methods.
+Direwolf 也支持使用正则表达式提取数据，有两个方法。
 
-This is sample data:
+这是示例数据：
 
 ```go
 fmt.Println(resp.Text())
@@ -511,7 +517,7 @@ fmt.Println(resp.Text())
 // -Hello--World--direwolf--wnanbei-
 ```
 
-First is `Re()`, it returns a slice of all match strings.
+首先是 `Re()`，它返回一个包含所有匹配数据的列表。
 
 ```go
 fmt.Println(resp.Re("-.*?-"))
@@ -519,13 +525,17 @@ fmt.Println(resp.Re("-.*?-"))
 // [-Hello- -World- -direwolf- -wnanbei-]
 ```
 
-Then is `ReSubmatch()`, it will return a two-dimensional slice that contains all the sub matching results (Data only in brackets).
+然后是 `ReSubmatch()`，它会返回一个二维列表，包含着所有的子匹配结果（正则表达式里括号中的数据）。
 
 ```go
 fmt.Println(resp.ReSubmatch("-(.*?)--(.*?)-"))
 // Output:
 // [[Hello World] [direwolf wnanbei]]
 ```
+
+***
+
+### 高级用法
 
 ***
 
