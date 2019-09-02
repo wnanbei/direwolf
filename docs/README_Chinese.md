@@ -10,7 +10,7 @@ Direwolf 是一个由 Golang 编写的简单易用的 HTTP 客户端。
 - [安装](#安装)
 - [入门](#入门)
 - [快速上手](#快速上手)
-  - [1. 发起请求](#1. 发起请求)
+  - [1.发起请求](#1.发起请求)
   - [2. 传递URL参数](#2. 传递URL参数)
   - [3. 设置 Headers](#3. 设置 Headers)
   - [4. 添加 Cookies](#4. 添加 Cookies)
@@ -613,7 +613,7 @@ fmt.Println(resp.Text())
 }
 ```
 
-如果在请求方法中也传入了 Headers 参数，direwolf 会在发起请求时将其与 Session 的 Headers 合并，如果有同名 Header，则 请求方法中传入的 Headers 优先。
+如果在请求方法中也传入了 Headers 参数，direwolf 会在发起请求时将其与 Session 的 Headers 合并，如果有同名 Header，则请求方法中传入的 Headers 优先。
 
 ```go
 session := dw.NewSession()
