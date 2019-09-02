@@ -12,7 +12,7 @@ Direwolf 是一个由 Golang 编写的简单易用的 HTTP 客户端。
 - [快速上手](#快速上手)
   - [1.发起请求](#1.发起请求)
   - [2. 传递URL参数](#2. 传递URL参数)
-  - [3. 设置 Headers](#3. 设置 Headers)
+  - [3.设置 Headers](#3.设置 Headers)
   - [4. 添加 Cookies](#4. 添加 Cookies)
   - [5. Post 表单](#5. Post 表单)
   - [6. Post 请求体](#6. Post 请求体)
