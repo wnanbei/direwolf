@@ -1,4 +1,4 @@
-# Direwolf HTTP 客户端
+# Direwolf HTTP 客户端：节约时间，节约生命
 
 Direwolf 是一个由 Golang 编写的简单易用的 HTTP 客户端。
 
@@ -6,23 +6,26 @@ Direwolf 是一个由 Golang 编写的简单易用的 HTTP 客户端。
 
 ## 目录
 
-- [Feature Support](#Feature Support)
-- [Installation](#Installation)
-- [Quick Start](#Quick Start)
-- [How to Use](#How to Use)
-  - [1. Make Request](#1. Make Request)
-  - [2. Passing Parameters In URLs](#2. Passing Parameters In URLs)
-  - [3. Set Headers](#3. Set Headers)
-  - [4. Add Cookies](#4. Add Cookies)
-  - [5. Post Form](#5. Post Form)
-  - [6. Post Body](#6. Post Body)
-  - [7. Set Timeout](#7. Set Timeout)
-  - [8. Redirect](#8. Redirect)
-  - [9. Proxy](#9. Proxy)
-  - [10. Response](#10. Response)
-  - [11. Extract Data](#11. Extract Data)
-  - [12. Extract Data by CSS Selector](#12. Extract Data by CSS Selector)
-  - [13. Extract Data by Regexp](#13. Extract Data by Regexp)
+- [功能特性](#功能特性)
+- [安装](#安装)
+- [入门](#入门)
+- [快速上手](#快速上手)
+  - [1. 发起请求](#1. 发起请求)
+  - [2. 传递URL参数](#2. 传递URL参数)
+  - [3. 设置 Headers](#3. 设置 Headers)
+  - [4. 添加 Cookies](#4. 添加 Cookies)
+  - [5. Post 表单](#5. Post 表单)
+  - [6. Post 请求体](#6. Post 请求体)
+  - [7. 设置超时](#7. 设置超时)
+  - [8. 重定向](#8. 重定向)
+  - [9. 代理](#9. 代理)
+  - [10. Response 响应](#10. Response 响应)
+  - [11. 提取数据](#11. 提取数据)
+  - [12. 使用 CSS 选择器提取数据](#12. 使用 CSS 选择器提取数据)
+  - [13. 使用正则提取数据](#13. 使用正则提取数据)
+- [高级用法](#高级用法)
+  - [1. Session 会话](#1. Session 会话)
+  - [2. Session 设置 Headers，Proxy，Timeout](#2. Session 设置 Headers，Proxy，Timeout)
 
 ## 功能特性
 
@@ -43,7 +46,7 @@ Direwolf 是一个由 Golang 编写的简单易用的 HTTP 客户端。
 go get github.com/wnanbei/direwolf
 ```
 
-## 速览
+## 入门
 
 你可以像下方这样非常简单的发起一个请求：
 
@@ -110,7 +113,7 @@ func main() {
 }
 ```
 
-## 用户指南
+## 快速上手
 
 首先，你可以像这样导入 direwolf 以方便之后使用，这只是推荐用法。
 
@@ -120,9 +123,7 @@ import (
 )
 ```
 
-### 快速上手
-
-#### 1. 发起请求
+### 1. 发起请求
 
 你可以像这样发起一个请求：
 
@@ -144,7 +145,7 @@ resp, err := dw.Put("https://httpbin.org/put", dw.NewPostForm("key", "value"))
 resp, err := dw.Delete("https://httpbin.org/delete")
 ```
 
-#### 2. 传递URL参数
+### 2. 传递URL参数
 
 在请求中加入URL参数非常简单，你只需要使用 `NewParams()` 创建一个URL参数对象，并将其传入请求方法中即可：
 
@@ -191,7 +192,7 @@ params := dw.NewParams(
 https://httpbin.org/get?key1=value1&key1=value2
 ```
 
-#### 3. 设置 Headers
+### 3. 设置 Headers
 
 设置 Headers 与传入URL参数非常相似, 使用 `NewHeaders()`：
 
@@ -227,7 +228,7 @@ fmt.Println(resp.Text())
 
 如果你没有设置 `User-Agent`，direwolf 会自动使用默认的 `User-Agent`: `direwolf - winter is coming`。
 
-#### 4. 添加 Cookies
+### 4. 添加 Cookies
 
 添加 Cookies 与传入URL参数也是类似的：
 
@@ -259,7 +260,7 @@ fmt.Println(resp.Text())
 }
 ```
 
-#### 5. Post 表单
+### 5. Post 表单
 
 如果你想要使用 Post 方法提交表单，请使用 `NewPostForm()`：
 
@@ -299,7 +300,7 @@ fmt.Println(resp.Text())
 }
 ```
 
-#### 6. Post 请求体
+### 6. Post 请求体
 
 如果你想要使用 Post 直接提交数据，你可以使用 `Body`，它的原始类型是 `[]byte`，如下所示：
 
@@ -332,7 +333,7 @@ fmt.Println(resp.Text())
 }
 ```
 
-#### 7. 设置超时
+### 7. 设置超时
 
 `Timeout` 指定了一个请求的超时时间，这个超时包含了连接时间、任何的重定向、和读取响应体的时间。
 
@@ -356,7 +357,7 @@ resp, err := dw.Get(
 )
 ```
 
-#### 8. 重定向
+### 8. 重定向
 
 RedirectNum 是允许重定向的次数。
 
@@ -380,7 +381,7 @@ resp, err := dw.Get(
 )
 ```
 
-#### 9. 代理
+### 9. 代理
 
 设置代理同样非常简单，你可以为 HTTP 和 HTTPS 网页分别设置不同的代理：
 
@@ -396,7 +397,7 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-#### 10. Response 响应
+### 10. Response 响应
 
 发起请求之后，如果没有返回异常，那么你会得到一个 `Response` 对象。
 
@@ -430,7 +431,7 @@ resp.Cookies
 resp.Request
 ```
 
-#### 11. 提取数据
+### 11. 提取数据
 
 你使用 direwolf 发送请求之后可以非常方便的提取数据，正如我们上面所做的一样：
 
@@ -462,9 +463,9 @@ text := resp.Text()
 resp.Content()
 ```
 
-#### 12. 使用 CSS 选择器提取数据
+### 12. 使用 CSS 选择器提取数据
 
-##### Text 文本
+#### Text 文本
 
 Direwolf 使用 `goquery` 在内部集成了 Css 选择器，可以使提取数据更加简单。
 
@@ -489,7 +490,7 @@ text2 := resp.CSS("a").At(3).Text()
 text := resp.CSS("a").TextAll()
 ```
 
-##### Attribute 属性
+#### Attribute 属性
 
 除了文本内容，direwolf 也可以提取属性内容：
 
@@ -505,7 +506,7 @@ attr := resp.CSS("a").Attr("href")
 attr := resp.CSS("a").Attr("class", "default value")
 ```
 
-#### 13. 使用正则提取数据
+### 13. 使用正则提取数据
 
 Direwolf 也支持使用正则表达式提取数据，有两个方法。
 
@@ -535,7 +536,152 @@ fmt.Println(resp.ReSubmatch("-(.*?)--(.*?)-"))
 
 ***
 
-### 高级用法
+## 高级用法
+
+### 1. Session 会话
+
+在快速上手中提供的单次请求，使用的是短连接的方式，不会复用连接，如果希望复用连接以提升效率的话，可以使用 `Session`。
+
+Session 中集成了连接池，可以通过复用连接极大的提升效率。
+
+```go
+session := dw.NewSession()
+session.Get("http://httpbin.org/get")
+```
+
+并且，Session 可以自动管理请求获取的 Cookie：
+
+```go
+session := dw.NewSession()
+session.Get("http://httpbin.org/cookies/set/name/direwolf")  // 获取Cookie
+resp, err := session.Get("http://httpbin.org/get")
+if err != nil {
+    return
+}
+fmt.Println(resp.Text())
+```
+
+输出：
+
+```json
+{
+  "args": {},
+  "headers": {
+    "Accept-Encoding": "gzip",
+    "Cookie": "name=direwolf",
+    "Host": "httpbin.org",
+    "User-Agent": "direwolf - winter is coming"
+  },
+  "origin": "222.209.233.36, 222.209.233.36",
+  "url": "https://httpbin.org/get"
+}
+```
+
+如果你想要使用 Session 以得到更高的效率，但又不想要自动管理 Cookie 的话，可以使用 `DisableCookieJar()` 这个方法禁用掉 CookieJar。
+
+```go
+session := dw.NewSession()
+session.DisableCookieJar()
+```
+
+### 2. Session 设置 Headers，Proxy，Timeout
+
+在 Session 中可以设定一些参数，例如 Headers，Proxy，Timeout，在 Session 每次发起请求时都会带上这些参数。
+
+#### Headers
+
+```go
+session := dw.NewSession()
+headers := dw.NewHeaders("User-Agent", "Chrome 76.0")
+session.Headers = headers
+resp, err := session.Get("http://httpbin.org/headers")
+if err != nil {
+    return
+}
+fmt.Println(resp.Text())
+```
+
+输出：
+
+```json
+{
+  "headers": {
+    "Accept-Encoding": "gzip",
+    "Host": "httpbin.org",
+    "User-Agent": "Chrome 76.0"
+  }
+}
+```
+
+如果在请求方法中也传入了 Headers 参数，direwolf 会在发起请求时将其与 Session 的 Headers 合并，如果有同名 Header，则 请求方法中传入的 Headers 优先。
+
+```go
+session := dw.NewSession()
+sessionHeaders := dw.NewHeaders(
+    "User-Agent", "Chrome 88.0",
+    "session", "on",
+)
+session.Headers = sessionHeaders
+
+normalHeaders := dw.NewHeaders(
+    "User-Agent", "Chrome 66.0",
+    "normal", "on",
+)
+resp, err := session.Get("http://httpbin.org/headers", normalHeaders)
+if err != nil {
+    return
+}
+fmt.Println(resp.Text())
+```
+
+输出：
+
+```json
+{
+  "headers": {
+    "Accept-Encoding": "gzip",
+    "Host": "httpbin.org",
+    "Normal": "on",
+    "Session": "on",
+    "User-Agent": "Chrome 66.0"
+  }
+}
+```
+
+#### Proxy
+
+```go
+session := dw.NewSession()
+proxy := &dw.Proxy{
+    HTTP:  "http://127.0.0.1:12333",
+    HTTPS: "http://127.0.0.1:12333",
+}
+session.Proxy = proxy
+resp, err := session.Get("http://httpbin.org/ip")
+if err != nil {
+    return
+}
+fmt.Println(resp.Text())
+```
+
+输出：
+
+```json
+{
+  "origin": "88.88.88.88, 88.88.88.88"
+}
+```
+
+如果在请求方法中传入了 Proxy 参数，则优先级高于 Session 的 Proxy。
+
+#### Timeout
+
+```go
+session := dw.NewSession()
+session.Timeout = 5
+```
+
+如果在请求方法中传入了 Timeout 参数，则优先级高于 Session 的 Timeout。
 
 ***
 
@@ -543,6 +689,6 @@ fmt.Println(resp.ReSubmatch("-(.*?)--(.*?)-"))
 
 Because I am not a native English speaker, please tell me in the Issues if there is something wrong or unclear in the introduction.
 
-- Check for open issues or open a fresh issue to start a discussion around a feature idea or a bug.
+- Open a fresh issue to start a discussion around a feature idea or a bug.
 - Send a pull request and bug the maintainer until it gets merged and published.
 - Write a test which shows that the bug was fixed or that the feature works as expected.
