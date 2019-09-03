@@ -4,6 +4,5 @@ SEOTitle: Direwolf
 description: "Package direwolf is a convient and esay to use http client written in Golang"
 
 author: wnanbei
-safe: true
 
-theme: jekyll-theme-architect
+remote_theme: fongandrew/hydeout

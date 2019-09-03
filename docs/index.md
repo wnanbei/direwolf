@@ -1,5 +1,3 @@
-
-
 # Direwolf HTTP Client: Save your time
 
 Package direwolf is a convient and esay to use http client written in Golang. 
@@ -9,8 +7,6 @@ Package direwolf is a convient and esay to use http client written in Golang.
 ![direwolf](cover.png)
 
 ## Contents
-
-{:toc #markdown-toc}
 
 - [Feature Support](#Feature-Support)
 - [Installation](#Installation)
