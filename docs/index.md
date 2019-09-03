@@ -2,9 +2,9 @@
 
 Package direwolf is a convient and esay to use http client written in Golang. 
 
-[中文文档请点此处](docs/README_Chinese.md)
+[中文文档请点此处](/ch)
 
-![direwolf](docs/cover.png)
+![direwolf](cover.png)
 
 ## Contents
 

@@ -1,6 +1,6 @@
 # Site settings
 title: Direwolf
 SEOTitle: Direwolf
-description: "Package direwolf is a convient and esay to use http client written in Golang."
+description: "Package direwolf is a convient and esay to use http client written in Golang"
 
 theme: jekyll-theme-architect
