@@ -1,7 +1,12 @@
 ---
 layout: home
 title: "Direwolf HTTP Client: Save your time"
-sidebar_link: true
+toc: true
+toc_label: "Direwolf HTTP Client: Save your time"
+
+excerpt: "Package direwolf is a convient and esay to use http client written in Golang."
+header:
+  overlay_color: "#333"
 ---
 
 # Direwolf HTTP Client: Save your time
