@@ -1,8 +1,24 @@
 ---
-layout: home
+layout: single
 title: "Direwolf HTTP Client: Save your time"
 toc: true
 toc_label: "Direwolf HTTP Client: Save your time"
+
+main:
+  - title: "Quick-Start Guide"
+    url: /docs/quick-start-guide/
+  - title: "Posts"
+    url: /year-archive/
+  - title: "Categories"
+    url: /categories/
+  - title: "Tags"
+    url: /tags/
+  - title: "Pages"
+    url: /page-archive/
+  - title: "Collections"
+    url: /collection-archive/
+  - title: "External Link"
+    url: https://google.com
 
 excerpt: "Package direwolf is a convient and esay to use http client written in Golang."
 header:
