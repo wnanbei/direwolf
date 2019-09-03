@@ -7,13 +7,9 @@ toc_label: "Direwolf HTTP Client: Save your time"
 excerpt: "Package direwolf is a convient and esay to use http client written in Golang."
 header:
   overlay_color: "#333"
+
+author_profile: true
 ---
-
-# Direwolf HTTP Client: Save your time
-
-Package direwolf is a convient and esay to use http client written in Golang. 
-
-[中文文档请点此处](/direwolf/ch)
 
 ![direwolf](cover.png)
 
