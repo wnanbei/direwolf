@@ -6,6 +6,9 @@ sidebar_link: true
 
 First of all, you can import `direwolf` like this for later use. This is just a recommended usage.
 
+* 目录
+{:toc #markdown-toc}	
+
 ```go
 import (
     dw "github.com/wnanbei/direwolf"
