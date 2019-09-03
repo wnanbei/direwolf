@@ -1,4 +1,7 @@
-## Quick start
+---
+layout: post
+title: Qucik Start
+---
 
 First of all, you can import `direwolf` like this for later use. This is just a recommended usage.
 
