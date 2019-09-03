@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: page
 title: Qucik Start
 sidebar_link: true
 ---
