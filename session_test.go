@@ -1,49 +1,11 @@
 package direwolf
 
 import (
-	"fmt"
-	"html"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 )
-
-func startWebserver() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		time.Sleep(time.Millisecond * 50)
-		fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
-	})
-	go http.ListenAndServe(":8777", nil)
-}
-
-func startLoadTest() {
-	count := 0
-	for {
-		resp, err := Get("http://localhost:8777/")
-		if err != nil {
-			panic(fmt.Sprintf("Got error: %v", err))
-		}
-		resp.Text()
-		log.Printf("Finished GET request #%v", count)
-		count++
-	}
-}
-
-// func TestSession(t *testing.T) {
-// 	// start a webserver in a goroutine
-// 	// s = NewSession()
-// 	// s.transport.MaxIdleConnsPerHost = 100
-// 	// s.transport.DisableKeepAlives = true
-
-// 	startWebserver()
-// 	for i := 0; i < 100; i++ {
-// 		go startLoadTest()
-// 	}
-// 	time.Sleep(time.Second * 2400)
-// }
 
 func TestSessionGet(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
