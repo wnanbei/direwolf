@@ -2,7 +2,7 @@ title: Direwolf
 description: "Package direwolf is a convient and esay to use http client written in Golang"
 
 author:
-  name: 'wnanbei'
+  name: "wnanbei"
   url: https://github.com/wnanbei
 
 markdown: kramdown
@@ -10,7 +10,7 @@ highlighter: rouge
 
 sidebar_home_link: true
 
-remote_theme: wnanbei/hydeout
+remote_theme: wnanbei/minimal-mistakes
 
 collections:
   zh:
