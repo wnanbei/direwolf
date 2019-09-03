@@ -2,42 +2,16 @@
 layout: single
 title: "Direwolf HTTP Client: Save your time"
 toc: true
-toc_label: "Direwolf HTTP Client: Save your time"
+toc_label: "Direwolf"
 
 excerpt: "Package direwolf is a convient and esay to use http client written in Golang."
 header:
-  overlay_color: "#333"
+  overlay_image: cover.png
 
 author_profile: true
 sidebar:
   nav: "docs"
 ---
-
-![direwolf](cover.png)
-
-## Contents
-
-- [Feature Support](#Feature-Support)
-- [Installation](#Installation)
-- [Getting started](#Getting-started)
-- [Quick Start](#Quick-Start)
-  - [1. Make Request](#1.-Make-Request)
-  - [2. Passing Parameters In URLs](#2.-Passing-Parameters-In-URLs)
-  - [3. Set Headers](#3.-Set-Headers)
-  - [4. Add Cookies](#4.-Add-Cookies)
-  - [5. Post Form](#5.-Post-Form)
-  - [6. Post Body](#6.-Post-Body)
-  - [7. Set Timeout](#7.-Set-Timeout)
-  - [8. Redirect](#8.-Redirect)
-  - [9. Proxy](#9.-Proxy)
-  - [10. Response](#10.-Response)
-  - [11. Extract Data](#11.-Extract-Data)
-  - [12. Extract Data by CSS Selector](#12.-Extract-Data-by-CSS-Selector)
-  - [13. Extract Data by Regexp](#13.-Extract-Data-by-Regexp)
-- [Advanced Usage](#Advanced-Usage)
-  - [1. Session](#1.-Session)
-  - [2. Session set Headers, Porxy, Timeout](#2.-Session-set-Headers,-Porxy,-Timeout)
-- [How to Contribute](#How-to-Contribute)
 
 ## Feature Support
 

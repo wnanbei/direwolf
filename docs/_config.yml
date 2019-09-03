@@ -18,7 +18,7 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 locale                   : "en-US"
 title                    : "Direwolf"
 title_separator          : "-"
-subtitle                 : # site tagline that appears below site title in masthead
+subtitle                 : "A HTTP client"
 name                     : "wnanbei"
 description              : "Package direwolf is a convient and esay to use http client written in Golang"
 url                      : "https://wnanbei.github.io"
