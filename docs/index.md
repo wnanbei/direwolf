@@ -1,6 +1,6 @@
 ---
-layout: page
-title: Direwolf HTTP Client: Save your time
+layout: index
+title: "Direwolf HTTP Client: Save your time"
 sidebar_link: true
 ---
 
