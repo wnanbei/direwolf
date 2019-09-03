@@ -9,6 +9,8 @@ header:
   overlay_color: "#333"
 
 author_profile: true
+sidebar:
+  nav: "docs"
 ---
 
 ![direwolf](cover.png)
