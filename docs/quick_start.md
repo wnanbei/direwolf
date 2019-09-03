@@ -4,10 +4,9 @@ title: Qucik Start
 sidebar_link: true
 ---
 
-First of all, you can import `direwolf` like this for later use. This is just a recommended usage.
+{:toc #markdown-toc}
 
-* 目录
-{:toc #markdown-toc}	
+First of all, you can import `direwolf` like this for later use. This is just a recommended usage.	
 
 ```go
 import (
@@ -15,7 +14,7 @@ import (
 )
 ```
 
-### 1. Make Request
+## 1. Make Request
 
 You can start a request like this:
 
@@ -37,7 +36,7 @@ resp, err := dw.Put("https://httpbin.org/put", dw.NewPostForm("key", "value"))
 resp, err := dw.Delete("https://httpbin.org/delete")
 ```
 
-### 2. Passing Parameters In URLs
+## 2. Passing Parameters In URLs
 
 Passing parameters in URLs is very easy, you only need to new a Params and pass it to request method.
 
@@ -84,7 +83,7 @@ Output:
 https://httpbin.org/get?key1=value1&key1=value2
 ```
 
-### 3. Set Headers
+## 3. Set Headers
 
 Set headers is similar to add parameters, use `NewHeaders()`:
 
@@ -120,7 +119,7 @@ This `NewHeaders()` method will return a `http.Header`, it`s ok if you want to c
 
 If you did not set `User-Agent`, direwolf will use default `User-Agent`: `direwolf - winter is coming`.
 
-### 4. Add Cookies
+## 4. Add Cookies
 
 Add cookies is similar to add parameters, too.
 
@@ -152,7 +151,7 @@ Output:
 }
 ```
 
-### 5. Post Form
+## 5. Post Form
 
 If you want post form data, use `NewPostForm()`:
 
@@ -192,7 +191,7 @@ Output:
 }
 ```
 
-### 6. Post Body
+## 6. Post Body
 
 If you want post bytes type data, you can use `Body`, its original type is `[]byte`, like this:
 
@@ -225,7 +224,7 @@ Output:
 }
 ```
 
-### 7. Set Timeout
+## 7. Set Timeout
 
 `Timeout` specifies a time limit for request. The timeout includes connection time, any redirects, and reading the response body. 
 
@@ -249,7 +248,7 @@ resp, err := dw.Get(
 )
 ```
 
-### 8. Redirect
+## 8. Redirect
 
 RedirectNum is the number of request redirect allowed.
 
@@ -273,7 +272,7 @@ resp, err := dw.Get(
 )
 ```
 
-### 9. Proxy
+## 9. Proxy
 
 Set proxy is esay, too. You can set different proxies for HTTP and HTTPS sites.
 
@@ -289,7 +288,7 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-### 10. Response
+## 10. Response
 
 After request, you will get a `Response` object if no error return.
 
@@ -323,7 +322,7 @@ If you want get request of response:
 resp.Request
 ```
 
-### 11. Extract Data
+## 11. Extract Data
 
 You can easily extract data using direwolf after sending a request, as we did above:
 
@@ -355,9 +354,9 @@ Besides, if you want get raw content, you can use `Content()` method, it will re
 resp.Content()
 ```
 
-### 12. Extract Data by CSS Selector
+## 12. Extract Data by CSS Selector
 
-#### Text
+### Text
 
 Direwolf has a built-in Css selector via `goquery`, which makes it easy to extract data.
 
@@ -382,7 +381,7 @@ Using these two methods will return a single string. If no matching values was f
 text := resp.CSS("a").TextAll()
 ```
 
-#### Attribute
+### Attribute
 
 In addition to text, direwolf can alse extract attributes.
 
@@ -398,7 +397,7 @@ The same with `Text()`, it retrun a slice of attribute values. It can use `First
 attr := resp.CSS("a").Attr("class", "default value")
 ```
 
-### 13. Extract Data by Regexp
+## 13. Extract Data by Regexp
 
 Direwolf also integrates regular expressions to extract data. It has two methods.
 
