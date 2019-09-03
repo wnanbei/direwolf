@@ -2,7 +2,7 @@
 
 Direwolf 是一个由 Golang 编写的简单易用的 HTTP 客户端。
 
-![direwolf](cover.png)
+![direwolf](../cover.png)
 
 ## 目录
 
