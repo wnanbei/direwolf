@@ -1,4 +1,4 @@
-# Direwolf HTTP 客户端：节约时间，节约生命
+# Direwolf HTTP 客户端：节约你的时间
 
 Direwolf 是一个由 Golang 编写的简单易用的 HTTP 客户端。
 
@@ -10,22 +10,23 @@ Direwolf 是一个由 Golang 编写的简单易用的 HTTP 客户端。
 - [安装](#安装)
 - [入门](#入门)
 - [快速上手](#快速上手)
-  - [1.发起请求](#1.发起请求)
-  - [2. 传递URL参数](#2. 传递URL参数)
-  - [3.设置 Headers](#3.设置 Headers)
-  - [4. 添加 Cookies](#4. 添加 Cookies)
-  - [5. Post 表单](#5. Post 表单)
-  - [6. Post 请求体](#6. Post 请求体)
-  - [7. 设置超时](#7. 设置超时)
-  - [8. 重定向](#8. 重定向)
-  - [9. 代理](#9. 代理)
-  - [10. Response 响应](#10. Response 响应)
-  - [11. 提取数据](#11. 提取数据)
-  - [12. 使用 CSS 选择器提取数据](#12. 使用 CSS 选择器提取数据)
-  - [13. 使用正则提取数据](#13. 使用正则提取数据)
+  - [1. 发起请求](#1.-发起请求)
+  - [2. 传递URL参数](#2.-传递URL参数)
+  - [3. 设置 Headers](#3.-设置-Headers)
+  - [4. 添加 Cookies](#4.-添加-Cookies)
+  - [5. Post 表单](#5.-Post-表单)
+  - [6. Post 请求体](#6.-Post-请求体)
+  - [7. 设置超时](#7.-设置超时)
+  - [8. 重定向](#8.-重定向)
+  - [9. 代理](#9.-代理)
+  - [10. Response 响应](#10.-Response-响应)
+  - [11. 提取数据](#11.-提取数据)
+  - [12. 使用 CSS 选择器提取数据](#12.-使用-CSS-选择器提取数据)
+  - [13. 使用正则提取数据](#13.-使用正则提取数据)
 - [高级用法](#高级用法)
-  - [1. Session 会话](#1. Session 会话)
-  - [2. Session 设置 Headers，Proxy，Timeout](#2. Session 设置 Headers，Proxy，Timeout)
+  - [1. Session 会话](#1.-Session-会话)
+  - [2. Session 设置 Headers，Proxy，Timeout](#2.-Session-设置-Headers，Proxy，Timeout)
+- [如何贡献](#如何贡献)
 
 ## 功能特性
 
@@ -685,10 +686,9 @@ session.Timeout = 5
 
 ***
 
-## How to Contribute
-
-Because I am not a native English speaker, please tell me in the Issues if there is something wrong or unclear in the introduction.
+## 如何贡献
 
 - Open a fresh issue to start a discussion around a feature idea or a bug.
 - Send a pull request and bug the maintainer until it gets merged and published.
 - Write a test which shows that the bug was fixed or that the feature works as expected.
+

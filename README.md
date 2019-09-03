@@ -2,27 +2,33 @@
 
 Package direwolf is a convient and esay to use http client written in Golang. 
 
+[中文文档请点此处](docs/README_Chinese.md)
+
 ![direwolf](docs/cover.png)
 
 ## Contents
 
-- [Feature Support](#Feature Support)
+- [Feature Support](#Feature-Support)
 - [Installation](#Installation)
-- [Quick Start](#Quick Start)
-- [How to Use](#How to Use)
-  - [1. Make Request](#1. Make Request)
-  - [2. Passing Parameters In URLs](#2. Passing Parameters In URLs)
-  - [3. Set Headers](#3. Set Headers)
-  - [4. Add Cookies](#4. Add Cookies)
-  - [5. Post Form](#5. Post Form)
-  - [6. Post Body](#6. Post Body)
-  - [7. Set Timeout](#7. Set Timeout)
-  - [8. Redirect](#8. Redirect)
-  - [9. Proxy](#9. Proxy)
-  - [10. Response](#10. Response)
-  - [11. Extract Data](#11. Extract Data)
-  - [12. Extract Data by CSS Selector](#12. Extract Data by CSS Selector)
-  - [13. Extract Data by Regexp](#13. Extract Data by Regexp)
+- [Getting started](#Getting-started)
+- [Quick Start](#Quick-Start)
+  - [1. Make Request](#1.-Make-Request)
+  - [2. Passing Parameters In URLs](#2.-Passing-Parameters-In-URLs)
+  - [3. Set Headers](#3.-Set-Headers)
+  - [4. Add Cookies](#4.-Add-Cookies)
+  - [5. Post Form](#5.-Post-Form)
+  - [6. Post Body](#6.-Post-Body)
+  - [7. Set Timeout](#7.-Set-Timeout)
+  - [8. Redirect](#8.-Redirect)
+  - [9. Proxy](#9.-Proxy)
+  - [10. Response](#10.-Response)
+  - [11. Extract Data](#11.-Extract-Data)
+  - [12. Extract Data by CSS Selector](#12.-Extract-Data-by-CSS-Selector)
+  - [13. Extract Data by Regexp](#13.-Extract-Data-by-Regexp)
+- [Advanced Usage](#Advanced-Usage)
+  - [1. Session](#1.-Session)
+  - [2. Session set Headers, Porxy, Timeout](#2.-Session-set-Headers,-Porxy,-Timeout)
+- [How to Contribute](#How-to-Contribute)
 
 ## Feature Support
 
@@ -43,7 +49,7 @@ Package direwolf is a convient and esay to use http client written in Golang.
 go get github.com/wnanbei/direwolf
 ```
 
-## Quick Start
+## Getting started
 
 You can easily send a request like this:
 
@@ -111,7 +117,7 @@ Output:
 }
 ```
 
-## The User Guide
+## Quick start
 
 First of all, you can import `direwolf` like this for later use. This is just a recommended usage.
 
@@ -121,9 +127,7 @@ import (
 )
 ```
 
-### Quickstart
-
-#### 1. Make Request
+### 1. Make Request
 
 You can start a request like this:
 
@@ -145,7 +149,7 @@ resp, err := dw.Put("https://httpbin.org/put", dw.NewPostForm("key", "value"))
 resp, err := dw.Delete("https://httpbin.org/delete")
 ```
 
-#### 2. Passing Parameters In URLs
+### 2. Passing Parameters In URLs
 
 Passing parameters in URLs is very easy, you only need to new a Params and pass it to request method.
 
@@ -192,7 +196,7 @@ Output:
 https://httpbin.org/get?key1=value1&key1=value2
 ```
 
-#### 3. Set Headers
+### 3. Set Headers
 
 Set headers is similar to add parameters, use `NewHeaders()`:
 
@@ -228,7 +232,7 @@ This `NewHeaders()` method will return a `http.Header`, it`s ok if you want to c
 
 If you did not set `User-Agent`, direwolf will use default `User-Agent`: `direwolf - winter is coming`.
 
-#### 4. Add Cookies
+### 4. Add Cookies
 
 Add cookies is similar to add parameters, too.
 
@@ -260,7 +264,7 @@ Output:
 }
 ```
 
-#### 5. Post Form
+### 5. Post Form
 
 If you want post form data, use `NewPostForm()`:
 
@@ -300,7 +304,7 @@ Output:
 }
 ```
 
-#### 6. Post Body
+### 6. Post Body
 
 If you want post bytes type data, you can use `Body`, its original type is `[]byte`, like this:
 
@@ -333,7 +337,7 @@ Output:
 }
 ```
 
-#### 7. Set Timeout
+### 7. Set Timeout
 
 `Timeout` specifies a time limit for request. The timeout includes connection time, any redirects, and reading the response body. 
 
@@ -357,7 +361,7 @@ resp, err := dw.Get(
 )
 ```
 
-#### 8. Redirect
+### 8. Redirect
 
 RedirectNum is the number of request redirect allowed.
 
@@ -381,7 +385,7 @@ resp, err := dw.Get(
 )
 ```
 
-#### 9. Proxy
+### 9. Proxy
 
 Set proxy is esay, too. You can set different proxies for HTTP and HTTPS sites.
 
@@ -397,7 +401,7 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-#### 10. Response
+### 10. Response
 
 After request, you will get a `Response` object if no error return.
 
@@ -431,7 +435,7 @@ If you want get request of response:
 resp.Request
 ```
 
-#### 11. Extract Data
+### 11. Extract Data
 
 You can easily extract data using direwolf after sending a request, as we did above:
 
@@ -463,9 +467,9 @@ Besides, if you want get raw content, you can use `Content()` method, it will re
 resp.Content()
 ```
 
-#### 12. Extract Data by CSS Selector
+### 12. Extract Data by CSS Selector
 
-##### Text
+#### Text
 
 Direwolf has a built-in Css selector via `goquery`, which makes it easy to extract data.
 
@@ -490,7 +494,7 @@ Using these two methods will return a single string. If no matching values was f
 text := resp.CSS("a").TextAll()
 ```
 
-##### Attribute
+#### Attribute
 
 In addition to text, direwolf can alse extract attributes.
 
@@ -506,7 +510,7 @@ The same with `Text()`, it retrun a slice of attribute values. It can use `First
 attr := resp.CSS("a").Attr("class", "default value")
 ```
 
-#### 13. Extract Data by Regexp
+### 13. Extract Data by Regexp
 
 Direwolf also integrates regular expressions to extract data. It has two methods.
 
@@ -536,7 +540,11 @@ fmt.Println(resp.ReSubmatch("-(.*?)--(.*?)-"))
 
 ***
 
-### Advanced Usage
+## Advanced Usage
+
+### 1. Session
+
+### 2. Session set Headers, Porxy, Timeout
 
 ***
 
@@ -544,6 +552,6 @@ fmt.Println(resp.ReSubmatch("-(.*?)--(.*?)-"))
 
 Because I am not a native English speaker, please tell me in the Issues if there is something wrong or unclear in the introduction.
 
-- Check for open issues or open a fresh issue to start a discussion around a feature idea or a bug.
+- Open a fresh issue to start a discussion around a feature idea or a bug.
 - Send a pull request and bug the maintainer until it gets merged and published.
 - Write a test which shows that the bug was fixed or that the feature works as expected.
