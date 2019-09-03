@@ -1,7 +1,6 @@
 ---
 layout: index
 title: "Direwolf HTTP 客户端：节约你的时间"
-sidebar_link: true
 ---
 
 # Direwolf HTTP 客户端：节约你的时间
