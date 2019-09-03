@@ -11,3 +11,8 @@ highlighter: rouge
 sidebar_home_link: true
 
 remote_theme: wnanbei/hydeout
+
+collections:
+  zh:
+    output: true
+    permalink: /:collection/:title/
