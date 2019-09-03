@@ -1,6 +1,7 @@
 ---
-layout: post
+layout: index
 title: Direwolf HTTP Client: Save your time
+sidebar_link: true
 ---
 
 Package direwolf is a convient and esay to use http client written in Golang. 
