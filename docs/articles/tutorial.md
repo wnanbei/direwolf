@@ -11,14 +11,6 @@ sidebar:
 permalink: /docs/tutorial
 ---
 
-First of all, you can import `direwolf` like this for later use. This is just a recommended usage.	
-
-```go
-import (
-    dw "github.com/wnanbei/direwolf"
-)
-```
-
 ## 1. Make Request
 
 You can start a request like this:
