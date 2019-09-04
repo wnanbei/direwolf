@@ -1,9 +1,9 @@
 ---
 layout: single
-title: How to Contribute
+title: Contribute
 
 toc: true
-toc_label: "How to Contribute"
+toc_label: "Contribute"
 
 author_profile: true
 ---

@@ -6,7 +6,7 @@ main:
   - title: "中文文档"
     url: /zh
   - title: "How to Contribute"
-    url: /how-to-contribute
+    url: /contribute
 
 sidebar_en:
   - title: Getting Started
@@ -56,7 +56,7 @@ sidebar_en:
       - title: "1. Session"
         url: /docs/advanced-usage#1-session
       - title: "2. Session set Headers, Porxy, Timeout"
-        url: /docs/advanced-usage#2-session-set-headers,-porxy,-timeout
+        url: /docs/advanced-usage#2-session-set-headers-porxy-timeout
 
 sidebar_zh:
   - title: Getting Started

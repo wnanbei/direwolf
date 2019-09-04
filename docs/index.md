@@ -6,7 +6,10 @@ toc_label: "Direwolf"
 
 excerpt: "Package direwolf is a convient and esay to use http client written in Golang."
 header:
-  overlay_image: assets/cover.png
+  image: assets/cover.jpg
+  actions:
+    - label: "Learn More"
+      url: "/documentation"
 
 author_profile: true
 ---
