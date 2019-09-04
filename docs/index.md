@@ -9,7 +9,7 @@ header:
   overlay_image: assets/cover.jpg
   actions:
     - label: "Learn More"
-      url: "/documentation"
+      url: "/foreword"
 
 author_profile: true
 ---

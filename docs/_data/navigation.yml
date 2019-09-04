@@ -4,9 +4,9 @@ main:
   - title: About
     url: /about
   - title: Documentation
-    url: /documentation
+    url: /foreword
   - title: 中文文档
-    url: /documentation-zh
+    url: /foreword-zh
   - title: Contribute
     url: /contribute
   - title: Github
