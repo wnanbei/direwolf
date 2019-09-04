@@ -7,8 +7,6 @@ main:
     url: /zh
   - title: "How to Contribute"
     url: /how-to-contribute
-  - title: "Chinese中文"
-    url: /zh
 
 sidebar_en:
   - title: Getting Started
@@ -25,16 +23,32 @@ sidebar_en:
   - title: Quick Start
     url: /docs/quick-start
     children:
+      - title: "1. Make Request"
+        url: /docs/quick-start#1-Make-Request
+      - title: "2. Passing Parameters In URLs"
+        url: /docs/quick-start#2-Passing-Parameters-In-URLs
+      - title: "3. Set Headers"
+        url: /docs/quick-start#3-Set-Headers
       - title: "4. Add Cookies"
         url: /docs/quick-start#4-add-cookies
-      - title: "Navigation"
-        url: /docs/navigation/
-      - title: "UI Text"
-        url: /docs/ui-text/
-      - title: "Authors"
-        url: /docs/authors/
-      - title: "Layouts"
-        url: /docs/layouts/
+      - title: "5. Post Form"
+        url: /docs/quick-start#5-Post-Form
+      - title: "6. Post Body"
+        url: /docs/quick-start#6-Post-Body
+      - title: "7. Set Timeout"
+        url: /docs/quick-start#7-Set-Timeout
+      - title: "8. Redirect"
+        url: /docs/quick-start#8-Redirect
+      - title: "9. Proxy"
+        url: /docs/quick-start#9-Proxy
+      - title: "10. Response"
+        url: /docs/quick-start#10-Response
+      - title: "11. Extract Data"
+        url: /docs/quick-start#11-Extract-Data
+      - title: "12. Extract Data by CSS Selector"
+        url: /docs/quick-start#12-Extract-Data-by-CSS-Selector
+      - title: "13. Extract Data by Regexp"
+        url: /docs/quick-start#13-Extract-Data-by-Regexp
 
 sidebar_zh:
   - title: Getting Started
