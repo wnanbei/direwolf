@@ -6,9 +6,9 @@ main:
   - title: "Categories"
     url: /categories/
   - title: "English"
-    url: /direwolf/
+    url: /
   - title: "Chinese中文"
-    url: /direwolf/zh
+    url: /zh
 
 sidebar_en:
   - title: Getting Started
