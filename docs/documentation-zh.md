@@ -9,7 +9,6 @@ excerpt: "Direwolf 是一个由 Golang 编写的简单易用的 HTTP 客户端�
 header:
   overlay_image: cover.png
 
-author_profile: true
 sidebar:
   nav: "sidebar_zh"
 ---

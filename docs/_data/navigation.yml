@@ -4,8 +4,8 @@ main:
   - title: "Documentation"
     url: /documentation
   - title: "中文文档"
-    url: /zh
-  - title: "How to Contribute"
+    url: /documentation-zh
+  - title: "Contribute"
     url: /contribute
 
 sidebar_en:

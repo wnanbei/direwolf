@@ -5,7 +5,6 @@ title: Documentation
 toc: true
 toc_label: Documentation
 
-author_profile: true
 sidebar:
   nav: "sidebar_en"
 ---
