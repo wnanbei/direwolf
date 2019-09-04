@@ -5,12 +5,12 @@ main:
     url: /year-archive/
   - title: "Categories"
     url: /categories/
-  - title: "Tags"
-    url: /tags/
-  - title: "Pages"
-    url: /page-archive/
+  - title: "English"
+    url: /direwolf/
+  - title: "Chinese中文"
+    url: /direwolf/zh
 
-docs:
+sidebar_en:
   - title: Getting Started
     children:
       - title: "Quick-Start Guide"
@@ -23,6 +23,32 @@ docs:
         url: /docs/upgrading/
 
   - title: Quick Start
+    url: qucik_start.md
+    children:
+      - title: "Configuration"
+        url: /docs/configuration/
+      - title: "Navigation"
+        url: /docs/navigation/
+      - title: "UI Text"
+        url: /docs/ui-text/
+      - title: "Authors"
+        url: /docs/authors/
+      - title: "Layouts"
+        url: /docs/layouts/
+
+sidebar_zh:
+  - title: Getting Started
+    children:
+      - title: "Quick-Start Guide"
+        url: /docs/quick-start-guide/
+      - title: "Structure"
+        url: /docs/structure/
+      - title: "Installation"
+        url: /docs/installation/
+      - title: "Upgrading"
+        url: /docs/upgrading/
+
+  - title: 快速上手
     url: qucik_start.md
     children:
       - title: "Configuration"
