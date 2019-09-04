@@ -2,7 +2,7 @@ main:
   - title: "Home"
     url: /
   - title: "Documentation"
-    url: /documentation/quick-start.md
+    url: /documentation
   - title: "中文文档"
     url: /zh
   - title: "How to Contribute"
