@@ -8,11 +8,8 @@ toc_label: Advanced Usage
 sidebar:
   nav: "sidebar_en"
 
-permalink: /:title
+permalink: /docs/advanced-usage
 ---
-
-* comment
-{:toc #markdown-toc}
 
 ## 1. Session
 

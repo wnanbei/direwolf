@@ -24,31 +24,39 @@ sidebar_en:
     url: /docs/quick-start
     children:
       - title: "1. Make Request"
-        url: /docs/quick-start#1-Make-Request
+        url: /docs/quick-start#1-make-request
       - title: "2. Passing Parameters In URLs"
-        url: /docs/quick-start#2-Passing-Parameters-In-URLs
+        url: /docs/quick-start#2-passing-parameters-in-urls
       - title: "3. Set Headers"
-        url: /docs/quick-start#3-Set-Headers
+        url: /docs/quick-start#3-set-headers
       - title: "4. Add Cookies"
         url: /docs/quick-start#4-add-cookies
       - title: "5. Post Form"
-        url: /docs/quick-start#5-Post-Form
+        url: /docs/quick-start#5-post-form
       - title: "6. Post Body"
-        url: /docs/quick-start#6-Post-Body
+        url: /docs/quick-start#6-post-body
       - title: "7. Set Timeout"
-        url: /docs/quick-start#7-Set-Timeout
+        url: /docs/quick-start#7-set-timeout
       - title: "8. Redirect"
-        url: /docs/quick-start#8-Redirect
+        url: /docs/quick-start#8-redirect
       - title: "9. Proxy"
-        url: /docs/quick-start#9-Proxy
+        url: /docs/quick-start#9-proxy
       - title: "10. Response"
-        url: /docs/quick-start#10-Response
+        url: /docs/quick-start#10-response
       - title: "11. Extract Data"
-        url: /docs/quick-start#11-Extract-Data
+        url: /docs/quick-start#11-extract-data
       - title: "12. Extract Data by CSS Selector"
-        url: /docs/quick-start#12-Extract-Data-by-CSS-Selector
+        url: /docs/quick-start#12-extract-data-by-css-selector
       - title: "13. Extract Data by Regexp"
-        url: /docs/quick-start#13-Extract-Data-by-Regexp
+        url: /docs/quick-start#13-extract-data-by-regexp
+  
+  - title: Advanced Usage
+    url: /docs/advanced-usage
+    children:
+      - title: "1. Session"
+        url: /docs/advanced-usage#1-session
+      - title: "2. Session set Headers, Porxy, Timeout"
+        url: /docs/advanced-usage#2-session-set-headers,-porxy,-timeout
 
 sidebar_zh:
   - title: Getting Started
