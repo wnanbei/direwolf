@@ -8,7 +8,7 @@ toc_label: "Quick Start"
 sidebar:
   nav: "sidebar_en"
 
-permalink: /quick-start
+permalink: /docs/quick-start
 ---
 
 First of all, you can import `direwolf` like this for later use. This is just a recommended usage.	
