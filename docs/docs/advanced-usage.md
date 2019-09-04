@@ -1,7 +1,14 @@
 ---
-layout: page
+layout: single
 title: Advanced Usage
-sidebar_link: true
+
+toc: true
+toc_label: Advanced Usage
+
+sidebar:
+  nav: "sidebar_en"
+
+permalink: /:title
 ---
 
 * comment
