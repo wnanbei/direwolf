@@ -23,7 +23,7 @@ sidebar_en:
         url: /docs/upgrading/
 
   - title: Quick Start
-    url: /documentation/qucik-start.md
+    url: /docs/qucik-start.md
     children:
       - title: "Configuration"
         url: /docs/configuration/
