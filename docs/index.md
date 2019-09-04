@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: single
 title: "Direwolf HTTP Client: Save your time"
 toc: true
 toc_label: "Direwolf"

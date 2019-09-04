@@ -35,8 +35,7 @@ func main() {
 }
 ```
 
-Besides, direwolf provide a convient way to add parameters to request. Such
-as Headers, Cookies, Params, etc.
+Besides, direwolf provide a convient way to add parameters to request. Such as Headers, Cookies, Params, etc.
 
 ```go
 import (

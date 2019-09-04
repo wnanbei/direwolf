@@ -60,6 +60,7 @@ sidebar_en:
 
 sidebar_zh:
   - title: Getting Started
+    url: /docs/documentation-zh
     children:
       - title: "Quick-Start Guide"
         url: /docs/quick-start-guide/
@@ -71,7 +72,7 @@ sidebar_zh:
         url: /docs/upgrading/
 
   - title: 快速上手
-    url: qucik_start.md
+    url: /docs/quick-start-zh
     children:
       - title: "Configuration"
         url: /docs/configuration/
@@ -83,3 +84,9 @@ sidebar_zh:
         url: /docs/authors/
       - title: "Layouts"
         url: /docs/layouts/
+
+  - title: 高级用法
+    url: /docs/advanced-usage-zh
+    children:
+      - title: "Configuration"
+        url: /docs/configuration/
