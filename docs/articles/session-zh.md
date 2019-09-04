@@ -1,14 +1,14 @@
 ---
 layout: single
-title: 高级用法
+title: Session 会话
 
 toc: true
-toc_label: 高级用法
+toc_label: Content
 
 sidebar:
   nav: "sidebar_zh"
 
-permalink: /docs/advanced-usage-zh
+permalink: /docs/session-zh
 ---
 
 ## 1. Session 会话

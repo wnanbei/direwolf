@@ -1,14 +1,14 @@
 ---
 layout: single
-title: Advanced Usage
+title: Session
 
 toc: true
-toc_label: Advanced Usage
+toc_label: Content
 
 sidebar:
   nav: "sidebar_en"
 
-permalink: /docs/advanced-usage
+permalink: /docs/session
 ---
 
 ## 1. Session

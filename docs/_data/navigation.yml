@@ -1,96 +1,109 @@
 main:
-  - title: "Home"
+  - title: Home
     url: /
-  - title: "About"
+  - title: About
     url: /about
-  - title: "Documentation"
+  - title: Documentation
     url: /documentation
-  - title: "中文文档"
+  - title: 中文文档
     url: /documentation-zh
-  - title: "Contribute"
+  - title: Contribute
     url: /contribute
-  - title: "Github"
+  - title: Github
     url: https://github.com/wnanbei/direwolf
 
 sidebar_en:
-  - title: Getting Started
-    children:
-      - title: "Quick-Start Guide"
-        url: /docs/quick-start-guide/
-      - title: "Structure"
-        url: /docs/structure/
-      - title: "Installation"
-        url: /docs/installation/
-      - title: "Upgrading"
-        url: /docs/upgrading/
+  - title: Foreword
+    url: /foreword
+    
+  - title: Installation
+    url: /docs/installation
 
   - title: Quick Start
     url: /docs/quick-start
+
+  - title: Tutorial
+    url: /docs/tutorial
     children:
-      - title: "1. Make Request"
-        url: /docs/quick-start#1-make-request
-      - title: "2. Passing Parameters In URLs"
-        url: /docs/quick-start#2-passing-parameters-in-urls
-      - title: "3. Set Headers"
-        url: /docs/quick-start#3-set-headers
-      - title: "4. Add Cookies"
-        url: /docs/quick-start#4-add-cookies
-      - title: "5. Post Form"
-        url: /docs/quick-start#5-post-form
-      - title: "6. Post Body"
-        url: /docs/quick-start#6-post-body
-      - title: "7. Set Timeout"
-        url: /docs/quick-start#7-set-timeout
-      - title: "8. Redirect"
-        url: /docs/quick-start#8-redirect
-      - title: "9. Proxy"
-        url: /docs/quick-start#9-proxy
-      - title: "10. Response"
-        url: /docs/quick-start#10-response
-      - title: "11. Extract Data"
-        url: /docs/quick-start#11-extract-data
-      - title: "12. Extract Data by CSS Selector"
-        url: /docs/quick-start#12-extract-data-by-css-selector
-      - title: "13. Extract Data by Regexp"
-        url: /docs/quick-start#13-extract-data-by-regexp
+      - title: 1. Make Request
+        url: /docs/tutorial#1-make-request
+      - title: 2. Passing Parameters In URLs
+        url: /docs/tutorial#2-passing-parameters-in-urls
+      - title: 3. Set Headers
+        url: /docs/tutorial#3-set-headers
+      - title: 4. Add Cookies
+        url: /docs/tutorial#4-add-cookies
+      - title: 5. Post Form
+        url: /docs/tutorial#5-post-form
+      - title: 6. Post Body
+        url: /docs/tutorial#6-post-body
+      - title: 7. Set Timeout
+        url: /docs/tutorial#7-set-timeout
+      - title: 8. Redirect
+        url: /docs/tutorial#8-redirect
+      - title: 9. Proxy
+        url: /docs/tutorial#9-proxy
+      - title: 10. Response
+        url: /docs/tutorial#10-response
+      - title: 11. Extract Data
+        url: /docs/tutorial#11-extract-data
+      - title: 12. Extract Data by CSS Selector
+        url: /docs/tutorial#12-extract-data-by-css-selector
+      - title: 13. Extract Data by Regexp
+        url: /docs/tutorial#13-extract-data-by-regexp
   
-  - title: Advanced Usage
-    url: /docs/advanced-usage
+  - title: Session
+    url: /docs/session
     children:
-      - title: "1. Session"
-        url: /docs/advanced-usage#1-session
-      - title: "2. Session set Headers, Porxy, Timeout"
-        url: /docs/advanced-usage#2-session-set-headers-porxy-timeout
+      - title: 1. Session
+        url: /docs/session#1-session
+      - title: 2. Session set Headers, Porxy, Timeout
+        url: /docs/session#2-session-set-headers-porxy-timeout
 
 sidebar_zh:
-  - title: Getting Started
-    url: /docs/documentation-zh
-    children:
-      - title: "Quick-Start Guide"
-        url: /docs/quick-start-guide/
-      - title: "Structure"
-        url: /docs/structure/
-      - title: "Installation"
-        url: /docs/installation/
-      - title: "Upgrading"
-        url: /docs/upgrading/
+  - title: 前言
+    url: /foreword-zh
+    
+  - title: 安装
+    url: /docs/installation-zh
 
   - title: 快速上手
     url: /docs/quick-start-zh
-    children:
-      - title: "Configuration"
-        url: /docs/configuration/
-      - title: "Navigation"
-        url: /docs/navigation/
-      - title: "UI Text"
-        url: /docs/ui-text/
-      - title: "Authors"
-        url: /docs/authors/
-      - title: "Layouts"
-        url: /docs/layouts/
 
-  - title: 高级用法
-    url: /docs/advanced-usage-zh
+  - title: 教程
+    url: /docs/tutorial-zh
     children:
-      - title: "Configuration"
-        url: /docs/configuration/
+      - title: 1. 发起请求
+        url: /docs/tutorial-zh#1-发起请求
+      - title: 2. 传递URL参数
+        url: /docs/tutorial-zh#2-传递url参数
+      - title: 3. 设置 Headers
+        url: /docs/tutorial-zh#3-设置-headers
+      - title: 4. 添加 Cookies
+        url: /docs/tutorial-zh#4-添加-cookies
+      - title: 5. Post 表单
+        url: /docs/tutorial-zh#5-post-表单
+      - title: 6. Post 请求体
+        url: /docs/tutorial-zh#6-post-请求体
+      - title: 7. 设置超时
+        url: /docs/tutorial-zh#7-设置超时
+      - title: 8. 重定向
+        url: /docs/tutorial-zh#8-重定向
+      - title: 9. 代理
+        url: /docs/tutorial-zh#9-代理
+      - title: 10. Response 响应
+        url: /docs/tutorial-zh#10-response-响应
+      - title: 11. 提取数据
+        url: /docs/tutorial-zh#11-提取数据
+      - title: 12. 使用 CSS 选择器提取数据
+        url: /docs/tutorial-zh#12-使用-css-选择器提取数据
+      - title: 13. 使用正则提取数据
+        url: /docs/tutorial-zh#13-使用正则提取数据
+  
+  - title: Session 会话
+    url: /docs/session-zh
+    children:
+      - title: 1. Session 会话
+        url: /docs/session-zh#1-session-会话
+      - title: 2. Session 设置 Headers，Proxy，Timeout
+        url: /docs/session-zh#2-session-设置-headersproxytimeout
