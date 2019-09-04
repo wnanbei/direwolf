@@ -7,8 +7,6 @@ toc_label: Advanced Usage
 
 sidebar:
   nav: "sidebar_en"
-
-# permalink: /advanced-usage
 ---
 
 ## 1. Session
