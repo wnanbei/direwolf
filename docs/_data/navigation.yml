@@ -25,8 +25,8 @@ sidebar_en:
   - title: Quick Start
     url: /docs/quick-start
     children:
-      - title: "Configuration"
-        url: /docs/configuration/
+      - title: "4. Add Cookies"
+        url: /docs/quick-start#4.-Add-Cookies
       - title: "Navigation"
         url: /docs/navigation/
       - title: "UI Text"
