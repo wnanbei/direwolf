@@ -8,7 +8,7 @@ toc_label: Advanced Usage
 sidebar:
   nav: "sidebar_en"
 
-permalink: /docs/advanced-usage
+permalink: /advanced-usage
 ---
 
 ## 1. Session

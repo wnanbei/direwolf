@@ -21,7 +21,7 @@ sidebar_en:
         url: /docs/upgrading/
 
   - title: Quick Start
-    url: /docs/quick-start
+    url: /quick-start
     children:
       - title: "1. Make Request"
         url: /docs/quick-start#1-make-request
@@ -51,7 +51,7 @@ sidebar_en:
         url: /docs/quick-start#13-extract-data-by-regexp
   
   - title: Advanced Usage
-    url: /docs/advanced-usage
+    url: /advanced-usage
     children:
       - title: "1. Session"
         url: /docs/advanced-usage#1-session
