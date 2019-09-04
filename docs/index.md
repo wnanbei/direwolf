@@ -1,16 +1,14 @@
 ---
-layout: single
+layout: home
 title: "Direwolf HTTP Client: Save your time"
 toc: true
 toc_label: "Direwolf"
 
 excerpt: "Package direwolf is a convient and esay to use http client written in Golang."
 header:
-  overlay_image: cover.png
+  overlay_image: assets/cover.png
 
 author_profile: true
-sidebar:
-  nav: "docs"
 ---
 
 ## Feature Support
@@ -99,16 +97,3 @@ Output:
     "url": "https://httpbin.org/get?age=18&name=wnanbei"
 }
 ```
-
-
-
-
-***
-
-## How to Contribute
-
-Because I am not a native English speaker, please tell me in the Issues if there is something wrong or unclear in the introduction.
-
-- Open a fresh issue to start a discussion around a feature idea or a bug.
-- Send a pull request and bug the maintainer until it gets merged and published.
-- Write a test which shows that the bug was fixed or that the feature works as expected.

@@ -1,11 +1,13 @@
 ---
-layout: page
-title: Qucik Start
-sidebar_link: true
----
+layout: single
+title: Quick Start
 
-* comment
-{:toc #markdown-toc}
+toc: true
+toc_label: "Quick Start"
+
+sidebar:
+  nav: "sidebar_en"
+---
 
 First of all, you can import `direwolf` like this for later use. This is just a recommended usage.	
 

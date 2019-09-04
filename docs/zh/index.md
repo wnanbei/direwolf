@@ -11,7 +11,7 @@ header:
 
 author_profile: true
 sidebar:
-  nav: "docs"
+  nav: "sidebar_zh"
 ---
 
 ## 功能特性
