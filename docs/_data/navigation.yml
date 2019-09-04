@@ -1,12 +1,16 @@
 main:
   - title: "Home"
     url: /
+  - title: "About"
+    url: /about
   - title: "Documentation"
     url: /documentation
   - title: "中文文档"
     url: /documentation-zh
   - title: "Contribute"
     url: /contribute
+  - title: "Github"
+    url: https://github.com/wnanbei/direwolf
 
 sidebar_en:
   - title: Getting Started

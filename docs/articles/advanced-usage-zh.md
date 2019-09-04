@@ -11,9 +11,7 @@ sidebar:
 permalink: /docs/advanced-usage-zh
 ---
 
-## 高级用法
-
-### 1. Session 会话
+## 1. Session 会话
 
 在快速上手中提供的单次请求，使用的是短连接的方式，不会复用连接，如果希望复用连接以提升效率的话，可以使用 `Session`。
 
@@ -59,11 +57,11 @@ session := dw.NewSession()
 session.DisableCookieJar()
 ```
 
-### 2. Session 设置 Headers，Proxy，Timeout
+## 2. Session 设置 Headers，Proxy，Timeout
 
 在 Session 中可以设定一些参数，例如 Headers，Proxy，Timeout，在 Session 每次发起请求时都会带上这些参数。
 
-#### Headers
+### Headers
 
 ```go
 session := dw.NewSession()
@@ -123,7 +121,7 @@ fmt.Println(resp.Text())
 }
 ```
 
-#### Proxy
+### Proxy
 
 ```go
 session := dw.NewSession()
@@ -149,7 +147,7 @@ fmt.Println(resp.Text())
 
 如果在请求方法中传入了 Proxy 参数，则优先级高于 Session 的 Proxy。
 
-#### Timeout
+### Timeout
 
 ```go
 session := dw.NewSession()

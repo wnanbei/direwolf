@@ -11,8 +11,6 @@ sidebar:
 permalink: /docs/quick-start-zh
 ---
 
-## 快速上手
-
 首先，你可以像这样导入 direwolf 以方便之后使用，这只是推荐用法。
 
 ```go
@@ -21,7 +19,7 @@ import (
 )
 ```
 
-### 1. 发起请求
+## 1. 发起请求
 
 你可以像这样发起一个请求：
 
@@ -43,7 +41,7 @@ resp, err := dw.Put("https://httpbin.org/put", dw.NewPostForm("key", "value"))
 resp, err := dw.Delete("https://httpbin.org/delete")
 ```
 
-### 2. 传递URL参数
+## 2. 传递URL参数
 
 在请求中加入URL参数非常简单，你只需要使用 `NewParams()` 创建一个URL参数对象，并将其传入请求方法中即可：
 
@@ -90,7 +88,7 @@ params := dw.NewParams(
 https://httpbin.org/get?key1=value1&key1=value2
 ```
 
-### 3. 设置 Headers
+## 3. 设置 Headers
 
 设置 Headers 与传入URL参数非常相似, 使用 `NewHeaders()`：
 
@@ -126,7 +124,7 @@ fmt.Println(resp.Text())
 
 如果你没有设置 `User-Agent`，direwolf 会自动使用默认的 `User-Agent`: `direwolf - winter is coming`。
 
-### 4. 添加 Cookies
+## 4. 添加 Cookies
 
 添加 Cookies 与传入URL参数也是类似的：
 
@@ -158,7 +156,7 @@ fmt.Println(resp.Text())
 }
 ```
 
-### 5. Post 表单
+## 5. Post 表单
 
 如果你想要使用 Post 方法提交表单，请使用 `NewPostForm()`：
 
@@ -198,7 +196,7 @@ fmt.Println(resp.Text())
 }
 ```
 
-### 6. Post 请求体
+## 6. Post 请求体
 
 如果你想要使用 Post 直接提交数据，你可以使用 `Body`，它的原始类型是 `[]byte`，如下所示：
 
@@ -231,7 +229,7 @@ fmt.Println(resp.Text())
 }
 ```
 
-### 7. 设置超时
+## 7. 设置超时
 
 `Timeout` 指定了一个请求的超时时间，这个超时包含了连接时间、任何的重定向、和读取响应体的时间。
 
@@ -255,7 +253,7 @@ resp, err := dw.Get(
 )
 ```
 
-### 8. 重定向
+## 8. 重定向
 
 RedirectNum 是允许重定向的次数。
 
@@ -279,7 +277,7 @@ resp, err := dw.Get(
 )
 ```
 
-### 9. 代理
+## 9. 代理
 
 设置代理同样非常简单，你可以为 HTTP 和 HTTPS 网页分别设置不同的代理：
 
@@ -295,7 +293,7 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-### 10. Response 响应
+## 10. Response 响应
 
 发起请求之后，如果没有返回异常，那么你会得到一个 `Response` 对象。
 
@@ -329,7 +327,7 @@ resp.Cookies
 resp.Request
 ```
 
-### 11. 提取数据
+## 11. 提取数据
 
 你使用 direwolf 发送请求之后可以非常方便的提取数据，正如我们上面所做的一样：
 
@@ -361,9 +359,9 @@ text := resp.Text()
 resp.Content()
 ```
 
-### 12. 使用 CSS 选择器提取数据
+## 12. 使用 CSS 选择器提取数据
 
-#### Text 文本
+### Text 文本
 
 Direwolf 使用 `goquery` 在内部集成了 Css 选择器，可以使提取数据更加简单。
 
@@ -388,7 +386,7 @@ text2 := resp.CSS("a").At(3).Text()
 text := resp.CSS("a").TextAll()
 ```
 
-#### Attribute 属性
+### Attribute 属性
 
 除了文本内容，direwolf 也可以提取属性内容：
 
@@ -404,7 +402,7 @@ attr := resp.CSS("a").Attr("href")
 attr := resp.CSS("a").Attr("class", "default value")
 ```
 
-### 13. 使用正则提取数据
+## 13. 使用正则提取数据
 
 Direwolf 也支持使用正则表达式提取数据，有两个方法。
 
