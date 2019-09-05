@@ -1,10 +1,10 @@
 # Direwolf HTTP Client: Save your time
 
-Package direwolf is a convient and esay to use http client written in Golang. 
+Package direwolf is a convient and esay to use http client written in Golang.
 
 If you want find more info, please go here: [Direwolf HTTP Client: Save your time](https://wnanbei.github.io/direwolf/)
 
-![direwolf](docs/cover.png)
+![direwolf](docs/assets/cover.jpg)
 
 ## Feature Support
 
@@ -21,7 +21,7 @@ If you want find more info, please go here: [Direwolf HTTP Client: Save your tim
 
 ## Installation
 
-```
+```text
 go get github.com/wnanbei/direwolf
 ```
 
@@ -92,13 +92,3 @@ Output:
     "url": "https://httpbin.org/get?age=18&name=wnanbei"
 }
 ```
-
-***
-
-## How to Contribute
-
-Because I am not a native English speaker, please tell me in the Issues if there is something wrong or unclear in the introduction.
-
-- Open a fresh issue to start a discussion around a feature idea or a bug.
-- Send a pull request and bug the maintainer until it gets merged and published.
-- Write a test which shows that the bug was fixed or that the feature works as expected.

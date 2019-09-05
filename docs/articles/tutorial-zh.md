@@ -48,7 +48,7 @@ fmt.Println(resp.URL)
 
 输出：
 
-```
+```text
 https://httpbin.org/get?key=value
 ```
 
@@ -76,7 +76,7 @@ params := dw.NewParams(
 
 输出：
 
-```
+```text
 https://httpbin.org/get?key1=value1&key1=value2
 ```
 
@@ -280,7 +280,7 @@ proxies := dw.Proxy{
 }
 resp, err := dw.Get("https://httpbin.org/get", proxies)
 if err != nil {
-	return
+  return
 }
 fmt.Println(resp.Text())
 ```
@@ -326,7 +326,7 @@ resp.Request
 ```go
 resp, err := dw.Get("https://httpbin.org/get")
 if err != nil {
-	return
+  return
 }
 fmt.Println(resp.Text())
 ```

@@ -24,7 +24,7 @@ if err != nil {
 
 You will get a `Response` object if err is equal to nil.
 
-Other HTTP request types: 
+Other HTTP request types:
 
 ```go
 resp, err := dw.Post("https://httpbin.org/post", dw.NewPostForm("key", "value"))
@@ -48,7 +48,7 @@ fmt.Println(resp.URL)
 
 Output:
 
-```
+```text
 https://httpbin.org/get?key=value
 ```
 
@@ -61,7 +61,7 @@ params := dw.NewParams(
 )
 ```
 
-**Note: Remember the comma between key and value.** 
+**Note: Remember the comma between key and value.**
 
 **Note: Key must to match Value one by one, if not, will report an error.**
 
@@ -76,7 +76,7 @@ params := dw.NewParams(
 
 Output:
 
-```
+```text
 https://httpbin.org/get?key1=value1&key1=value2
 ```
 
@@ -223,7 +223,7 @@ Output:
 
 ## 7. Set Timeout
 
-`Timeout` specifies a time limit for request. The timeout includes connection time, any redirects, and reading the response body. 
+`Timeout` specifies a time limit for request. The timeout includes connection time, any redirects, and reading the response body.
 
 The timer remains running after Get, Head, Post, or Do return and will interrupt reading of the Response.Body.
 
@@ -280,7 +280,7 @@ proxies := dw.Proxy{
 }
 resp, err := dw.Get("https://httpbin.org/get", proxies)
 if err != nil {
-	return
+  return
 }
 fmt.Println(resp.Text())
 ```
@@ -326,7 +326,7 @@ You can easily extract data using direwolf after sending a request, as we did ab
 ```go
 resp, err := dw.Get("https://httpbin.org/get")
 if err != nil {
-	return
+  return
 }
 fmt.Println(resp.Text())
 ```
