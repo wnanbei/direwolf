@@ -18,6 +18,13 @@ sidebar_en:
     
   - title: Installation
     url: /docs/installation
+    children:
+      - title: Install the Specified Version
+        url: /docs/installation#install-the-Specified-Version
+      - title: Manual installation
+        url: /docs/installation#manual-installation
+      - title: Import
+        url: /docs/installation#import
 
   - title: Quick Start
     url: /docs/quick-start
@@ -66,6 +73,13 @@ sidebar_zh:
     
   - title: 安装
     url: /docs/installation-zh
+    children:
+      - title: 安装指定版本
+        url: /docs/installation-zh#安装指定版本
+      - title: 手动安装
+        url: /docs/installation-zh#手动安装
+      - title: 导入
+        url: /docs/installation-zh#导入
 
   - title: 快速上手
     url: /docs/quick-start-zh

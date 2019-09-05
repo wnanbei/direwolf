@@ -19,8 +19,6 @@ go get github.com/wnanbei/direwolf
 
 **Note: Please make sure that `GOPATH` and other environment have been setted before installation.**
 
-You can specify the version
-
 ## Install the Specified Version
 
 Golang released version `1.13` in recent 2019.09.03. This version uses `Go module` as the default mode.
