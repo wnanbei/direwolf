@@ -26,7 +26,7 @@ Golang released version `1.13` in recent 2019.09.03. This version uses `Go modul
 So if your Golang version is equal to or higher than `1.13`, or if you enabled `Go module` mode, you can use this method to specific the version of direwolf installed:
 
 ```text
-go get github.com/wnanbei/direwolf@0.4.0
+go get github.com/wnanbei/direwolf@v0.4.0
 ```
 
 ## Manual installation

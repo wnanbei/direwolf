@@ -20,7 +20,7 @@ sidebar_en:
     url: /docs/installation
     children:
       - title: Install the Specified Version
-        url: /docs/installation#install-the-Specified-Version
+        url: /docs/installation#install-the-specified-version
       - title: Manual installation
         url: /docs/installation#manual-installation
       - title: Import

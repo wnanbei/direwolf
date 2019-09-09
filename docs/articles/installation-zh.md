@@ -26,8 +26,10 @@ go get github.com/wnanbei/direwolf
 所以如果你的 Go 版本等于或高于 1.13，或者你开启了 `Go module`模式，那么你可以使用这种方法指定 direwolf 安装的版本：
 
 ```text
-go get github.com/wnanbei/direwolf@0.4.0
+go get github.com/wnanbei/direwolf@v0.4.0
 ```
+
+由于 Go 1.13 默认使用中国国内无法访问的 `https://proxy.golang.org` 作为 `GOPROXY`，所以要使用 `Go module`，需要将 `goproxy.cn` 或者 `goproxy.io` 设置为 `GOPROXY`。
 
 ## 手动安装
 
