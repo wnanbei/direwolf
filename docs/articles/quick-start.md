@@ -11,6 +11,8 @@ sidebar:
 permalink: /docs/quick-start
 ---
 
+## Send Request
+
 You can easily send a request like this:
 
 ```go
@@ -21,13 +23,30 @@ import (
 )
 
 func main() {
-    resp, err := dw.Get("https://www.google.com")
+    resp, err := dw.Get("http://httpbin.org/get")
     if err != nil {
         return
     }
     fmt.Println(resp.Text())
 }
 ```
+
+output:
+
+```json
+{
+  "args": {},
+  "headers": {
+    "Accept-Encoding": "gzip",
+    "Host": "httpbin.org",
+    "User-Agent": "direwolf - winter is coming"
+  },
+  "origin": "171.217.52.188, 171.217.52.188",
+  "url": "https://httpbin.org/get"
+}
+```
+
+## Add Request Parameters
 
 Besides, direwolf provide a convient way to add parameters to request. Such as Headers, Cookies, Params, etc.
 

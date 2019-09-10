@@ -11,6 +11,8 @@ sidebar:
 permalink: /docs/quick-start-zh
 ---
 
+## 发起请求
+
 你可以像下方这样非常简单的发起一个请求：
 
 ```go
@@ -21,13 +23,30 @@ import (
 )
 
 func main() {
-    resp, err := dw.Get("https://www.google.com")
+    resp, err := dw.Get("http://httpbin.org/get")
     if err != nil {
         return
     }
     fmt.Println(resp.Text())
 }
 ```
+
+输出：
+
+```json
+{
+  "args": {},
+  "headers": {
+    "Accept-Encoding": "gzip",
+    "Host": "httpbin.org",
+    "User-Agent": "direwolf - winter is coming"
+  },
+  "origin": "171.217.52.188, 171.217.52.188",
+  "url": "https://httpbin.org/get"
+}
+```
+
+## 添加请求参数
 
 除此之外，direwolf 可以很方便的给一个请求添加参数，例如 Headers、Cookies、Params。
 
