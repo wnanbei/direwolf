@@ -33,6 +33,18 @@ resp, err := dw.Put("https://httpbin.org/put", dw.NewPostForm("key", "value"))
 resp, err := dw.Delete("https://httpbin.org/delete")
 ```
 
+你还可以使用一个更加通用的函数 `Request()` 来发起请求，使用这个方法需要你先构造一个 `RequestSetting` 对象：
+
+```go
+req := dw.NewRequestSetting("Get", "https://httpbin.org/get")
+resp, err := dw.Request(req)
+if err != nil {
+    return
+}
+```
+
+使用这种方法发起请求，那么 `RequestSetting` 对象将是可以被复用的。除了需要将请求方法的字符串作为第一个参数传入之外，`NewRequestSetting()` 方法与普通的 `Get()` 和 `Post()` 等方法需要的参数是一致的。
+
 ## 2. 传递URL参数
 
 在请求中加入URL参数非常简单，你只需要使用 `NewParams()` 创建一个URL参数对象，并将其传入请求方法中即可：
@@ -265,7 +277,7 @@ resp, err := dw.Get("https://httpbin.org/delay/10", redirect)
 ```go
 resp, err := dw.Get(
     "https://httpbin.org/delay/10",
-    dw.RedirectNum(5),
+    dw.RedirectNum(10),
 )
 ```
 
@@ -274,7 +286,7 @@ resp, err := dw.Get(
 设置代理同样非常简单，你可以为 HTTP 和 HTTPS 网页分别设置不同的代理：
 
 ```go
-proxies := dw.Proxy{
+proxies := &dw.Proxy{
     HTTP:  "http://127.0.0.1:8888",
     HTTPS: "http://127.0.0.1:8888",
 }
@@ -361,7 +373,7 @@ Direwolf 使用 `goquery` 在内部集成了 Css 选择器，可以使提取数�
 text := resp.CSS("a").Text()
 ```
 
-这会查找所有匹配的数据, 将其放入一个切片中并返回。如果没有找到匹配的数据，它会返回一个空切片。
+这会查找所有符合匹配的数据结果, 将其放入一个切片中并返回。如果没有找到匹配的数据，它会返回一个空切片。
 
 在很多情况下，我们仅仅查找一个单个的匹配结果, 这样我们可以使用 `First()` 或者 `At()` 来提取单个匹配结果：
 
@@ -386,7 +398,7 @@ text := resp.CSS("a").TextAll()
 attr := resp.CSS("a").Attr("href")
 ```
 
-与 `Text()` 相同，它返回一个包含属性值的列表。它也可以使用 `First()` 或者 `At()` 来提取单个数据。
+与 `Text()` 相同，它返回一个包含属性值的切片。它也可以使用 `First()` 或者 `At()` 来提取单个数据。
 
 `Attr()` 可以设置一个默认值，如果没有找到匹配的值，就会返回默认值。
 
@@ -414,7 +426,7 @@ fmt.Println(resp.Re("-.*?-"))
 // [-Hello- -World- -direwolf- -wnanbei-]
 ```
 
-然后是 `ReSubmatch()`，它会返回一个二维列表，包含着所有的子匹配结果（正则表达式里括号中的数据）。
+然后是 `ReSubmatch()`，它会返回一个二维列表，包含着所有的子匹配结果（正则表达式里括号中匹配的数据）。
 
 ```go
 fmt.Println(resp.ReSubmatch("-(.*?)--(.*?)-"))

@@ -15,6 +15,9 @@ main:
 sidebar_en:
   - title: Foreword
     url: /foreword
+    children:
+      - title: Version
+        url: /foreword#version
     
   - title: Installation
     url: /docs/installation
@@ -70,6 +73,9 @@ sidebar_en:
 sidebar_zh:
   - title: 前言
     url: /foreword-zh
+    children:
+      - title: 版本
+        url: /foreword-zh#版本
     
   - title: 安装
     url: /docs/installation-zh

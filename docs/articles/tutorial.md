@@ -33,6 +33,18 @@ resp, err := dw.Put("https://httpbin.org/put", dw.NewPostForm("key", "value"))
 resp, err := dw.Delete("https://httpbin.org/delete")
 ```
 
+You can use a more generic function `Request()` to send request. This function requires you to construct a `RequestSetting` object first:
+
+```go
+req := dw.NewRequestSetting("Get", "https://httpbin.org/get")
+resp, err := dw.Request(req)
+if err != nil {
+    return
+}
+```
+
+`RequestSetting` object could be reused if you use this method to send request. In addition to passing request type as the first argument, the other argument `NewRequestSetting()` need is the same as the normal methods `Get()` and `Post()`.
+
 ## 2. Passing Parameters In URLs
 
 Passing parameters in URLs is very easy, you only need to new a Params and pass it to request method.
@@ -265,7 +277,7 @@ or
 ```go
 resp, err := dw.Get(
     "https://httpbin.org/delay/10",
-    dw.RedirectNum(5),
+    dw.RedirectNum(10),
 )
 ```
 
@@ -274,7 +286,7 @@ resp, err := dw.Get(
 Set proxy is esay, too. You can set different proxies for HTTP and HTTPS sites.
 
 ```go
-proxies := dw.Proxy{
+proxies := &dw.Proxy{
     HTTP:  "http://127.0.0.1:8888",
     HTTPS: "http://127.0.0.1:8888",
 }
