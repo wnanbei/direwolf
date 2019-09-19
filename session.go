@@ -91,27 +91,27 @@ func (session *Session) Delete(URL string, args ...interface{}) (*Response, erro
 }
 
 // Cookies returns the cookies of the given url in Session.
-func (session *Session) Cookies(u string) (Cookies, error) {
+func (session *Session) Cookies(URL string) Cookies {
 	if session.client.Jar == nil {
-		return nil, MakeError(nil, "ErrCookieJar", "Cookie Jar was disabled.")
+		return nil
 	}
-	URL, err := url.Parse(u)
+	parsedURL, err := url.Parse(URL)
 	if err != nil {
-		return nil, MakeErrorStack(err, "Parse URL failed")
+		return nil
 	}
-	return session.client.Jar.Cookies(URL), nil
+	return session.client.Jar.Cookies(parsedURL)
 }
 
 // SetCookies set cookies of the url in Session.
-func (session *Session) SetCookies(u string, c Cookies) error {
+func (session *Session) SetCookies(URL string, cookies Cookies) error {
 	if session.client.Jar == nil {
 		return MakeError(nil, "ErrCookieJar", "Cookie Jar was disabled.")
 	}
-	URL, err := url.Parse(u)
+	parsedURL, err := url.Parse(URL)
 	if err != nil {
 		return MakeErrorStack(err, "Parse URL failed")
 	}
-	session.client.Jar.SetCookies(URL, []*http.Cookie(c))
+	session.client.Jar.SetCookies(parsedURL, []*http.Cookie(cookies))
 	return nil
 }
 

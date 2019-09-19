@@ -1,26 +1,25 @@
 package direwolf
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
 
-func TestMini(t *testing.T) {
-	session := NewSession()
-	proxy := &Proxy{
-		HTTP:  "http://127.0.0.1:12333",
-		HTTPS: "http://127.0.0.1:12333",
-	}
-	session.Proxy = proxy
-	resp, err := session.Get("http://httpbin.org/ip")
-	if err != nil {
-		return
-	}
-	fmt.Println(resp.Text())
-}
+//func TestMini(t *testing.T) {
+//	session := NewSession()
+//	proxy := &Proxy{
+//		HTTP:  "http://127.0.0.1:12333",
+//		HTTPS: "http://127.0.0.1:12333",
+//	}
+//	session.Proxy = proxy
+//	resp, err := session.Get("http://httpbin.org/ip")
+//	if err != nil {
+//		return
+//	}
+//	fmt.Println(resp.Text())
+//}
 
 func TestGet(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -62,13 +62,15 @@ sidebar_en:
       - title: 13. Extract Data by Regexp
         url: /docs/tutorial#13-extract-data-by-regexp
   
-  - title: Session
-    url: /docs/session
+  - title: Advanced Usage
+    url: /docs/advanced-usage
     children:
       - title: 1. Session
-        url: /docs/session#1-session
+        url: /docs/advanced-usage#1-session
+      - title: 2. Session set Cookies
+        url: /docs/advanced-usage#2-session-set-headers-porxy-timeout
       - title: 2. Session set Headers, Porxy, Timeout
-        url: /docs/session#2-session-set-headers-porxy-timeout
+        url: /docs/advanced-usage#2-session-set-headers-porxy-timeout
 
 sidebar_zh:
   - title: 前言
@@ -120,10 +122,12 @@ sidebar_zh:
       - title: 13. 使用正则提取数据
         url: /docs/tutorial-zh#13-使用正则提取数据
   
-  - title: Session 会话
-    url: /docs/session-zh
+  - title: 高级用法
+    url: /docs/advanced-usage-zh
     children:
       - title: 1. Session 会话
-        url: /docs/session-zh#1-session-会话
-      - title: 2. Session 设置 Headers，Proxy，Timeout
-        url: /docs/session-zh#2-session-设置-headersproxytimeout
+        url: /docs/advanced-usage-zh#1-session-会话
+      - title: 2. Session Cookies
+        url: /docs/advanced-usage-zh#2-session-cookies
+      - title: 3. Session 设置 Headers，Proxy，Timeout
+        url: /docs/advanced-usage-zh#3-session-设置-headersproxytimeout

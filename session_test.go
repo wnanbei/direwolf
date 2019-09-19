@@ -7,16 +7,58 @@ import (
 	"testing"
 )
 
-func TestSessionGet(t *testing.T) {
+func newTestSessionServer() *httptest.Server {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// check method is GET before going to check other features
-		if r.Method != "GET" {
-			t.Fatalf("Expected method %q; got %q", "GET", r.Method)
+		if r.Method == "GET" {
+			if r.URL.Path == "/test" {
+				if _, err := w.Write([]byte("GET")); err != nil {
+				}
+			}
+			if r.URL.Path == "/setCookie" {
+				http.SetCookie(w, &http.Cookie{Name: "key", Value: "value"})
+			}
+			if r.URL.Path == "/getCookie" {
+				cookies := r.Cookies()
+				for _, cookie := range cookies {
+					if _, err := w.Write([]byte(cookie.Name + "=" + cookie.Value)); err != nil {
+					}
+				}
+			}
 		}
-		if r.URL.Path == "/test" {
-			w.Write([]byte("passed"))
+		if r.Method == "POST" {
+			if r.URL.Path == "/test" {
+				body, _ := ioutil.ReadAll(r.Body)
+				if string(body) != "key=value" {
+					if _, err := w.Write([]byte("Failed")); err != nil {
+					}
+				} else {
+					if _, err := w.Write([]byte("POST")); err != nil {
+					}
+				}
+			}
+		}
+		if r.Method == "HEAD" {
+			http.SetCookie(w, &http.Cookie{Name: "HEAD", Value: "RIGHT"})
+		}
+		if r.Method == "PUT" {
+			if _, err := w.Write([]byte("PUT")); err != nil {
+			}
+		}
+		if r.Method == "PATCH" {
+			if _, err := w.Write([]byte("PATCH")); err != nil {
+			}
+		}
+		if r.Method == "DELETE" {
+			if _, err := w.Write([]byte("DELETE")); err != nil {
+			}
 		}
 	}))
+	return ts
+}
+
+func TestSessionGet(t *testing.T) {
+	ts := newTestSessionServer()
 	defer ts.Close()
 
 	session := NewSession()
@@ -25,25 +67,14 @@ func TestSessionGet(t *testing.T) {
 		t.Fatal(err)
 	}
 	text := resp.Text()
-	if text != "passed" {
-		t.Fatal("response was wrong, not", text)
+	if text != "GET" {
+		t.Fatal("Session.Get test failed")
 	}
 	t.Log("Session.Get test passed")
 }
 
 func TestSessionPost(t *testing.T) {
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// check method is GET before going to check other features
-		if r.Method != "POST" {
-			t.Fatalf("Expected method %q; got %q", "Post", r.Method)
-		}
-		body, _ := ioutil.ReadAll(r.Body)
-		if string(body) != "key=value" {
-			w.Write([]byte("Post body failed."))
-		} else {
-			w.Write([]byte("passed"))
-		}
-	}))
+	ts := newTestSessionServer()
 	defer ts.Close()
 
 	session := NewSession()
@@ -55,8 +86,8 @@ func TestSessionPost(t *testing.T) {
 		t.Fatal(err)
 	}
 	text := resp.Text()
-	if text != "passed" {
-		t.Fatal("response was wrong,", text)
+	if text != "POST" {
+		t.Fatal("Session.Post test failed")
 	}
 
 	body := Body("key=value")
@@ -65,38 +96,129 @@ func TestSessionPost(t *testing.T) {
 		t.Fatal(err)
 	}
 	text2 := resp2.Text()
-	if text2 != "passed" {
-		t.Fatal("response was wrong,", text)
+	if text2 != "POST" {
+		t.Fatal("Session.Post test failed")
 	}
 
 	t.Log("Session.Post test passed")
 }
 
-func TestCookieJar(t *testing.T) {
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// check method is GET before going to check other features
-		if r.Method != "GET" {
-			t.Fatalf("Expected method %q; got %q", "GET", r.Method)
-		}
-		if r.URL.Path == "/cookie" {
-			http.SetCookie(w, &http.Cookie{Name: "key", Value: "value"})
-			w.Write([]byte("passed"))
-		}
-	}))
+func TestSessionPut(t *testing.T) {
+	ts := newTestSessionServer()
 	defer ts.Close()
 
 	session := NewSession()
-	_, err := session.Get(ts.URL + "/cookie")
+	resp, err := session.Put(ts.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
-	cookie, err := session.Cookies(ts.URL)
+	text := resp.Text()
+	if text != "PUT" {
+		t.Fatal("Session.Put test failed")
+	}
+	t.Log("Session.Put test passed")
+}
+
+func TestSessionPatch(t *testing.T) {
+	ts := newTestSessionServer()
+	defer ts.Close()
+
+	session := NewSession()
+	resp, err := session.Patch(ts.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if cookie[0].Name != "key" {
-		t.Fatal("Cookies() failed.")
+	text := resp.Text()
+	if text != "PATCH" {
+		t.Fatal("Session.Patch test failed")
+	}
+	t.Log("Session.Patch test passed")
+}
+
+func TestSessionDelete(t *testing.T) {
+	ts := newTestSessionServer()
+	defer ts.Close()
+
+	session := NewSession()
+	resp, err := session.Delete(ts.URL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	text := resp.Text()
+	if text != "DELETE" {
+		t.Fatal("Session.Delete test failed")
+	}
+	t.Log("Session.Delete test passed")
+}
+
+func TestSessionHead(t *testing.T) {
+	ts := newTestSessionServer()
+	defer ts.Close()
+
+	session := NewSession()
+	resp, err := session.Head(ts.URL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	cookies := resp.Cookies
+	if cookies[0].Name != "HEAD" {
+		t.Fatal("Session.Head test failed")
+	}
+	t.Log("Session.Head test passed")
+}
+
+func TestSessionCookieJar(t *testing.T) {
+	ts := newTestSessionServer()
+	defer ts.Close()
+
+	session := NewSession()
+	_, err := session.Get(ts.URL + "/setCookie")
+	if err != nil {
+		t.Fatal(err)
+	}
+	resp, err := session.Get(ts.URL + "/getCookie")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.Text() != "key=value" {
+		t.Fatal("Session.CookieJar failed.")
 		return
 	}
-	t.Log("Cookies() passed.")
+	t.Log("Session.CookiesJar passed.")
+}
+
+func TestSessionSetCookie(t *testing.T) {
+	ts := newTestSessionServer()
+	defer ts.Close()
+
+	session := NewSession()
+	cookie := NewCookies("key", "value")
+	if err := session.SetCookies(ts.URL, cookie); err != nil {
+		t.Fatal(err)
+	}
+	resp, err := session.Get(ts.URL + "/getCookie")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.Text() != "key=value" {
+		t.Fatal("Session.SetCookies() failed.")
+		return
+	}
+	t.Log("Session.SetCookies() passed.")
+}
+
+func TestSessionCookies(t *testing.T) {
+	ts := newTestSessionServer()
+	defer ts.Close()
+
+	session := NewSession()
+	_, err := session.Get(ts.URL + "/setCookie")
+	if err != nil {
+		t.Fatal(err)
+	}
+	cookies := session.Cookies(ts.URL)
+	if cookies[0].Name != "key"{
+		t.Fatal("Session.Cookies() failed.")
+	}
+	t.Log("Session.Cookies() passed.")
 }
