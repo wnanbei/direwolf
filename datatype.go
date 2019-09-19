@@ -23,7 +23,7 @@ type Body []byte
 
 // PostForm is the form you want to post, as parameter in Request method.
 // You should init it by using NewPostForm like this:
-// 	postform := dw.NewPostForm(
+// 	postForm := dw.NewPostForm(
 //		"key1", "value1",
 // 		"key2", "value2",
 // 	)
@@ -64,29 +64,29 @@ type stringSliceMap struct {
 // 	)
 // But be careful, between the key and value is a comma.
 // And if the number of parameters is not a multiple of 2, it will panic.
-func (ssm *stringSliceMap) New(keyvalue ...string) {
+func (ssm *stringSliceMap) New(keyValue ...string) {
 	ssm.data = make(map[string][]string)
-	if keyvalue != nil {
-		if len(keyvalue)%2 != 0 {
+	if keyValue != nil {
+		if len(keyValue)%2 != 0 {
 			panic("key and value must be pair")
 		}
 
-		for i := 0; i < len(keyvalue)/2; i++ {
-			key := keyvalue[i*2]
-			value := keyvalue[i*2+1]
+		for i := 0; i < len(keyValue)/2; i++ {
+			key := keyValue[i*2]
+			value := keyValue[i*2+1]
 			ssm.data[key] = append(ssm.data[key], value)
 		}
 	}
 }
 
 // Add key and value to stringSliceMap.
-// If key exiests, value will append to slice.
+// If key exists, value will append to slice.
 func (ssm *stringSliceMap) Add(key, value string) {
 	ssm.data[key] = append(ssm.data[key], value)
 }
 
 // Set key and value to stringSliceMap.
-// If key exiests, existed value will drop and new value will set.
+// If key exists, existed value will drop and new value will set.
 func (ssm *stringSliceMap) Set(key, value string) {
 	ssm.data[key] = []string{value}
 }
@@ -113,7 +113,7 @@ func (ssm *stringSliceMap) Get(key string, index ...int) string {
 }
 
 // URLEncode encodes the values into ``URL encoded'' form
-// ("bar=baz&foo=quux") sorted by key.
+// ("bar=baz&foo=qux") sorted by key.
 func (ssm *stringSliceMap) URLEncode() string {
 	if ssm.data == nil {
 		return ""
@@ -148,24 +148,24 @@ func (ssm *stringSliceMap) URLEncode() string {
 // 	)
 // But be careful, between the key and value is a comma.
 // And if the number of parameters is not a multiple of 2, it will panic.
-func NewParams(keyvalue ...string) *Params {
+func NewParams(keyValue ...string) *Params {
 	var p = &Params{}
-	p.New(keyvalue...)
+	p.New(keyValue...)
 	return p
 }
 
 // NewPostForm new a PostForm type.
 //
 // You can set key-value pair when you init it by sent parameters. Just like this:
-// 	postform := NewPostForm(
+// 	postForm := NewPostForm(
 // 		"key1", "value1",
 // 		"key2", "value2",
 // 	)
 // But be careful, between the key and value is a comma.
 // And if the number of parameters is not a multiple of 2, it will panic.
-func NewPostForm(keyvalue ...string) *PostForm {
+func NewPostForm(keyValue ...string) *PostForm {
 	var p = &PostForm{}
-	p.New(keyvalue...)
+	p.New(keyValue...)
 	return p
 }
 
@@ -178,16 +178,16 @@ func NewPostForm(keyvalue ...string) *PostForm {
 // 	)
 // But be careful, between the key and value is a comma.
 // And if the number of parameters is not a multiple of 2, it will panic.
-func NewHeaders(keyvalue ...string) http.Header {
+func NewHeaders(keyValue ...string) http.Header {
 	h := http.Header{}
-	if keyvalue != nil {
-		if len(keyvalue)%2 != 0 {
+	if keyValue != nil {
+		if len(keyValue)%2 != 0 {
 			panic("key and value must be part")
 		}
 
-		for i := 0; i < len(keyvalue)/2; i++ {
-			key := keyvalue[i*2]
-			value := keyvalue[i*2+1]
+		for i := 0; i < len(keyValue)/2; i++ {
+			key := keyValue[i*2]
+			value := keyValue[i*2+1]
 			h.Add(key, value)
 		}
 	}
@@ -217,16 +217,16 @@ func (c Cookies) Add(key, value string) {
 // 	)
 // But be careful, between the key and value is a comma.
 // And if the number of parameters is not a multiple of 2, it will panic.
-func NewCookies(keyvalue ...string) Cookies {
+func NewCookies(keyValue ...string) Cookies {
 	c := make(Cookies, 0)
-	if keyvalue != nil {
-		if len(keyvalue)%2 != 0 {
+	if keyValue != nil {
+		if len(keyValue)%2 != 0 {
 			panic("key and value must be part")
 		}
 
-		for i := 0; i < len(keyvalue)/2; i++ {
-			key := keyvalue[i*2]
-			value := keyvalue[i*2+1]
+		for i := 0; i < len(keyValue)/2; i++ {
+			key := keyValue[i*2]
+			value := keyValue[i*2+1]
 			cookie := &http.Cookie{Name: key, Value: value}
 			c = append(c, cookie)
 		}

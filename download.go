@@ -75,11 +75,11 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 	}
 	defer resp.Body.Close()
 
-	buildedResponse, err := buildResponse(reqSetting, resp)
+	response, err := buildResponse(reqSetting, resp)
 	if err != nil {
 		return nil, MakeErrorStack(err, "Response Error")
 	}
-	return buildedResponse, nil
+	return response, nil
 }
 
 // buildResponse build response with http.Response after do request.

@@ -115,7 +115,7 @@ func (session *Session) SetCookies(u string, c Cookies) error {
 	return nil
 }
 
-// DisableCookieJar disable the Cookiejar of session
+// DisableCookieJar disable the CookieJar of session
 func (session *Session) DisableCookieJar() {
 	session.client.Jar = nil
 }
@@ -126,7 +126,6 @@ func NewSession() *Session {
 		DialContext: (&net.Dialer{
 			Timeout:   30 * time.Second,
 			KeepAlive: 30 * time.Second,
-			DualStack: true,
 		}).DialContext,
 		MaxIdleConns:          100,
 		MaxIdleConnsPerHost:   2,

@@ -1,5 +1,5 @@
 /*
-Package direwolf is a convient and esay to use http client written in Golang.
+Package direwolf is a convenient and easy to use http client written in Golang.
 */
 package direwolf
 
@@ -24,7 +24,7 @@ func Request(reqSetting *RequestSetting) (*Response, error) {
 // 	http.Header: HTTP Headers to send.
 // 	direwolf.Params: Parameters to send in the query string.
 // 	direwolf.Cookies: Cookies to send.
-// 	direwolf.Postform: Post dataform to send.
+// 	direwolf.PostForm: Post data form to send.
 // 	direwolf.Body: Post body to send.
 // 	direwolf.Proxy: Proxy url to use.
 // 	direwolf.Timeout: Request Timeout. Default value is 30.
@@ -41,7 +41,7 @@ func Get(URL string, args ...interface{}) (*Response, error) {
 // Post is the method to constructs and sends a Post request. Parameters are
 // the same with direwolf.Get()
 //
-// Note: direwolf.Body can`t existed with direwolf.Postform.
+// Note: direwolf.Body can`t existed with direwolf.PostForm.
 func Post(URL string, args ...interface{}) (*Response, error) {
 	reqSetting := NewRequestSetting("POST", URL, args...)
 	resp, err := Request(reqSetting)

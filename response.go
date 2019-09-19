@@ -33,7 +33,7 @@ func (resp *Response) Content() []byte {
 // Text decode content to string. You can specified encoding type. Such as GBK, GB18030,
 // latin1. Default is UTF-8.
 //
-// If Response.content doesn`t exists, it will call Response.Content() at first.
+// If Response.content does not exists, it will call Response.Content() at first.
 func (resp *Response) Text(encoding ...string) string {
 	var text = ""
 	var encodingType = strings.ToUpper(resp.Encoding)
@@ -119,7 +119,7 @@ type CSSNode struct {
 	selection *goquery.Selection
 }
 
-// Text return the text of the CSSNode. Only include stright children node text
+// Text return the text of the CSSNode. Only include straight children node text
 func (node *CSSNode) Text() string {
 	if node.selection != nil {
 		var text string
@@ -160,7 +160,7 @@ type CSSNodeList struct {
 	container []CSSNode
 }
 
-// Text return a list of text. Only include stright children node text
+// Text return a list of text. Only include straight children node text
 func (nodeList *CSSNodeList) Text() (textList []string) {
 	for _, node := range nodeList.container {
 		text := node.Text()
@@ -205,7 +205,7 @@ func (nodeList *CSSNodeList) CSS(queryStr string) *CSSNodeList {
 	return &CSSNodeList{container: newNodeList}
 }
 
-// First return the frist cssNode of CSSNodeList.
+// First return the first cssNode of CSSNodeList.
 // Return a empty cssNode if there is no cssNode in CSSNodeList
 func (nodeList *CSSNodeList) First() *CSSNode {
 	if len(nodeList.container) > 0 {

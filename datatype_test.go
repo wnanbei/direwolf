@@ -48,11 +48,11 @@ func TestStringSliceMap(t *testing.T) {
 		t.Fatal("params.Del() failed.")
 	}
 
-	postform := NewPostForm(
+	postForm := NewPostForm(
 		"key1", "value1",
 		"key2", "value2",
 	)
-	if postform.Get("key1") != "value1" {
-		t.Fatal("postform.Get() failed.")
+	if postForm.Get("key1") != "value1" {
+		t.Fatal("PostForm.Get() failed.")
 	}
 }

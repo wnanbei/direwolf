@@ -10,7 +10,7 @@ const (
 	HTTPError = "HTTPError"
 	// NewRequestError means create request method field.
 	NewRequestError = "NewRequestError"
-	// RequestBodyError means request body can`t exists with postform.
+	// RequestBodyError means request body can`t exists with post form.
 	RequestBodyError = "RequestBodyError"
 	// ProxyURLError means that proxy url was wrong.
 	ProxyURLError = "ProxyURLError"

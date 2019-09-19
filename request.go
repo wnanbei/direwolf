@@ -28,7 +28,7 @@ type RequestSetting struct {
 // 	http.Header: HTTP Headers to send.
 // 	direwolf.Params: Parameters to send in the query string.
 // 	direwolf.Cookies: Cookies to send.
-// 	direwolf.Postform: Post dataform to send.
+// 	direwolf.PostForm: Post data form to send.
 // 	direwolf.Body: Post body to send.
 // 	direwolf.Proxy: Proxy url to use.
 // 	direwolf.Timeout: Request Timeout.

@@ -13,16 +13,20 @@ permalink: /docs/session-zh
 
 ## 1. Session 会话
 
-在快速上手中提供的单次请求，使用的是短连接的方式，不会复用连接，如果希望复用连接以提升效率的话，可以使用 `Session`。
+在快速上手中提到的 `Get()` 等单次请求，默认使用的是短连接，不会复用连接，如果希望复用连接以提升效率的话，可以使用 `Session`。
 
-Session 中集成了连接池，可以通过复用连接极大的提升效率。
+Session 中集成了连接池，在对单个域名发起大量请求时，可以通过复用连接极大的提升效率。
 
 ```go
 session := dw.NewSession()
 session.Get("http://httpbin.org/get")
 ```
 
-并且，Session 可以自动管理请求获取的 Cookie：
+Session 同样可以使用多种请求方法，例如 `Post()`, `Request()`, `Put()` 等，请求方法中需要的参数也保持一致。
+
+## 2. Session Cookies
+
+Session 可以跨请求地自动管理请求获取的 Cookies：
 
 ```go
 session := dw.NewSession()
@@ -49,6 +53,8 @@ fmt.Println(resp.Text())
   "url": "https://httpbin.org/get"
 }
 ```
+
+如果需要手动添加 Cookies 的话，那么可以使用 `SetCookies()`方法
 
 如果你想要使用 Session 以得到更高的效率，但又不想要自动管理 Cookie 的话，可以使用 `DisableCookieJar()` 这个方法禁用掉 CookieJar。
 
