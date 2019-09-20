@@ -48,7 +48,7 @@ output:
 
 ## Add Request Parameters
 
-Besides, direwolf provide a convient way to add parameters to request. Such as Headers, Cookies, Params, etc.
+Besides, direwolf provide a convenient way to add parameters to request. Such as Headers, Cookies, Params, etc.
 
 ```go
 import (

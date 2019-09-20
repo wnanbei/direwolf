@@ -103,16 +103,15 @@ func (session *Session) Cookies(URL string) Cookies {
 }
 
 // SetCookies set cookies of the url in Session.
-func (session *Session) SetCookies(URL string, cookies Cookies) error {
+func (session *Session) SetCookies(URL string, cookies Cookies) {
 	if session.client.Jar == nil {
-		return MakeError(nil, "ErrCookieJar", "Cookie Jar was disabled.")
+		return
 	}
 	parsedURL, err := url.Parse(URL)
 	if err != nil {
-		return MakeErrorStack(err, "Parse URL failed")
+		return
 	}
-	session.client.Jar.SetCookies(parsedURL, []*http.Cookie(cookies))
-	return nil
+	session.client.Jar.SetCookies(parsedURL, cookies)
 }
 
 // DisableCookieJar disable the CookieJar of session

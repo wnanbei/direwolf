@@ -283,7 +283,7 @@ resp, err := dw.Get(
 
 ## 9. Proxy
 
-Set proxy is esay, too. You can set different proxies for HTTP and HTTPS sites.
+Set proxy is easy, too. You can set different proxies for HTTP and HTTPS sites.
 
 ```go
 proxies := &dw.Proxy{
@@ -351,7 +351,7 @@ resp.Text("GBK")
 
 It only support `UTF8`, `GBK`, `GB18030`, `Latin1` now.
 
-Note: Text() will decode content everytime you call it. If you want reuse text, you would better store the text in a variable.
+Note: Text() will decode content every time you call it. If you want reuse text, you would better store the text in a variable.
 
 ```go
 text := resp.Text()
@@ -392,13 +392,13 @@ text := resp.CSS("a").TextAll()
 
 ### Attribute
 
-In addition to text, direwolf can alse extract attributes.
+In addition to text, direwolf can also extract attributes.
 
 ```go
 attr := resp.CSS("a").Attr("href")
 ```
 
-The same with `Text()`, it retrun a slice of attribute values. It can use `First()` or `At()` to extract single value, too.
+The same with `Text()`, it return a slice of attribute values. It can use `First()` or `At()` to extract single value, too.
 
 `Attr()` can set a default value, if not match value is found, it will return the default value.
 

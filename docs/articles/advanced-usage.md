@@ -13,4 +13,4 @@ permalink: /docs/session
 
 ## 1. Session
 
-## 2. Session set Headers, Porxy, Timeout
+## 2. Session set Headers, Proxy, Timeout

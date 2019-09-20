@@ -4,7 +4,7 @@ title: "Direwolf HTTP Client: Save your time"
 toc: true
 toc_label: "Direwolf"
 
-excerpt: "Package direwolf is a convient and esay to use http client written in Golang."
+excerpt: "Package direwolf is a convenient and easy to use http client written in Golang."
 header:
   overlay_image: assets/cover.jpg
   actions:
@@ -16,7 +16,7 @@ author_profile: true
 
 ## Feature Support
 
-- Clean and Convient API
+- Clean and Convenient API
 - Simple to Set Headers, Cookies, Parameters, Post Forms
 - Sessions with Cookie Persistence
 - Keep-Alive & Connection Pooling

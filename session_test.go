@@ -193,9 +193,7 @@ func TestSessionSetCookie(t *testing.T) {
 
 	session := NewSession()
 	cookie := NewCookies("key", "value")
-	if err := session.SetCookies(ts.URL, cookie); err != nil {
-		t.Fatal(err)
-	}
+	session.SetCookies(ts.URL, cookie)
 	resp, err := session.Get(ts.URL + "/getCookie")
 	if err != nil {
 		t.Fatal(err)

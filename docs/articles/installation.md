@@ -11,13 +11,13 @@ sidebar:
 permalink: /docs/installation
 ---
 
-The easist way to install direwolf is to use `go get`:
+The easiest way to install direwolf is to use `go get`:
 
 ```text
 go get github.com/wnanbei/direwolf
 ```
 
-**Note: Please make sure that `GOPATH` and other environment have been setted before installation.**
+**Note: Please make sure that `GOPATH` and other environment have been set before installation.**
 
 ## Install the Specified Version
 
