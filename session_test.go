@@ -25,6 +25,20 @@ func newTestSessionServer() *httptest.Server {
 					}
 				}
 			}
+			if r.URL.Path == "/getHeader" {
+				header := r.Header
+				value := header.Get("user-agent")
+				if _, err := w.Write([]byte(value)); err != nil {
+				}
+			}
+			if r.URL.Path == "/getParams" {
+				if err := r.ParseForm(); err != nil {
+				}
+				params := r.Form
+				value := params.Get("key")
+				if _, err := w.Write([]byte(value)); err != nil {
+				}
+			}
 		}
 		if r.Method == "POST" {
 			if r.URL.Path == "/test" {
