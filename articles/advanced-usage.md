@@ -1,6 +1,6 @@
 ---
 layout: single
-title: Session
+title: Advanced Usage
 
 toc: true
 toc_label: Content
