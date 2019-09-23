@@ -157,7 +157,7 @@ If you want use session to improve efficiency but do not need CookieJar to persi
 session.DisableCookieJar()
 ```
 
-## 3. Session set Headers，Proxy，Timeout
+## 3. Session set Headers, Proxy, Timeout
 
 Session can persists some parameters across requests, like headers, timeout and proxy. But method-level parameters will override session parameters if method-level parameters coexists with session parameters.
 
