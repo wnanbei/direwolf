@@ -1,28 +1,28 @@
 ---
 layout: single
-title: Session 会话
+title: Session
 
 toc: true
 toc_label: Content
 
 sidebar:
-  nav: "sidebar_zh"
+  nav: "sidebar_en"
 
-permalink: /docs/session-zh
+permalink: /docs/advanced-usage
 ---
 
-## 1. 会话 Session
+## 1. Session Object
 
-`Get()`，`Post()` 等请求方法，默认使用的是短连接，不会复用连接，如果希望复用连接以提升效率的话，可以使用 `Session`。
+Request method such as `Get()` and `Post()`, which use short connection by default, do not reuse connections. You can use `Session` if you want to reuse connections for efficiency.
 
-Session 中集成了 `http.Client`，通过其底层的连接池，在对单个域名发起大量请求时，可以复用连接来极大的提升效率。
+The session integrates `http.Client`. When made a large number of requests to a single domain, the connections can be reused to improve efficiency through the underlying connection pool.
 
 ```go
 session := dw.NewSession()
 session.Get("http://httpbin.org/get")
 ```
 
-Session 对象拥有 Direwolf API 所有的请求方法。
+A Session object has all the request methods of the main Direwolf API.
 
 ```go
 session := dw.NewSession()
@@ -32,23 +32,23 @@ resp, err := session.Put("https://httpbin.org/put", dw.NewPostForm("key", "value
 resp, err := session.Delete("https://httpbin.org/delete")
 ```
 
-以及 `Request()`：
+and `Request()`:
 
 ```go
 req := dw.NewRequestSetting("Get", "https://httpbin.org/get")
 resp, err := session.Request(req)
 ```
 
-### 参数优先级
+### Parameter Priority
 
-Session 可以跨请求地保持某些参数，例如 headers，超时和代理。但是如果方法的参数和 Session 的参数共存的话，方法的参数会覆盖掉 Session 的参数。
+Session can persists some parameters across requests, like headers, timeout and proxy. But method-level parameters will override session parameters if method-level parameters coexists with session parameters.
 
-换句话说，方法的参数拥有更高的优先级。例子：
+In other words, method-level parameters has a higher priority. Example:
 
 ```go
 session := dw.NewSession()
 sessionHeaders := dw.NewHeaders("User-Agent", "Chrome 88.0")
-session.Headers = sessionHeaders  // 设置Session的Headers
+session.Headers = sessionHeaders  // Set session headers
 
 normalHeaders := dw.NewHeaders("User-Agent", "Chrome 66.0")
 resp, err := session.Get("http://httpbin.org/headers", normalHeaders)
@@ -58,27 +58,29 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-输出：
+Output：
 
 ```json
 {
   "headers": {
     "Accept-Encoding": "gzip",
     "Host": "httpbin.org",
+    "Normal": "on",
+    "Session": "on",
     "User-Agent": "Chrome 66.0"
   }
 }
 ```
 
-**但是，方法的参数将不会被跨请求的保持，它仅会被使用一次，即使使用的是 Session**
+**However, that method-level parameters will not be persisted across requests, even if using a session.** 
 
 ## 2. Session Cookies
 
-Session 可以跨请求地自动管理请求获取的 Cookies：
+Session can persists cookies across requests made from it：
 
 ```go
 session := dw.NewSession()
-session.Get("http://httpbin.org/cookies/set/name/direwolf")  // 获取cookie
+session.Get("http://httpbin.org/cookies/set/name/direwolf")  // get cookie
 resp, err := session.Get("http://httpbin.org/get")
 if err != nil {
     return
@@ -86,7 +88,7 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-输出：
+Output：
 
 ```json
 {
@@ -102,9 +104,9 @@ fmt.Println(resp.Text())
 }
 ```
 
-### 添加 Cookies
+### Add Cookies
 
-如果需要手动添加 Cookies 到 Session 中的话，那么可以使用 `SetCookies()`方法：
+If you need to manually add cookies to session, you can use `SetCookies()` method.
 
 ```go
 session := dw.NewSession()
@@ -117,7 +119,7 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-输出：
+Output：
 
 ```json
 {
@@ -127,9 +129,9 @@ fmt.Println(resp.Text())
 }
 ```
 
-### 获取 Cookies
+### Get Cookies
 
-如果需要获取 Session 中的 Cookies，则可以使用 `Cookies()` 方法：
+If you need to get cookies from session, you can use `Cookies()` method.
 
 ```go
 session := dw.NewSession()
@@ -137,31 +139,31 @@ _, err := session.Get("http://httpbin.org/cookies/set/key/value")
 if err != nil {
     return
 }
-cookies := session.Cookies("http://httpbin.org") // 输入cookies对应的协议和域名
+cookies := session.Cookies("http://httpbin.org") // Input cookies scheme and domain
 fmt.Println(cookies)
 ```
 
-得到的是一个 `Cookies` 类型的对象。输出：
+You will get a  `Cookies` type method. Output:
 
 ```go
 [key=value]
 ```
 
-### 禁用 CookieJar
+### Disable CookieJar
 
-如果你想要使用 Session 以得到更高的效率，但又不需要自动管理 Cookie 的话，可以使用 `DisableCookieJar()` 这个方法禁用掉 CookieJar。
+If you want use session to improve efficiency but do not need CookieJar to persist cookie，you can use `DisableCookieJar()` to disable cookiejar.
 
 ```go
 session.DisableCookieJar()
 ```
 
-## 3. Session 设置 Headers，Proxy，Timeout
+## 3. Session set Headers，Proxy，Timeout
 
-Session 可以跨请求地保持某些参数，例如 headers，超时和代理。但是如果方法的参数和 Session 的参数共存的话，方法的参数会覆盖掉 Session 的参数。
+Session can persists some parameters across requests, like headers, timeout and proxy. But method-level parameters will override session parameters if method-level parameters coexists with session parameters.
 
-### 请求头 Headers
+### Headers
 
-Session 的 Headers 字段类型为 `http.Header`, 使用 `dw.NewHeaders()` 方法构造并赋值即可。
+The type of Session Headers field is `http.Header`, you can simply construct it with `dw.NewHeaders()` and assign it.
 
 ```go
 session := dw.NewSession()
@@ -174,7 +176,7 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-输出：
+Output：
 
 ```json
 {
@@ -186,7 +188,7 @@ fmt.Println(resp.Text())
 }
 ```
 
-与其他参数不同，如果方法的 Headers 和 Session 的 Headers 共存，那么它们将会被合并，而如果有同名的 Header，那么方法的 Header 将会覆盖掉同名的 Session 的 Header。
+Different with other parameters, they will be merged if method-level parameters coexists with session parameters. And if there are same name parameters, the method-level parameter will override the same name session parameters.
 
 ```go
 session := dw.NewSession()
@@ -207,7 +209,7 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-输出：
+Output:
 
 ```json
 {
@@ -221,9 +223,9 @@ fmt.Println(resp.Text())
 }
 ```
 
-### 代理 Proxy
+### Proxy
 
-Session 的 Proxy 字段类型为 `*dw.Proxy` 的一个结构体，这个结构体有两个字段 `HTTP` 和 `HTTPS`，表示你访问 HTTP 和 HTTPS 网页时可以分别设置不同的代理。
+The type of Session Proxy field is a struct of `*dw.Proxy`. This struct has two fields `HTTP` and `HTTPS`, which means you can set different proxy when you request HTTP or HTTPS website.
 
 ```go
 session := dw.NewSession()
@@ -239,7 +241,7 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-输出：
+Output：
 
 ```json
 {
@@ -247,9 +249,9 @@ fmt.Println(resp.Text())
 }
 ```
 
-### 超时 Timeout
+### Timeout
 
-Session 的 Timeout 字段类型为一个简单的整形。
+The type of Session Timeout field is a simple `int`.
 
 ```go
 session := dw.NewSession()
