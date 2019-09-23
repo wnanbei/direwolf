@@ -70,7 +70,7 @@ sidebar_en:
       - title: 2. Session Cookies
         url: /docs/advanced-usage#2-session-cookies
       - title: 3. Session set Headers, Porxy, Timeout
-        url: /docs/advanced-usage#3-session-set-headers-porxy-timeout
+        url: /docs/advanced-usage#3-session-set-headersporxytimeout
 
 sidebar_zh:
   - title: 前言
