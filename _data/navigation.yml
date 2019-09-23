@@ -20,57 +20,57 @@ sidebar_en:
         url: /foreword#version
     
   - title: Installation
-    url: /articles/installation
+    url: /docs/installation
     children:
       - title: Install the Specified Version
-        url: /articles/installation#install-the-specified-version
+        url: /docs/installation#install-the-specified-version
       - title: Manual installation
-        url: /articles/installation#manual-installation
+        url: /docs/installation#manual-installation
       - title: Import
-        url: /articles/installation#import
+        url: /docs/installation#import
 
   - title: Quick Start
-    url: /articles/quick-start
+    url: /docs/quick-start
 
   - title: Tutorial
-    url: /articles/tutorial
+    url: /docs/tutorial
     children:
       - title: 1. Make Request
-        url: /articles/tutorial#1-make-request
+        url: /docs/tutorial#1-make-request
       - title: 2. Passing Parameters In URLs
-        url: /articles/tutorial#2-passing-parameters-in-urls
+        url: /docs/tutorial#2-passing-parameters-in-urls
       - title: 3. Set Headers
-        url: /articles/tutorial#3-set-headers
+        url: /docs/tutorial#3-set-headers
       - title: 4. Add Cookies
-        url: /articles/tutorial#4-add-cookies
+        url: /docs/tutorial#4-add-cookies
       - title: 5. Post Form
-        url: /articles/tutorial#5-post-form
+        url: /docs/tutorial#5-post-form
       - title: 6. Post Body
-        url: /articles/tutorial#6-post-body
+        url: /docs/tutorial#6-post-body
       - title: 7. Set Timeout
-        url: /articles/tutorial#7-set-timeout
+        url: /docs/tutorial#7-set-timeout
       - title: 8. Redirect
-        url: /articles/tutorial#8-redirect
+        url: /docs/tutorial#8-redirect
       - title: 9. Proxy
-        url: /articles/tutorial#9-proxy
+        url: /docs/tutorial#9-proxy
       - title: 10. Response
-        url: /articles/tutorial#10-response
+        url: /docs/tutorial#10-response
       - title: 11. Extract Data
-        url: /articles/tutorial#11-extract-data
+        url: /docs/tutorial#11-extract-data
       - title: 12. Extract Data by CSS Selector
-        url: /articles/tutorial#12-extract-data-by-css-selector
+        url: /docs/tutorial#12-extract-data-by-css-selector
       - title: 13. Extract Data by Regexp
-        url: /articles/tutorial#13-extract-data-by-regexp
+        url: /docs/tutorial#13-extract-data-by-regexp
   
   - title: Advanced Usage
-    url: /articles/advanced-usage
+    url: /docs/advanced-usage
     children:
       - title: 1. Session Object
-        url: /articles/advanced-usage#1-session-object
+        url: /docs/advanced-usage#1-session-object
       - title: 2. Session Cookies
-        url: /articles/advanced-usage#2-session-cookies
+        url: /docs/advanced-usage#2-session-cookies
       - title: 3. Session set Headers, Porxy, Timeout
-        url: /articles/advanced-usage#2-session-set-headers-porxy-timeout
+        url: /docs/advanced-usage#2-session-set-headers-porxy-timeout
 
 sidebar_zh:
   - title: 前言
@@ -80,54 +80,54 @@ sidebar_zh:
         url: /foreword-zh#版本
     
   - title: 安装
-    url: /articles/installation-zh
+    url: /docs/installation-zh
     children:
       - title: 安装指定版本
-        url: /articles/installation-zh#安装指定版本
+        url: /docs/installation-zh#安装指定版本
       - title: 手动安装
-        url: /articles/installation-zh#手动安装
+        url: /docs/installation-zh#手动安装
       - title: 导入
-        url: /articles/installation-zh#导入
+        url: /docs/installation-zh#导入
 
   - title: 快速上手
-    url: /articles/quick-start-zh
+    url: /docs/quick-start-zh
 
   - title: 教程
-    url: /articles/tutorial-zh
+    url: /docs/tutorial-zh
     children:
       - title: 1. 发起请求
-        url: /articles/tutorial-zh#1-发起请求
+        url: /docs/tutorial-zh#1-发起请求
       - title: 2. 传递URL参数
-        url: /articles/tutorial-zh#2-传递url参数
+        url: /docs/tutorial-zh#2-传递url参数
       - title: 3. 设置 Headers
-        url: /articles/tutorial-zh#3-设置-headers
+        url: /docs/tutorial-zh#3-设置-headers
       - title: 4. 添加 Cookies
-        url: /articles/tutorial-zh#4-添加-cookies
+        url: /docs/tutorial-zh#4-添加-cookies
       - title: 5. Post 表单
-        url: /articles/tutorial-zh#5-post-表单
+        url: /docs/tutorial-zh#5-post-表单
       - title: 6. Post 请求体
-        url: /articles/tutorial-zh#6-post-请求体
+        url: /docs/tutorial-zh#6-post-请求体
       - title: 7. 设置超时
-        url: /articles/tutorial-zh#7-设置超时
+        url: /docs/tutorial-zh#7-设置超时
       - title: 8. 重定向
-        url: /articles/tutorial-zh#8-重定向
+        url: /docs/tutorial-zh#8-重定向
       - title: 9. 代理
-        url: /articles/tutorial-zh#9-代理
+        url: /docs/tutorial-zh#9-代理
       - title: 10. Response 响应
-        url: /articles/tutorial-zh#10-response-响应
+        url: /docs/tutorial-zh#10-response-响应
       - title: 11. 提取数据
-        url: /articles/tutorial-zh#11-提取数据
+        url: /docs/tutorial-zh#11-提取数据
       - title: 12. 使用 CSS 选择器提取数据
-        url: /articles/tutorial-zh#12-使用-css-选择器提取数据
+        url: /docs/tutorial-zh#12-使用-css-选择器提取数据
       - title: 13. 使用正则提取数据
-        url: /articles/tutorial-zh#13-使用正则提取数据
+        url: /docs/tutorial-zh#13-使用正则提取数据
   
   - title: 高级用法
-    url: /articles/advanced-usage-zh
+    url: /docs/advanced-usage-zh
     children:
       - title: 1. 会话 Session
-        url: /articles/advanced-usage-zh#1-会话-Session
+        url: /docs/advanced-usage-zh#1-会话-Session
       - title: 2. Session Cookies
-        url: /articles/advanced-usage-zh#2-session-cookies
+        url: /docs/advanced-usage-zh#2-session-cookies
       - title: 3. Session 设置 Headers，Proxy，Timeout
-        url: /articles/advanced-usage-zh#3-session-设置-headersproxytimeout
+        url: /docs/advanced-usage-zh#3-session-设置-headersproxytimeout
