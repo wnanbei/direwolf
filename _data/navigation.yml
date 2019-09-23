@@ -70,7 +70,7 @@ sidebar_en:
       - title: 2. Session Cookies
         url: /docs/advanced-usage#2-session-cookies
       - title: 3. Session set Headers, Porxy, Timeout
-        url: /docs/advanced-usage#2-session-set-headers-porxy-timeout
+        url: /docs/advanced-usage#3-session-set-headers-porxy-timeout
 
 sidebar_zh:
   - title: 前言
@@ -126,7 +126,7 @@ sidebar_zh:
     url: /docs/advanced-usage-zh
     children:
       - title: 1. 会话 Session
-        url: /docs/advanced-usage-zh#1-会话-Session
+        url: /docs/advanced-usage-zh#1-会话-session
       - title: 2. Session Cookies
         url: /docs/advanced-usage-zh#2-session-cookies
       - title: 3. Session 设置 Headers，Proxy，Timeout
