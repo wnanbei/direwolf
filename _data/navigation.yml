@@ -65,11 +65,11 @@ sidebar_en:
   - title: Advanced Usage
     url: /docs/advanced-usage
     children:
-      - title: 1. Session
-        url: /docs/advanced-usage#1-session
-      - title: 2. Session set Cookies
-        url: /docs/advanced-usage#2-session-set-headers-porxy-timeout
-      - title: 2. Session set Headers, Porxy, Timeout
+      - title: 1. Session Object
+        url: /docs/advanced-usage#1-session-object
+      - title: 2. Session Cookies
+        url: /docs/advanced-usage#2-session-cookies
+      - title: 3. Session set Headers, Porxy, Timeout
         url: /docs/advanced-usage#2-session-set-headers-porxy-timeout
 
 sidebar_zh:
@@ -125,8 +125,8 @@ sidebar_zh:
   - title: 高级用法
     url: /docs/advanced-usage-zh
     children:
-      - title: 1. Session 会话
-        url: /docs/advanced-usage-zh#1-session-会话
+      - title: 1. 会话 Session
+        url: /docs/advanced-usage-zh#1-会话-Session
       - title: 2. Session Cookies
         url: /docs/advanced-usage-zh#2-session-cookies
       - title: 3. Session 设置 Headers，Proxy，Timeout

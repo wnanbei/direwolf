@@ -13,16 +13,16 @@ permalink: /docs/session-zh
 
 ## 1. 会话 Session
 
-在快速上手中提到的 `Get()` 等单次请求，默认使用的是短连接，不会复用连接，如果希望复用连接以提升效率的话，可以使用 `Session`。
+`Get()`，`Post()` 等请求方法，默认使用的是短连接，不会复用连接，如果希望复用连接以提升效率的话，可以使用 `Session`。
 
-Session 中集成了连接池，在对单个域名发起大量请求时，可以通过复用连接极大的提升效率。
+Session 中集成了 `http.Client`，通过其底层的连接池，在对单个域名发起大量请求时，可以复用连接来极大的提升效率。
 
 ```go
 session := dw.NewSession()
 session.Get("http://httpbin.org/get")
 ```
 
-Session 同样可以使用多种请求方法，例如 `Post()`, `Request()`, `Put()` 等，请求方法中需要的参数也保持一致。
+Session 对象拥有 Direwolf API 所有的请求方法。
 
 ```go
 session := dw.NewSession()
@@ -32,13 +32,53 @@ resp, err := session.Put("https://httpbin.org/put", dw.NewPostForm("key", "value
 resp, err := session.Delete("https://httpbin.org/delete")
 ```
 
+以及 `Request()`：
+
+```go
+req := dw.NewRequestSetting("Get", "https://httpbin.org/get")
+resp, err := session.Request(req)
+```
+
+### 参数优先级
+
+Session 可以跨请求地保持某些参数，例如 headers，超时和代理。但是如果方法的参数和 Session 的参数共存的话，方法的参数会覆盖掉 Session 的参数。
+
+换句话说，方法的参数拥有更高的优先级。例子：
+
+```go
+session := dw.NewSession()
+sessionHeaders := dw.NewHeaders("User-Agent", "Chrome 88.0")
+session.Headers = sessionHeaders  // 设置Session的Headers
+
+normalHeaders := dw.NewHeaders("User-Agent", "Chrome 66.0")
+resp, err := session.Get("http://httpbin.org/headers", normalHeaders)
+if err != nil {
+    return
+}
+fmt.Println(resp.Text())
+```
+
+输出：
+
+```json
+{
+  "headers": {
+    "Accept-Encoding": "gzip",
+    "Host": "httpbin.org",
+    "User-Agent": "Chrome 66.0"
+  }
+}
+```
+
+**但是，方法的参数将不会被跨请求的保持，它仅会被使用一次，即使使用的是 Session**
+
 ## 2. Session Cookies
 
 Session 可以跨请求地自动管理请求获取的 Cookies：
 
 ```go
 session := dw.NewSession()
-session.Get("http://httpbin.org/cookies/set/name/direwolf")  // 获取Cookie
+session.Get("http://httpbin.org/cookies/set/name/direwolf")  // 获取cookie
 resp, err := session.Get("http://httpbin.org/get")
 if err != nil {
     return
@@ -115,11 +155,13 @@ fmt.Println(cookies)
 session.DisableCookieJar()
 ```
 
-## 2. Session 设置 Headers，Proxy，Timeout
+## 3. Session 设置 Headers，Proxy，Timeout
 
-在 Session 中可以设定一些参数，例如 Headers，Proxy，Timeout，在 Session 每次发起请求时都会带上这些参数。
+Session 可以跨请求地保持某些参数，例如 headers，超时和代理。但是如果方法的参数和 Session 的参数共存的话，方法的参数会覆盖掉 Session 的参数。
 
 ### 请求头 Headers
+
+Session 的 Headers 字段类型为 `http.Header`, 使用 `dw.NewHeaders()` 方法构造并赋值即可。
 
 ```go
 session := dw.NewSession()
@@ -144,7 +186,7 @@ fmt.Println(resp.Text())
 }
 ```
 
-如果在请求方法中也传入了 Headers 参数，direwolf 会在发起请求时将其与 Session 的 Headers 合并，如果有同名 Header，则请求方法中传入的 Headers 优先。
+与其他参数不同，如果方法的 Headers 和 Session 的 Headers 共存，那么它们将会被合并，而如果有同名的 Header，那么方法的 Header 将会覆盖掉同名的 Session 的 Header。
 
 ```go
 session := dw.NewSession()
@@ -181,6 +223,8 @@ fmt.Println(resp.Text())
 
 ### 代理 Proxy
 
+Session 的 Proxy 字段类型为 `*dw.Proxy` 的一个结构体，这个结构体有两个字段 `HTTP` 和 `HTTPS`，表示你访问 HTTP 和 HTTPS 网页时可以分别设置不同的代理。
+
 ```go
 session := dw.NewSession()
 proxy := &dw.Proxy{
@@ -203,13 +247,11 @@ fmt.Println(resp.Text())
 }
 ```
 
-如果在请求方法中传入了 Proxy 参数，则优先级高于 Session 的 Proxy。
-
 ### 超时 Timeout
+
+Session 的 Timeout 字段类型为一个简单的整形。
 
 ```go
 session := dw.NewSession()
 session.Timeout = 5
 ```
-
-如果在请求方法中传入了 Timeout 参数，则优先级高于 Session 的 Timeout。
