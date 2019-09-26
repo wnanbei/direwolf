@@ -2,7 +2,7 @@ package direwolf
 
 import (
 	"bytes"
-	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -54,7 +54,7 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 	// Handle the DataForm, convert DataForm to strings.Reader.
 	// Set Content-Type to application/x-www-form-urlencoded.
 	if reqSetting.Body != nil && reqSetting.PostForm != nil {
-		return nil, errors.New("body can`t coexists with PostForm")
+		return nil, ErrRequestBody
 	} else if reqSetting.PostForm != nil {
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 		data := reqSetting.PostForm.URLEncode()
@@ -99,7 +99,7 @@ func buildResponse(req *RequestSetting, resp *http.Response) (*Response, error) 
 		Proto:         resp.Proto,
 		Encoding:      "UTF-8",
 		Headers:       resp.Header,
-		Cookies:       Cookies(resp.Cookies()),
+		Cookies:       resp.Cookies(),
 		Request:       req,
 		ContentLength: resp.ContentLength,
 		content:       content,
@@ -134,38 +134,34 @@ func getProxyFunc(p1, p2 *Proxy) (func(*http.Request) (*url.URL, error), error) 
 		return nil, nil
 	}
 
-	if p.HTTP != "" && p.HTTPS != "" { // Parse HTTP and HTTPS proxy url
-		httpURL, err := url.Parse(p.HTTP)
-		if err != nil {
-			return nil, WrapError(err, "Proxy URL error, please check proxy url")
-		}
-		httpsURL, err := url.Parse(p.HTTPS)
-		if err != nil {
-			return nil, WrapError(err, "Proxy URL error, please check proxy url")
-		}
-
-		return func(req *http.Request) (*url.URL, error) { // Create a function to choose proxy when transport start request
-			if req.URL.Scheme == "http" {
-				return httpURL, nil
-			} else if req.URL.Scheme == "https" {
-				return httpsURL, nil
-			}
-			return nil, errors.New("URL scheme is wrong. Not http or https")
-		}, nil
-
+	if p.HTTP == "" && p.HTTPS == "" { // Check Proxy fields
+		return nil, nil
 	}
-	return nil, errors.New("proxy URL error, please check proxy url")
+
+	httpURL, err := url.Parse(p.HTTP)
+	if err != nil {
+		return nil, WrapError(err, "Proxy URL error, please check proxy url")
+	}
+	httpsURL, err := url.Parse(p.HTTPS)
+	if err != nil {
+		return nil, WrapError(err, "Proxy URL error, please check proxy url")
+	}
+
+	return func(req *http.Request) (*url.URL, error) { // Create a function to choose proxy when transport start request
+		if req.URL.Scheme == "http" {
+			return httpURL, nil
+		} else if req.URL.Scheme == "https" {
+			return httpsURL, nil
+		}
+		return nil, fmt.Errorf(`unsupported protocol scheme "%s"`, req.URL.Scheme)
+	}, nil
 }
 
 // getRedirectFunc return a redirect control function. Default redirect number is 5.
 func getRedirectFunc(r int) func(req *http.Request, via []*http.Request) error {
-	if r <= 0 {
-		r = 0
-	}
-
 	redirectFunc := func(req *http.Request, via []*http.Request) error {
 		if len(via) > r {
-			return errors.New("exceeded the maximum number of redirects")
+			return &RedirectError{r}
 		}
 		return nil
 	}

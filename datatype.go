@@ -41,7 +41,7 @@ type Proxy struct {
 
 // RedirectNum is the number of request redirect allowed.
 // If RedirectNum > 0, it means a redirect number limit for requests.
-// If RedirectNum = 0, it means ban redirect.
+// If RedirectNum <= 0, it means ban redirect.
 // If RedirectNum is not set, it means default 5 times redirect limit.
 type RedirectNum int
 

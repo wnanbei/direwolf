@@ -2,13 +2,28 @@ package direwolf
 
 import (
 	"errors"
-	"fmt"
 	"testing"
 )
 
 func TestError(t *testing.T) {
-	err1 := errors.New("first error")
+	err1 := ErrRequestBody
 	err2 := WrapError(err1, "second testing")
 	err3 := WrapError(err2, "third testing")
-	fmt.Println(err3)
+
+	if !errors.Is(err3, ErrRequestBody) {
+		t.Fatal("Test errors.Is failed.")
+	}
+}
+
+func TestRedirectError(t *testing.T) {
+	red := RedirectNum(3)
+	_, err := Get("http://httpbin.org/redirect/4", red)
+	if err != nil {
+		var eType *RedirectError
+		if !errors.As(err, &eType) {
+			t.Fatal("Test TestRedirectError failed.")
+		}
+	} else {
+		t.Fatal("Test TestRedirectError failed.")
+	}
 }

@@ -106,7 +106,7 @@ func (resp *Response) CSS(queryStr string) *CSSNodeList {
 	}
 	resp.dom = dom
 
-	newNodeList := make([]CSSNode, 1)
+	newNodeList := make([]CSSNode, 0)
 	resp.dom.Find(queryStr).Each(func(i int, selection *goquery.Selection) {
 		newNode := CSSNode{selection: selection}
 		newNodeList = append(newNodeList, newNode)
@@ -195,7 +195,7 @@ func (nodeList *CSSNodeList) Attr(attrName string, defaultValue ...string) (valu
 
 // CSS return a CSSNodeList, so you can chain CSS
 func (nodeList *CSSNodeList) CSS(queryStr string) *CSSNodeList {
-	newNodeList := make([]CSSNode, 1)
+	newNodeList := make([]CSSNode, 0)
 	for _, node := range nodeList.container {
 		node.selection.Find(queryStr).Each(func(i int, selection *goquery.Selection) {
 			newNode := CSSNode{selection: selection}

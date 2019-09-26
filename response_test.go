@@ -79,10 +79,7 @@ func TestCssExtract(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(resp.Text())
 	result1 := resp.CSS(`a`).First().Text()
-	resultxxx := resp.CSS(`a`)
-	t.Log(resultxxx)
 	if result1 != "is a convenient" {
 		t.Fatal("Response.CSS().First().Text() failed.")
 	}
