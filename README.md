@@ -1,6 +1,6 @@
 # Direwolf HTTP Client: Save your time
 
-Package direwolf is a convient and esay to use http client written in Golang.
+Package direwolf is a convenient and easy to use http client written in Golang.
 
 If you want find more info, please go here: [Direwolf HTTP Client: Save your time](https://wnanbei.github.io/direwolf/)
 
@@ -8,7 +8,7 @@ If you want find more info, please go here: [Direwolf HTTP Client: Save your tim
 
 ## Feature Support
 
-- Clean and Convient API
+- Clean and Convenient API
 - Simple to Set Headers, Cookies, Parameters, Post Forms
 - Sessions with Cookie Persistence
 - Keep-Alive & Connection Pooling
@@ -25,7 +25,7 @@ If you want find more info, please go here: [Direwolf HTTP Client: Save your tim
 go get github.com/wnanbei/direwolf
 ```
 
-## Take a galance
+## Take a glance
 
 You can easily send a request like this:
 
@@ -45,7 +45,7 @@ func main() {
 }
 ```
 
-Besides, direwolf provide a convient way to add parameters to request. Such
+Besides, direwolf provide a convenient way to add parameters to request. Such
 as Headers, Cookies, Params, etc.
 
 ```go

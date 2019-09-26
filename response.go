@@ -91,7 +91,7 @@ func (resp *Response) ReSubmatch(queryStr string) [][]string {
 	var subMatchResult [][]string
 	for _, match := range data {
 		if len(match) > 1 { // In case that query has no submatch part
-			subMatchResult = append(subMatchResult, match[1:len(match)])
+			subMatchResult = append(subMatchResult, match[1:])
 		}
 	}
 	return subMatchResult
@@ -106,7 +106,7 @@ func (resp *Response) CSS(queryStr string) *CSSNodeList {
 	}
 	resp.dom = dom
 
-	newNodeList := []CSSNode{}
+	newNodeList := make([]CSSNode, 1)
 	resp.dom.Find(queryStr).Each(func(i int, selection *goquery.Selection) {
 		newNode := CSSNode{selection: selection}
 		newNodeList = append(newNodeList, newNode)
@@ -195,7 +195,7 @@ func (nodeList *CSSNodeList) Attr(attrName string, defaultValue ...string) (valu
 
 // CSS return a CSSNodeList, so you can chain CSS
 func (nodeList *CSSNodeList) CSS(queryStr string) *CSSNodeList {
-	newNodeList := []CSSNode{}
+	newNodeList := make([]CSSNode, 1)
 	for _, node := range nodeList.container {
 		node.selection.Find(queryStr).Each(func(i int, selection *goquery.Selection) {
 			newNode := CSSNode{selection: selection}

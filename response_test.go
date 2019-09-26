@@ -79,8 +79,10 @@ func TestCssExtract(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	t.Log(resp.Text())
 	result1 := resp.CSS(`a`).First().Text()
-	t.Log(result1)
+	resultxxx := resp.CSS(`a`)
+	t.Log(resultxxx)
 	if result1 != "is a convenient" {
 		t.Fatal("Response.CSS().First().Text() failed.")
 	}
@@ -115,7 +117,6 @@ func TestResponseEncoding(t *testing.T) {
 	}
 	resp3.Encoding = "latin1"
 	result3 := resp3.ReSubmatch(`<a href="/author/">(.*?)</a>`)
-	// t.Log(resp3.Text())
 	if result3[0][0] != "..." {
 		t.Fatal("Response latin1 failed.")
 	}

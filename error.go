@@ -3,6 +3,7 @@ package direwolf
 import (
 	"fmt"
 	"runtime"
+	"time"
 )
 
 const (
@@ -20,57 +21,62 @@ const (
 	URLError = "URLError"
 )
 
-// ErrorStack is a wrapped error type, contain stack info, like file name and code line.
-type ErrorStack struct {
-	Prev error
-	Msg  string
-	File string
-	Line int
-}
-
-// Error method made ErrorStack type contain the error stack.
-func (e ErrorStack) Error() string {
-	if e.Prev == nil {
-		return fmt.Sprintf("%s:%d\n%s", e.File, e.Line, e.Msg)
-	}
-	return fmt.Sprintf("%s:%d\n%s\n%v", e.File, e.Line, e.Msg, e.Prev)
-}
-
-// MakeErrorStack used to create ErrorStack type, prev is the previous error.
-func MakeErrorStack(prev error, msg string) error {
-	_, file, line, _ := runtime.Caller(1)
-	return &ErrorStack{
-		Prev: prev,
-		Msg:  msg,
-		File: file,
-		Line: line,
-	}
-}
-
-// Error combined by Name field and ErrorStack. So it have name and stack info.
 type Error struct {
-	Name string
-	ErrorStack
+	// wrapped error
+	err      error
+	msg      string
+	// file path and name
+	file     string
+	fileLine int
+	time     string
 }
 
-// Error method made Error type contain the error stack.
-func (e Error) Error() string {
-	if e.Prev == nil {
-		return fmt.Sprintf("%s:%d - %s\n%s", e.File, e.Line, e.Name, e.Msg)
+func (e *Error) Error() string {
+	return fmt.Sprintf("%s - %s:%d\n%s\n\n%s", e.time, e.file, e.fileLine, e.msg, e.err.Error())
+}
+
+func (e *Error) Unwrap() error {
+	if e.err != nil {
+		return e.err
 	}
-	return fmt.Sprintf("%s:%d - %s\n%s\n%v", e.File, e.Line, e.Name, e.Msg, e.Prev)
+	return nil
 }
 
-// MakeError used to create Error type, prev is the previous error.
-func MakeError(prev error, name, msg string) error {
+// stack will return the error stack information with a string.
+//func (e *Error) stack() string {
+//	return fmt.Sprintf("[%s] - %s:%d - %s\n%s", e.time, e.file, e.fileLine, e.msg, ErrStack(e.err))
+//}
+
+// WrapError will wrap a error with some information: filename, line, time.
+func WrapError(err error, msg string) error {
 	_, file, line, _ := runtime.Caller(1)
 	return &Error{
-		Name: name,
-		ErrorStack: ErrorStack{
-			Prev: prev,
-			Msg:  msg,
-			File: file,
-			Line: line,
-		},
+		err:      err,
+		msg:      msg,
+		file:     file,
+		fileLine: line,
+		time:     time.Now().Format("2006-01-02 15:04:05"),
 	}
 }
+
+// ErrStack will return error stack information.
+//func ErrStack(err error) string {
+//	var prevErr *Error
+//	if errors.As(err, &prevErr) {
+//		return prevErr.stack()
+//	}
+//	return err.Error()
+//}
+
+
+
+// ErrorStack is a wrapped error type, contain stack info, like file name and code line.
+
+// Error method made ErrorStack type contain the error stack.
+// MakeErrorStack used to create ErrorStack type, prev is the previous error.
+
+// Error combined by Name field and ErrorStack. So it have name and stack info.
+
+// Error method made Error type contain the error stack.
+
+// MakeError used to create Error type, prev is the previous error.

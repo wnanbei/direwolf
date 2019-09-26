@@ -25,7 +25,7 @@ type Session struct {
 func (session *Session) Request(reqSetting *RequestSetting) (*Response, error) {
 	resp, err := session.send(reqSetting)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Session.Request()")
+		return nil, WrapError(err, "request failed")
 	}
 	return resp, nil
 }
@@ -35,7 +35,7 @@ func (session *Session) Get(URL string, args ...interface{}) (*Response, error) 
 	reqSetting := NewRequestSetting("GET", URL, args...)
 	resp, err := session.Request(reqSetting)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Session.Get()")
+		return nil, err
 	}
 	return resp, nil
 }
@@ -45,7 +45,7 @@ func (session *Session) Post(URL string, args ...interface{}) (*Response, error)
 	reqSetting := NewRequestSetting("POST", URL, args...)
 	resp, err := session.Request(reqSetting)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Session.Post()")
+		return nil, err
 	}
 	return resp, nil
 }
@@ -55,7 +55,7 @@ func (session *Session) Head(URL string, args ...interface{}) (*Response, error)
 	reqSetting := NewRequestSetting("HEAD", URL, args...)
 	resp, err := session.Request(reqSetting)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Session.Head()")
+		return nil, err
 	}
 	return resp, nil
 }
@@ -65,7 +65,7 @@ func (session *Session) Put(URL string, args ...interface{}) (*Response, error) 
 	reqSetting := NewRequestSetting("PUT", URL, args...)
 	resp, err := session.Request(reqSetting)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Session.Put()")
+		return nil, err
 	}
 	return resp, nil
 }
@@ -75,7 +75,7 @@ func (session *Session) Patch(URL string, args ...interface{}) (*Response, error
 	reqSetting := NewRequestSetting("PATCH", URL, args...)
 	resp, err := session.Request(reqSetting)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Session.Put()")
+		return nil, err
 	}
 	return resp, nil
 }
@@ -85,7 +85,7 @@ func (session *Session) Delete(URL string, args ...interface{}) (*Response, erro
 	reqSetting := NewRequestSetting("DELETE", URL, args...)
 	resp, err := session.Request(reqSetting)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Session.Delete()")
+		return nil, err
 	}
 	return resp, nil
 }

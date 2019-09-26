@@ -2,6 +2,7 @@ package direwolf
 
 import (
 	"bytes"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -14,7 +15,7 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 	// Make new http.Request
 	req, err := http.NewRequest(reqSetting.Method, reqSetting.URL, nil)
 	if err != nil {
-		return nil, MakeError(err, NewRequestError, "Build Request error, please check request url or request method")
+		return nil, WrapError(err, "build Request error, please check request url or request method")
 	}
 
 	// Handle the Headers.
@@ -23,7 +24,7 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 	// Add proxy method to transport
 	proxyFunc, err := getProxyFunc(reqSetting.Proxy, session.Proxy)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Session.send()")
+		return nil, WrapError(err, "build proxy failed, please check Proxy and session.Proxy")
 	}
 	if proxyFunc != nil {
 		session.transport.Proxy = proxyFunc
@@ -53,7 +54,7 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 	// Handle the DataForm, convert DataForm to strings.Reader.
 	// Set Content-Type to application/x-www-form-urlencoded.
 	if reqSetting.Body != nil && reqSetting.PostForm != nil {
-		return nil, MakeError(nil, RequestBodyError, "Body can`t exists with PostForm")
+		return nil, errors.New("body can`t coexists with PostForm")
 	} else if reqSetting.PostForm != nil {
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 		data := reqSetting.PostForm.URLEncode()
@@ -71,13 +72,17 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 
 	resp, err := session.client.Do(req) // do request
 	if err != nil {
-		return nil, MakeError(err, HTTPError, "Request Error")
+		return nil, WrapError(err, "Request Error")
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			panic(err)
+		}
+	}()
 
 	response, err := buildResponse(reqSetting, resp)
 	if err != nil {
-		return nil, MakeErrorStack(err, "Response Error")
+		return nil, WrapError(err, "build Response Error")
 	}
 	return response, nil
 }
@@ -86,7 +91,7 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 func buildResponse(req *RequestSetting, resp *http.Response) (*Response, error) {
 	content, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, MakeError(err, "ErrReadBody", "Read Response.Body failed.")
+		return nil, WrapError(err, "read Response.Body failed")
 	}
 	return &Response{
 		URL:           req.URL,
@@ -132,11 +137,11 @@ func getProxyFunc(p1, p2 *Proxy) (func(*http.Request) (*url.URL, error), error) 
 	if p.HTTP != "" && p.HTTPS != "" { // Parse HTTP and HTTPS proxy url
 		httpURL, err := url.Parse(p.HTTP)
 		if err != nil {
-			return nil, MakeError(err, ProxyURLError, "Proxy URL error, please check proxy url")
+			return nil, WrapError(err, "Proxy URL error, please check proxy url")
 		}
 		httpsURL, err := url.Parse(p.HTTPS)
 		if err != nil {
-			return nil, MakeError(err, ProxyURLError, "Proxy URL error, please check proxy url")
+			return nil, WrapError(err, "Proxy URL error, please check proxy url")
 		}
 
 		return func(req *http.Request) (*url.URL, error) { // Create a function to choose proxy when transport start request
@@ -145,11 +150,11 @@ func getProxyFunc(p1, p2 *Proxy) (func(*http.Request) (*url.URL, error), error) 
 			} else if req.URL.Scheme == "https" {
 				return httpsURL, nil
 			}
-			return nil, MakeError(nil, URLError, "URL scheme is wrong. Not http or https.")
+			return nil, errors.New("URL scheme is wrong. Not http or https")
 		}, nil
 
 	}
-	return nil, MakeError(nil, ProxyURLError, "Proxy URL error, please check proxy url")
+	return nil, errors.New("proxy URL error, please check proxy url")
 }
 
 // getRedirectFunc return a redirect control function. Default redirect number is 5.
@@ -160,7 +165,7 @@ func getRedirectFunc(r int) func(req *http.Request, via []*http.Request) error {
 
 	redirectFunc := func(req *http.Request, via []*http.Request) error {
 		if len(via) > r {
-			return MakeError(nil, RedirectError, "Exceeded the maximum number of redirects")
+			return errors.New("exceeded the maximum number of redirects")
 		}
 		return nil
 	}

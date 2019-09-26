@@ -11,7 +11,7 @@ func Request(reqSetting *RequestSetting) (*Response, error) {
 	session.transport.DisableKeepAlives = true
 	resp, err := session.Request(reqSetting)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Request()")
+		return nil, err
 	}
 	return resp, nil
 }
@@ -33,7 +33,7 @@ func Get(URL string, args ...interface{}) (*Response, error) {
 	reqSetting := NewRequestSetting("GET", URL, args...)
 	resp, err := Request(reqSetting)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Get()")
+		return nil, err
 	}
 	return resp, nil
 }
@@ -46,7 +46,7 @@ func Post(URL string, args ...interface{}) (*Response, error) {
 	reqSetting := NewRequestSetting("POST", URL, args...)
 	resp, err := Request(reqSetting)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Post()")
+		return nil, err
 	}
 	return resp, nil
 }
@@ -57,7 +57,7 @@ func Head(URL string, args ...interface{}) (*Response, error) {
 	reqSetting := NewRequestSetting("HEAD", URL, args...)
 	resp, err := Request(reqSetting)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Post()")
+		return nil, err
 	}
 	return resp, nil
 }
@@ -68,7 +68,7 @@ func Put(URL string, args ...interface{}) (*Response, error) {
 	reqSetting := NewRequestSetting("Put", URL, args...)
 	resp, err := Request(reqSetting)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Post()")
+		return nil, err
 	}
 	return resp, nil
 }
@@ -79,7 +79,7 @@ func Patch(URL string, args ...interface{}) (*Response, error) {
 	reqSetting := NewRequestSetting("Patch", URL, args...)
 	resp, err := Request(reqSetting)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Post()")
+		return nil, err
 	}
 	return resp, nil
 }
@@ -90,7 +90,7 @@ func Delete(URL string, args ...interface{}) (*Response, error) {
 	reqSetting := NewRequestSetting("Delete", URL, args...)
 	resp, err := Request(reqSetting)
 	if err != nil {
-		return nil, MakeErrorStack(err, "direwolf.Post()")
+		return nil, err
 	}
 	return resp, nil
 }
