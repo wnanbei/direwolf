@@ -17,6 +17,16 @@ func TestHeaders(t *testing.T) {
 	}
 }
 
+//func TestParams(t *testing.T) {
+//	params := NewParams("xxx", "yyy")
+//	proxy := &Proxy{
+//		HTTPS: "xxx",
+//		HTTP: "xxx",
+//	}
+//	req := NewRequestSetting("Post", "http://www.baidu.com", params, proxy)
+//	fmt.Printf("%+v", req)
+//}
+
 func TestStringSliceMap(t *testing.T) {
 	params := NewParams(
 		"key1", "value1",

@@ -48,8 +48,22 @@ func (e *Error) Unwrap() error {
 	return nil
 }
 
-// WrapError will wrap a error with some information: filename, line, time and some message.
-func WrapError(err error, msg string) error {
+// WrapErr will wrap a error with some information: filename, line, time and some message.
+func WrapErr(err error, msg string) error {
+	_, file, line, _ := runtime.Caller(1)
+	return &Error{
+		err:      err,
+		msg:      msg,
+		file:     file,
+		fileLine: line,
+		time:     time.Now().Format("2006-01-02 15:04:05"),
+	}
+}
+
+// WrapErr will wrap a error with some information: filename, line, time and some message.
+// You can format message of error.
+func WrapErrf(err error, format string, args ...interface{}) error {
+	msg := fmt.Sprintf(format, args...)
 	_, file, line, _ := runtime.Caller(1)
 	return &Error{
 		err:      err,

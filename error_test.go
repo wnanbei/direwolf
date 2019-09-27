@@ -7,8 +7,8 @@ import (
 
 func TestError(t *testing.T) {
 	err1 := ErrRequestBody
-	err2 := WrapError(err1, "second testing")
-	err3 := WrapError(err2, "third testing")
+	err2 := WrapErr(err1, "second testing")
+	err3 := WrapErr(err2, "third testing")
 
 	if !errors.Is(err3, ErrRequestBody) {
 		t.Fatal("Test errors.Is failed.")

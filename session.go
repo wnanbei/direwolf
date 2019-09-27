@@ -25,7 +25,7 @@ type Session struct {
 func (session *Session) Request(reqSetting *RequestSetting) (*Response, error) {
 	resp, err := session.send(reqSetting)
 	if err != nil {
-		return nil, WrapError(err, "request failed")
+		return nil, WrapErr(err, "request failed")
 	}
 	return resp, nil
 }

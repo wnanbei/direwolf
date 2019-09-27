@@ -15,7 +15,7 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 	// Make new http.Request
 	req, err := http.NewRequest(reqSetting.Method, reqSetting.URL, nil)
 	if err != nil {
-		return nil, WrapError(err, "build Request error, please check request url or request method")
+		return nil, WrapErr(err, "build Request error, please check request url or request method")
 	}
 
 	// Handle the Headers.
@@ -24,7 +24,7 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 	// Add proxy method to transport
 	proxyFunc, err := getProxyFunc(reqSetting.Proxy, session.Proxy)
 	if err != nil {
-		return nil, WrapError(err, "build proxy failed, please check Proxy and session.Proxy")
+		return nil, WrapErr(err, "build proxy failed, please check Proxy and session.Proxy")
 	}
 	if proxyFunc != nil {
 		session.transport.Proxy = proxyFunc
@@ -72,7 +72,7 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 
 	resp, err := session.client.Do(req) // do request
 	if err != nil {
-		return nil, WrapError(err, "Request Error")
+		return nil, WrapErr(err, "Request Error")
 	}
 	defer func() {
 		if err := resp.Body.Close(); err != nil {
@@ -82,7 +82,7 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 
 	response, err := buildResponse(reqSetting, resp)
 	if err != nil {
-		return nil, WrapError(err, "build Response Error")
+		return nil, WrapErr(err, "build Response Error")
 	}
 	return response, nil
 }
@@ -91,7 +91,7 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 func buildResponse(req *RequestSetting, resp *http.Response) (*Response, error) {
 	content, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, WrapError(err, "read Response.Body failed")
+		return nil, WrapErr(err, "read Response.Body failed")
 	}
 	return &Response{
 		URL:           req.URL,
@@ -140,11 +140,11 @@ func getProxyFunc(p1, p2 *Proxy) (func(*http.Request) (*url.URL, error), error) 
 
 	httpURL, err := url.Parse(p.HTTP)
 	if err != nil {
-		return nil, WrapError(err, "Proxy URL error, please check proxy url")
+		return nil, WrapErr(err, "Proxy URL error, please check proxy url")
 	}
 	httpsURL, err := url.Parse(p.HTTPS)
 	if err != nil {
-		return nil, WrapError(err, "Proxy URL error, please check proxy url")
+		return nil, WrapErr(err, "Proxy URL error, please check proxy url")
 	}
 
 	return func(req *http.Request) (*url.URL, error) { // Create a function to choose proxy when transport start request
@@ -165,6 +165,5 @@ func getRedirectFunc(r int) func(req *http.Request, via []*http.Request) error {
 		}
 		return nil
 	}
-
 	return redirectFunc
 }
