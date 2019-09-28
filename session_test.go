@@ -229,7 +229,7 @@ func TestSessionCookies(t *testing.T) {
 		t.Fatal(err)
 	}
 	cookies := session.Cookies(ts.URL)
-	if cookies[0].Name != "key"{
+	if cookies[0].Name != "key" {
 		t.Fatal("Session.Cookies() failed.")
 	}
 	t.Log("Session.Cookies() passed.")

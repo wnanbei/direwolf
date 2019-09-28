@@ -10,7 +10,6 @@ import (
 
 var (
 	ErrRequestBody = errors.New("request body can`t coexists with PostForm")
-
 )
 
 type RedirectError struct {
@@ -23,8 +22,8 @@ func (e *RedirectError) Error() string {
 
 type Error struct {
 	// wrapped error
-	err      error
-	msg      string
+	err error
+	msg string
 	// file path and name
 	file     string
 	fileLine int

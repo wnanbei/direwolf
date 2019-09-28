@@ -8,7 +8,9 @@ package direwolf
 // method.
 func Request(reqSetting *RequestSetting) (*Response, error) {
 	session := NewSession()
-	session.transport.DisableKeepAlives = true
+	sessionOptions := DefaultSessionOptions()
+	sessionOptions.DisableDialKeepAlives = true
+	sessionOptions.DisableCookieJar = true
 	resp, err := session.Request(reqSetting)
 	if err != nil {
 		return nil, err
