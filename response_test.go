@@ -29,19 +29,23 @@ func newTestResponseServer() *httptest.Server {
 			log.Fatalf("Expected method %q; got %q", "GET", r.Method)
 		}
 		if r.URL.Path == "/" {
-			w.Write([]byte(respString))
+			if _, err := w.Write([]byte(respString)); err != nil {
+			}
 		}
 		if r.URL.Path == "/GBK" {
 			content, _ := simplifiedchinese.GBK.NewEncoder().Bytes([]byte(respString))
-			w.Write(content)
+			if _, err := w.Write(content); err != nil {
+			}
 		}
 		if r.URL.Path == "/GB18030" {
 			content, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte(respString))
-			w.Write(content)
+			if _, err := w.Write(content); err != nil {
+			}
 		}
 		if r.URL.Path == "/latin1" {
 			content, _ := charmap.ISO8859_1.NewEncoder().Bytes([]byte(`<li><a href="/author/">...</a></li>`))
-			w.Write(content)
+			if _, err := w.Write(content); err != nil {
+			}
 		}
 	}))
 	return ts
@@ -59,7 +63,6 @@ func TestReExtract(t *testing.T) {
 	if result1[0] != "2019-06-21" {
 		t.Fatal("Response.Re() failed.")
 	}
-	t.Log("Response.Re() passed.")
 
 	result2 := resp.ReSubmatch(`<a href.*?>(.*?)</a>`)
 	if len(result2) != 4 {
@@ -68,7 +71,6 @@ func TestReExtract(t *testing.T) {
 	if result2[3][0] != "2019-06-21" {
 		t.Fatal("Response.ReSubmatch() failed.")
 	}
-	t.Log("Response.ReSubmatch() passed.")
 }
 
 func TestCssExtract(t *testing.T) {
@@ -83,25 +85,21 @@ func TestCssExtract(t *testing.T) {
 	if result1 != "is a convenient" {
 		t.Fatal("Response.CSS().First().Text() failed.")
 	}
-	t.Log("Response.CSS().First().Text() passed.")
 
 	result2 := resp.CSS(`body`).CSS(`li`).CSS(`a[href=\/time\/]`).First().Text()
 	if result2 != "2019-06-21" {
 		t.Fatal("Response.CSS() failed.")
 	}
-	t.Log("Response.CSS() passed.")
 
 	result3 := resp.CSS(`a`).First().Attr("href")
 	if result3 != "/convenient/" {
 		t.Fatal("Response.CSS().First().Attr() failed.")
 	}
-	t.Log("Response.CSS().First().Attr() passed.")
 
 	result5 := resp.CSS(`a`).At(2).Text()
 	if result5 != "南北" {
 		t.Fatal("Response.CSS().At() failed.")
 	}
-	t.Log("Response.CSS().At() passed.")
 }
 
 func TestResponseEncoding(t *testing.T) {
@@ -117,7 +115,6 @@ func TestResponseEncoding(t *testing.T) {
 	if result3[0][0] != "..." {
 		t.Fatal("Response latin1 failed.")
 	}
-	t.Log("Response latin1 passed.")
 
 	resp, err := Get(ts.URL + "/GBK")
 	if err != nil {
@@ -128,7 +125,6 @@ func TestResponseEncoding(t *testing.T) {
 	if result1[0][0] != "南北" {
 		t.Fatal("Response GBK failed.")
 	}
-	t.Log("Response GBK passed.")
 
 	resp2, err := Get(ts.URL + "/GB18030")
 	if err != nil {
@@ -139,5 +135,4 @@ func TestResponseEncoding(t *testing.T) {
 	if result2[0][0] != "南北" {
 		t.Fatal("Response GB18030 failed.")
 	}
-	t.Log("Response GB18030 passed.")
 }

@@ -153,7 +153,8 @@ func getProxyFunc(p1, p2 *Proxy) (func(*http.Request) (*url.URL, error), error) 
 		} else if req.URL.Scheme == "https" {
 			return httpsURL, nil
 		}
-		return nil, fmt.Errorf(`unsupported protocol scheme "%s"`, req.URL.Scheme)
+		err := fmt.Errorf(`unsupported protocol scheme "%s"`, req.URL.Scheme)
+		return nil, WrapErr(err, "ProtocolError")
 	}, nil
 }
 
@@ -161,7 +162,8 @@ func getProxyFunc(p1, p2 *Proxy) (func(*http.Request) (*url.URL, error), error) 
 func getRedirectFunc(r int) func(req *http.Request, via []*http.Request) error {
 	redirectFunc := func(req *http.Request, via []*http.Request) error {
 		if len(via) > r {
-			return &RedirectError{r}
+			err := &RedirectError{r}
+			return WrapErr(err, "RedirectError")
 		}
 		return nil
 	}

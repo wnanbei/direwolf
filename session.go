@@ -114,11 +114,6 @@ func (session *Session) SetCookies(URL string, cookies Cookies) {
 	session.client.Jar.SetCookies(parsedURL, cookies)
 }
 
-// DisableCookieJar disable the CookieJar of session
-func (session *Session) DisableCookieJar() {
-	session.client.Jar = nil
-}
-
 // NewSession new a Session object, and set a default Client and Transport.
 func NewSession(options ...*SessionOptions) *Session {
 	var sessionOptions *SessionOptions

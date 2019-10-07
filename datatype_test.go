@@ -17,19 +17,6 @@ func TestHeaders(t *testing.T) {
 	}
 }
 
-//func TestParams(t *testing.T) {
-//	//params := NewParams("xxx", "yyy")
-//	//proxy := &Proxy{
-//	//	HTTPS: "xxx",
-//	//	HTTP: "xxx",
-//	//}
-//	//req := NewRequestSetting("Post", "http://www.baidu.com", params, proxy)
-//	//fmt.Printf("%+v", req)
-//	option := &SessionOptions{}
-//	*option.MaxIdleConns = 10
-//	fmt.Print(option)
-//}
-
 func TestStringSliceMap(t *testing.T) {
 	params := NewParams(
 		"key1", "value1",
@@ -68,4 +55,8 @@ func TestStringSliceMap(t *testing.T) {
 	if postForm.Get("key1") != "value1" {
 		t.Fatal("PostForm.Get() failed.")
 	}
+}
+
+func TestCookies(t *testing.T) {
+
 }

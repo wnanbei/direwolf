@@ -84,7 +84,6 @@ func TestSessionGet(t *testing.T) {
 	if text != "GET" {
 		t.Fatal("Session.Get test failed")
 	}
-	t.Log("Session.Get test passed")
 }
 
 func TestSessionPost(t *testing.T) {
@@ -113,8 +112,6 @@ func TestSessionPost(t *testing.T) {
 	if text2 != "POST" {
 		t.Fatal("Session.Post test failed")
 	}
-
-	t.Log("Session.Post test passed")
 }
 
 func TestSessionPut(t *testing.T) {
@@ -130,7 +127,6 @@ func TestSessionPut(t *testing.T) {
 	if text != "PUT" {
 		t.Fatal("Session.Put test failed")
 	}
-	t.Log("Session.Put test passed")
 }
 
 func TestSessionPatch(t *testing.T) {
@@ -146,7 +142,6 @@ func TestSessionPatch(t *testing.T) {
 	if text != "PATCH" {
 		t.Fatal("Session.Patch test failed")
 	}
-	t.Log("Session.Patch test passed")
 }
 
 func TestSessionDelete(t *testing.T) {
@@ -162,7 +157,6 @@ func TestSessionDelete(t *testing.T) {
 	if text != "DELETE" {
 		t.Fatal("Session.Delete test failed")
 	}
-	t.Log("Session.Delete test passed")
 }
 
 func TestSessionHead(t *testing.T) {
@@ -178,7 +172,6 @@ func TestSessionHead(t *testing.T) {
 	if cookies[0].Name != "HEAD" {
 		t.Fatal("Session.Head test failed")
 	}
-	t.Log("Session.Head test passed")
 }
 
 func TestSessionCookieJar(t *testing.T) {
@@ -198,7 +191,6 @@ func TestSessionCookieJar(t *testing.T) {
 		t.Fatal("Session.CookieJar failed.")
 		return
 	}
-	t.Log("Session.CookiesJar passed.")
 }
 
 func TestSessionSetCookie(t *testing.T) {
@@ -216,7 +208,6 @@ func TestSessionSetCookie(t *testing.T) {
 		t.Fatal("Session.SetCookies() failed.")
 		return
 	}
-	t.Log("Session.SetCookies() passed.")
 }
 
 func TestSessionCookies(t *testing.T) {
@@ -232,5 +223,4 @@ func TestSessionCookies(t *testing.T) {
 	if cookies[0].Name != "key" {
 		t.Fatal("Session.Cookies() failed.")
 	}
-	t.Log("Session.Cookies() passed.")
 }

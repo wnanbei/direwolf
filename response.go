@@ -42,10 +42,6 @@ func (resp *Response) Text(encoding ...string) string {
 		encodingType = strings.ToUpper(encoding[0])
 	}
 
-	if resp.content == nil {
-		resp.Content()
-	}
-
 	switch encodingType {
 	case "UTF-8", "UTF8":
 		text = string(resp.content)
