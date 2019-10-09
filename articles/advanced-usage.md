@@ -257,3 +257,85 @@ The type of Session Timeout field is a simple `int`.
 session := dw.NewSession()
 session.Timeout = 5
 ```
+
+## 4. Session Options
+
+There are more settings that can be changed in Session. Such as the maximum number of connections each session support, or various detailed timeouts.
+
+Since Golang lacks support of default values, if you need modify these settings, you need to get a default `SessionOptions` object first:
+
+```go
+option := dw.DefaultSessionOptions()
+```
+
+Then you can change one or more of these settings, and pass in these settings when creating `Session` object:
+
+```go
+option.DialTimeout = 10
+session := dw.NewSession(option)
+```
+
+This is default value of `DefaultSessionOptions`:
+
+```go
+&SessionOptions{
+    DialTimeout: 30 * time.Second,		
+    DialKeepAlive: 30 * time.Second,		
+    MaxConnsPerHost: 0,		
+    MaxIdleConns: 100,		
+    MaxIdleConnsPerHost: 2,		
+    IdleConnTimeout: 90 * time.Second,		
+    TLSHandshakeTimeout: 10 * time.Second,		
+    ExpectContinueTimeout: 1 * time.Second,		
+    DisableCookieJar: false,		
+    DisableDialKeepAlives: false,	
+}
+```
+
+### Timeout
+
+`DialTimeout` - DialTimeout is the maximum amount of time a dial will wait for a connect to complete.
+
+When using TCP and dialing a host name with multiple IP addresses, the timeout may be divided between them. 
+
+With or without a timeout, the operating system may impose its own earlier timeout. For instance, TCP timeouts are often around 3 minutes.
+
+`DialKeepAlive` - DialKeepAlive specifies the interval between keep-alive probes for an active network connection.
+
+Network protocols or operating systems that do not support keep-alives ignore this field. If negative, keep-alive probes are disabled.
+
+`IdleConnTimeout` - IdleConnTimeout is the maximum amount of time an idle (keep-alive) connection will remain idle before closing itself.
+
+Zero means no limit.
+
+`TLSHandshakeTimeout` - TLSHandshakeTimeout specifies the maximum amount of time waiting to wait for a TLS handshake. Zero means no timeout.
+
+`ExpectContinueTimeout` - ExpectContinueTimeout, if non-zero, specifies the amount of time to wait for a server's first response headers after fully writing the request headers if the request has an "Expect: 100-continue" header. 
+
+Zero means no timeout and causes the body to be sent immediately, without waiting for the server to approve. 
+
+This time does not include the time to send the request header.
+
+### Connections
+
+`MaxConnsPerHost` - MaxConnsPerHost optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. On limit violation, dials will block.
+
+Zero means no limit.
+
+`MaxIdleConns` - MaxIdleConns controls the maximum number of idle (keep-alive) connections across all hosts. Zero means no limit.
+
+If you need to make a large number of requests, it is recommended to increase the value of this field.
+
+`MaxIdleConnsPerHost` - MaxConnsPerHost optionally limits the total number of connections per host, including connections in the dialing, active, and idle states. On limit violation, dials will block.
+
+Zero means no limit.
+
+If you need to make a large number of requests for a single domain, it is recommended to increase the value of this field.
+
+### Other
+
+`DisableCookieJar` - DisableCookieJar specifies whether disable session cookiejar.
+
+`DisableDialKeepAlives` - DisableDialKeepAlives, if true, disables HTTP keep-alives and will only use the connection to the server for a single HTTP request.
+
+This is unrelated to the similarly named TCP keep-alives.

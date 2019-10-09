@@ -71,6 +71,8 @@ sidebar_en:
         url: /docs/advanced-usage#2-session-cookies
       - title: 3. Session set Headers, Porxy, Timeout
         url: /docs/advanced-usage#3-session-set-headers-proxy-timeout
+      - title: 4. Session Options
+        url: /docs/advanced-usage#4-session-options
 
 sidebar_zh:
   - title: 前言
@@ -131,3 +133,5 @@ sidebar_zh:
         url: /docs/advanced-usage-zh#2-session-cookies
       - title: 3. Session 设置 Headers，Proxy，Timeout
         url: /docs/advanced-usage-zh#3-session-设置-headersproxytimeout
+      - title: 4. Session 高级设置
+        url: /docs/advanced-usage-zh#4-Session-高级设置
