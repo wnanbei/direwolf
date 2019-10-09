@@ -134,4 +134,4 @@ sidebar_zh:
       - title: 3. Session 设置 Headers，Proxy，Timeout
         url: /docs/advanced-usage-zh#3-session-设置-headersproxytimeout
       - title: 4. Session 高级设置
-        url: /docs/advanced-usage-zh#4-Session-高级设置
+        url: /docs/advanced-usage-zh#4-session-高级设置

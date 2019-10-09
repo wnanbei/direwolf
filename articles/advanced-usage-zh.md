@@ -292,30 +292,30 @@ session := dw.NewSession(option)
 
 ### Timeout 超时
 
-`DialTimeout` - 建立一个新连接的超时时间。默认值为 30。如果在访问一个域名的过程中需要与多个 IP 地址建立连接，`DialTimeout` 将会被分成多个部分。
+**DialTimeout** - 建立一个新连接的超时时间。默认值为 30。如果在访问一个域名的过程中需要与多个 IP 地址建立连接，`DialTimeout` 将会被分成多个部分。
 
-`DialKeepAlive` - 每次探测活跃连接是否 keep-alives 的时间间隔。如果网络协议或系统不支持 keep-alives，则将会忽略此字段。如果为负值，将会禁用 keep-alives 探测。
+**DialKeepAlive** - 每次探测活跃连接是否 keep-alives 的时间间隔。如果网络协议或系统不支持 keep-alives，则将会忽略此字段。如果为负值，将会禁用 keep-alives 探测。
 
-`IdleConnTimeout` - 连接池中持久连接保持在空闲状态的时间，如果超过这个时间，持久连接将会被关闭。值为 `0` 表示不限制超时。
+**IdleConnTimeout** - 连接池中持久连接保持在空闲状态的时间，如果超过这个时间，持久连接将会被关闭。值为 `0` 表示不限制超时。
 
-`TLSHandshakeTimeout` - TLS 握手的超时时间。值为 `0` 表示不限制超时。
+**TLSHandshakeTimeout** - TLS 握手的超时时间。值为 `0` 表示不限制超时。
 
-`ExpectContinueTimeout` - 如果请求的 header 中有 `Expect: 100-continue`，从完全发送请求的 header 开始，直到服务端返回响应的第一条 header 的超时时间。如果值为 `0`，表示发送请求后，不等待服务端的响应，立即发送响应体。
+**ExpectContinueTimeout** - 如果请求的 header 中有 `Expect: 100-continue`，从完全发送请求的 header 开始，直到服务端返回响应的第一条 header 的超时时间。如果值为 `0`，表示发送请求后，不等待服务端的响应，立即发送响应体。
 
 ### Connections 连接数量
 
-`MaxConnsPerHost` - 与每个域名建立的最大连接数，包括正在拨号、活跃的、空闲的连接。如果超过此连接数量，那么拨号将会堵塞。值为 `0` 表示不限制。
+**MaxConnsPerHost** - 与每个域名建立的最大连接数，包括正在拨号、活跃的、空闲的连接。如果超过此连接数量，那么拨号将会堵塞。值为 `0` 表示不限制。
 
-`MaxIdleConns` - 控制 Session 持久连接的最大总数量。值为 `0` 表示不限制。
+**MaxIdleConns** - 控制 Session 持久连接的最大总数量。值为 `0` 表示不限制。
 
 如果需要发起大量请求，推荐提高此项设置的值。
 
-`MaxIdleConnsPerHost` - 控制 Session 与每个域名的持久连接的最大数量。值为 `0` 将会使用默认值 `2`。
+**MaxIdleConnsPerHost** - 控制 Session 与每个域名的持久连接的最大数量。值为 `0` 将会使用默认值 `2`。
 
 如果需要对单一域名发起大量请求，推荐提高此项设置的值。
 
 ### 其他
 
-`DisableCookieJar` - Session 默认会启用 CookieJar 来管理 Cookie，如果你不希望启用 CookieJar，可以将此项设置改为 `true` 来禁用 CookieJar。
+**DisableCookieJar** - Session 默认会启用 CookieJar 来管理 Cookie，如果你不希望启用 CookieJar，可以将此项设置改为 `true` 来禁用 CookieJar。
 
-`DisableDialKeepAlives` - 默认情况下，HTTP1.1 会启用持久连接。如果你希望禁用持久连接，强制使用短连接，可以将此项设置改为 `true` 来禁用持久连接。
+**DisableDialKeepAlives** - 默认情况下，HTTP1.1 会启用持久连接。如果你希望禁用持久连接，强制使用短连接，可以将此项设置改为 `true` 来禁用持久连接。
