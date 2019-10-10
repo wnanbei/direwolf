@@ -3,15 +3,15 @@ Package direwolf is a convenient and easy to use http client written in Golang.
 */
 package direwolf
 
-// Request is different with Get and Post method, you should pass a
-// RequestSetting to it. You can construct RequestSetting by use NewRequestSetting
+// Send is different with Get and Post method, you should pass a
+// Request to it. You can construct Request by use NewRequest
 // method.
-func Request(reqSetting *RequestSetting) (*Response, error) {
+func Send(req *Request) (*Response, error) {
 	session := NewSession()
 	sessionOptions := DefaultSessionOptions()
 	sessionOptions.DisableDialKeepAlives = true
 	sessionOptions.DisableCookieJar = true
-	resp, err := session.Request(reqSetting)
+	resp, err := session.Send(req)
 	if err != nil {
 		return nil, err
 	}
@@ -32,8 +32,8 @@ func Request(reqSetting *RequestSetting) (*Response, error) {
 // 	direwolf.Timeout: Request Timeout. Default value is 30.
 // 	direwolf.RedirectNum: Number of Request allowed to redirect. Default value is 5.
 func Get(URL string, args ...interface{}) (*Response, error) {
-	reqSetting := NewRequestSetting("GET", URL, args...)
-	resp, err := Request(reqSetting)
+	req := NewRequest("GET", URL, args...)
+	resp, err := Send(req)
 	if err != nil {
 		return nil, err
 	}
@@ -45,8 +45,8 @@ func Get(URL string, args ...interface{}) (*Response, error) {
 //
 // Note: direwolf.Body can`t existed with direwolf.PostForm.
 func Post(URL string, args ...interface{}) (*Response, error) {
-	reqSetting := NewRequestSetting("POST", URL, args...)
-	resp, err := Request(reqSetting)
+	req := NewRequest("POST", URL, args...)
+	resp, err := Send(req)
 	if err != nil {
 		return nil, err
 	}
@@ -56,8 +56,8 @@ func Post(URL string, args ...interface{}) (*Response, error) {
 // Head is the method to constructs and sends a Head request. Parameters are
 // the same with direwolf.Get()
 func Head(URL string, args ...interface{}) (*Response, error) {
-	reqSetting := NewRequestSetting("HEAD", URL, args...)
-	resp, err := Request(reqSetting)
+	req := NewRequest("HEAD", URL, args...)
+	resp, err := Send(req)
 	if err != nil {
 		return nil, err
 	}
@@ -67,8 +67,8 @@ func Head(URL string, args ...interface{}) (*Response, error) {
 // Put is the method to constructs and sends a Put request. Parameters are
 // the same with direwolf.Get()
 func Put(URL string, args ...interface{}) (*Response, error) {
-	reqSetting := NewRequestSetting("Put", URL, args...)
-	resp, err := Request(reqSetting)
+	req := NewRequest("Put", URL, args...)
+	resp, err := Send(req)
 	if err != nil {
 		return nil, err
 	}
@@ -78,8 +78,8 @@ func Put(URL string, args ...interface{}) (*Response, error) {
 // Patch is the method to constructs and sends a Patch request. Parameters are
 // the same with direwolf.Get()
 func Patch(URL string, args ...interface{}) (*Response, error) {
-	reqSetting := NewRequestSetting("Patch", URL, args...)
-	resp, err := Request(reqSetting)
+	req := NewRequest("Patch", URL, args...)
+	resp, err := Send(req)
 	if err != nil {
 		return nil, err
 	}
@@ -89,8 +89,8 @@ func Patch(URL string, args ...interface{}) (*Response, error) {
 // Delete is the method to constructs and sends a Delete request. Parameters are
 // the same with direwolf.Get()
 func Delete(URL string, args ...interface{}) (*Response, error) {
-	reqSetting := NewRequestSetting("Delete", URL, args...)
-	resp, err := Request(reqSetting)
+	req := NewRequest("Delete", URL, args...)
+	resp, err := Send(req)
 	if err != nil {
 		return nil, err
 	}

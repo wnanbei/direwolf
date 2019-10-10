@@ -5,9 +5,9 @@ import (
 	"strings"
 )
 
-// RequestSetting is a prepared request setting, you should construct it by using
-// NewRequestSetting().
-type RequestSetting struct {
+// Request is a prepared request setting, you should construct it by using
+// NewRequest().
+type Request struct {
 	Method      string
 	URL         string
 	Headers     http.Header
@@ -20,7 +20,7 @@ type RequestSetting struct {
 	Timeout     int
 }
 
-// NewRequestSetting construct a RequestSetting by passing the parameters.
+// NewRequest construct a Request by passing the parameters.
 //
 // You can construct this request by passing the following parameters:
 // 	method: Method for the request.
@@ -33,33 +33,33 @@ type RequestSetting struct {
 // 	direwolf.Proxy: Proxy url to use.
 // 	direwolf.Timeout: Request Timeout.
 // 	direwolf.RedirectNum: Number of Request allowed to redirect.
-func NewRequestSetting(method string, URL string, args ...interface{}) *RequestSetting {
-	reqSetting := &RequestSetting{}             // new a RequestSetting and set default field
-	reqSetting.Method = strings.ToUpper(method) // Upper the method string
-	reqSetting.URL = URL
-	reqSetting.RedirectNum = 5
+func NewRequest(method string, URL string, args ...interface{}) *Request {
+	req := &Request{}             // new a Request and set default field
+	req.Method = strings.ToUpper(method) // Upper the method string
+	req.URL = URL
+	req.RedirectNum = 5
 
 	// Check the type of the parameter and handle it.
 	for _, arg := range args {
 		switch a := arg.(type) {
 		case http.Header:
-			reqSetting.Headers = a
+			req.Headers = a
 		case *Params:
-			reqSetting.Params = a
-			reqSetting.URL = reqSetting.URL + "?" + reqSetting.Params.URLEncode()
+			req.Params = a
+			req.URL = req.URL + "?" + req.Params.URLEncode()
 		case *PostForm:
-			reqSetting.PostForm = a
+			req.PostForm = a
 		case Body:
-			reqSetting.Body = a
+			req.Body = a
 		case Cookies:
-			reqSetting.Cookies = a
+			req.Cookies = a
 		case *Proxy:
-			reqSetting.Proxy = a
+			req.Proxy = a
 		case RedirectNum:
-			reqSetting.RedirectNum = int(a)
+			req.RedirectNum = int(a)
 		case Timeout:
-			reqSetting.Timeout = int(a)
+			req.Timeout = int(a)
 		}
 	}
-	return reqSetting
+	return req
 }

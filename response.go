@@ -19,7 +19,7 @@ type Response struct {
 	Encoding      string
 	Headers       http.Header
 	Cookies       Cookies
-	Request       *RequestSetting
+	Request       *Request
 	ContentLength int64
 	content       []byte
 	dom           *goquery.Document

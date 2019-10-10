@@ -21,9 +21,9 @@ type Session struct {
 	Timeout   int
 }
 
-// Request is a generic request method.
-func (session *Session) Request(reqSetting *RequestSetting) (*Response, error) {
-	resp, err := session.send(reqSetting)
+// Send is a generic request method.
+func (session *Session) Send(req *Request) (*Response, error) {
+	resp, err := session.send(req)
 	if err != nil {
 		return nil, WrapErr(err, "request failed")
 	}
@@ -32,8 +32,8 @@ func (session *Session) Request(reqSetting *RequestSetting) (*Response, error) {
 
 // Get is a get method.
 func (session *Session) Get(URL string, args ...interface{}) (*Response, error) {
-	reqSetting := NewRequestSetting("GET", URL, args...)
-	resp, err := session.Request(reqSetting)
+	req := NewRequest("GET", URL, args...)
+	resp, err := session.Send(req)
 	if err != nil {
 		return nil, err
 	}
@@ -42,8 +42,8 @@ func (session *Session) Get(URL string, args ...interface{}) (*Response, error) 
 
 // Post is a post method.
 func (session *Session) Post(URL string, args ...interface{}) (*Response, error) {
-	reqSetting := NewRequestSetting("POST", URL, args...)
-	resp, err := session.Request(reqSetting)
+	req := NewRequest("POST", URL, args...)
+	resp, err := session.Send(req)
 	if err != nil {
 		return nil, err
 	}
@@ -52,8 +52,8 @@ func (session *Session) Post(URL string, args ...interface{}) (*Response, error)
 
 // Head is a post method.
 func (session *Session) Head(URL string, args ...interface{}) (*Response, error) {
-	reqSetting := NewRequestSetting("HEAD", URL, args...)
-	resp, err := session.Request(reqSetting)
+	req := NewRequest("HEAD", URL, args...)
+	resp, err := session.Send(req)
 	if err != nil {
 		return nil, err
 	}
@@ -62,8 +62,8 @@ func (session *Session) Head(URL string, args ...interface{}) (*Response, error)
 
 // Put is a post method.
 func (session *Session) Put(URL string, args ...interface{}) (*Response, error) {
-	reqSetting := NewRequestSetting("PUT", URL, args...)
-	resp, err := session.Request(reqSetting)
+	req := NewRequest("PUT", URL, args...)
+	resp, err := session.Send(req)
 	if err != nil {
 		return nil, err
 	}
@@ -72,8 +72,8 @@ func (session *Session) Put(URL string, args ...interface{}) (*Response, error) 
 
 // Patch is a post method.
 func (session *Session) Patch(URL string, args ...interface{}) (*Response, error) {
-	reqSetting := NewRequestSetting("PATCH", URL, args...)
-	resp, err := session.Request(reqSetting)
+	req := NewRequest("PATCH", URL, args...)
+	resp, err := session.Send(req)
 	if err != nil {
 		return nil, err
 	}
@@ -82,8 +82,8 @@ func (session *Session) Patch(URL string, args ...interface{}) (*Response, error
 
 // Delete is a post method.
 func (session *Session) Delete(URL string, args ...interface{}) (*Response, error) {
-	reqSetting := NewRequestSetting("DELETE", URL, args...)
-	resp, err := session.Request(reqSetting)
+	req := NewRequest("DELETE", URL, args...)
+	resp, err := session.Send(req)
 	if err != nil {
 		return nil, err
 	}
@@ -123,6 +123,7 @@ func NewSession(options ...*SessionOptions) *Session {
 		sessionOptions = DefaultSessionOptions()
 	}
 
+	// set transport parameters.
 	trans := &http.Transport{
 		DialContext: (&net.Dialer{
 			Timeout:   sessionOptions.DialTimeout,
@@ -165,11 +166,8 @@ func NewSession(options ...*SessionOptions) *Session {
 }
 
 type SessionOptions struct {
-	// Timeout is the maximum amount of time a dial will wait for
-	// a connect to complete. If Deadline is also set, it may fail
-	// earlier.
-	//
-	// The default is 30.
+	// DialTimeout is the maximum amount of time a dial will wait for
+	// a connect to complete.
 	//
 	// When using TCP and dialing a host name with multiple IP
 	// addresses, the timeout may be divided between them.
@@ -179,11 +177,10 @@ type SessionOptions struct {
 	// often around 3 minutes.
 	DialTimeout time.Duration
 
-	// KeepAlive specifies the interval between keep-alive
+	// DialKeepAlive specifies the interval between keep-alive
 	// probes for an active network connection.
-	// If zero, keep-alive probes are sent with a default value
-	// (currently 15 seconds), if supported by the protocol and operating
-	// system. Network protocols or operating systems that do
+	//
+	// Network protocols or operating systems that do
 	// not support keep-alives ignore this field.
 	// If negative, keep-alive probes are disabled.
 	DialKeepAlive time.Duration
@@ -223,8 +220,7 @@ type SessionOptions struct {
 	// This time does not include the time to send the request header.
 	ExpectContinueTimeout time.Duration
 
-	// Whether disable session cookiejar.
-	// Default value is false
+	// DisableCookieJar specifies whether disable session cookiejar.
 	DisableCookieJar bool
 
 	// DisableDialKeepAlives, if true, disables HTTP keep-alives and
@@ -235,6 +231,7 @@ type SessionOptions struct {
 	DisableDialKeepAlives bool
 }
 
+// DefaultSessionOptions return a default SessionOptions object.
 func DefaultSessionOptions() *SessionOptions {
 	return &SessionOptions{
 		DialTimeout:           30 * time.Second,

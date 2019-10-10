@@ -11,18 +11,18 @@ import (
 )
 
 // send is low level request method.
-func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
+func (session *Session) send(req *Request) (*Response, error) {
 	// Make new http.Request
-	req, err := http.NewRequest(reqSetting.Method, reqSetting.URL, nil)
+	httpReq, err := http.NewRequest(req.Method, req.URL, nil)
 	if err != nil {
 		return nil, WrapErr(err, "build Request error, please check request url or request method")
 	}
 
 	// Handle the Headers.
-	req.Header = mergeHeaders(reqSetting.Headers, session.Headers)
+	httpReq.Header = mergeHeaders(req.Headers, session.Headers)
 
 	// Add proxy method to transport
-	proxyFunc, err := getProxyFunc(reqSetting.Proxy, session.Proxy)
+	proxyFunc, err := getProxyFunc(req.Proxy, session.Proxy)
 	if err != nil {
 		return nil, WrapErr(err, "build proxy failed, please check Proxy and session.Proxy")
 	}
@@ -33,15 +33,15 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 	}
 
 	// set redirect
-	session.client.CheckRedirect = getRedirectFunc(reqSetting.RedirectNum)
+	session.client.CheckRedirect = getRedirectFunc(req.RedirectNum)
 
 	// set timeout
 	// if timeout > 0, it means a time limit for requests.
 	// if timeout < 0, it means no limit.
 	// if timeout = 0, it means keep default 30 second timeout.
-	if reqSetting.Timeout > 0 {
-		session.client.Timeout = time.Duration(reqSetting.Timeout) * time.Second
-	} else if reqSetting.Timeout < 0 {
+	if req.Timeout > 0 {
+		session.client.Timeout = time.Duration(req.Timeout) * time.Second
+	} else if req.Timeout < 0 {
 		session.client.Timeout = 0
 	} else if session.Timeout > 0 {
 		session.client.Timeout = time.Duration(session.Timeout) * time.Second
@@ -53,24 +53,24 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 
 	// Handle the DataForm, convert DataForm to strings.Reader.
 	// Set Content-Type to application/x-www-form-urlencoded.
-	if reqSetting.Body != nil && reqSetting.PostForm != nil {
+	if req.Body != nil && req.PostForm != nil {
 		return nil, ErrRequestBody
-	} else if reqSetting.PostForm != nil {
-		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-		data := reqSetting.PostForm.URLEncode()
-		req.Body = ioutil.NopCloser(strings.NewReader(data))
-	} else if reqSetting.Body != nil {
-		req.Body = ioutil.NopCloser(bytes.NewReader(reqSetting.Body))
+	} else if req.PostForm != nil {
+		httpReq.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+		data := req.PostForm.URLEncode()
+		httpReq.Body = ioutil.NopCloser(strings.NewReader(data))
+	} else if req.Body != nil {
+		httpReq.Body = ioutil.NopCloser(bytes.NewReader(req.Body))
 	}
 
 	// Handle Cookies
-	if reqSetting.Cookies != nil {
-		for _, cookie := range reqSetting.Cookies {
-			req.AddCookie(cookie)
+	if req.Cookies != nil {
+		for _, cookie := range req.Cookies {
+			httpReq.AddCookie(cookie)
 		}
 	}
 
-	resp, err := session.client.Do(req) // do request
+	resp, err := session.client.Do(httpReq) // do request
 	if err != nil {
 		return nil, WrapErr(err, "Request Error")
 	}
@@ -80,7 +80,7 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 		}
 	}()
 
-	response, err := buildResponse(reqSetting, resp)
+	response, err := buildResponse(req, resp)
 	if err != nil {
 		return nil, WrapErr(err, "build Response Error")
 	}
@@ -88,26 +88,26 @@ func (session *Session) send(reqSetting *RequestSetting) (*Response, error) {
 }
 
 // buildResponse build response with http.Response after do request.
-func buildResponse(req *RequestSetting, resp *http.Response) (*Response, error) {
-	content, err := ioutil.ReadAll(resp.Body)
+func buildResponse(httpReq *Request, httpResp *http.Response) (*Response, error) {
+	content, err := ioutil.ReadAll(httpResp.Body)
 	if err != nil {
 		return nil, WrapErr(err, "read Response.Body failed")
 	}
 	return &Response{
-		URL:           req.URL,
-		StatusCode:    resp.StatusCode,
-		Proto:         resp.Proto,
+		URL:           httpReq.URL,
+		StatusCode:    httpResp.StatusCode,
+		Proto:         httpResp.Proto,
 		Encoding:      "UTF-8",
-		Headers:       resp.Header,
-		Cookies:       resp.Cookies(),
-		Request:       req,
-		ContentLength: resp.ContentLength,
+		Headers:       httpResp.Header,
+		Cookies:       httpResp.Cookies(),
+		Request:       httpReq,
+		ContentLength: httpResp.ContentLength,
 		content:       content,
 	}, nil
 }
 
-// mergeHeaders merge RequestSetting headers and Session Headers.
-// RequestSetting has higher priority.
+// mergeHeaders merge Request headers and Session Headers.
+// Request has higher priority.
 func mergeHeaders(h1, h2 http.Header) http.Header {
 	h := http.Header{}
 	for key, values := range h2 {
@@ -123,7 +123,7 @@ func mergeHeaders(h1, h2 http.Header) http.Header {
 	return h
 }
 
-// getProxyFunc return a Proxy Function. RequestSetting has higher priority.
+// getProxyFunc return a Proxy Function. Request has higher priority.
 func getProxyFunc(p1, p2 *Proxy) (func(*http.Request) (*url.URL, error), error) {
 	var p *Proxy // choose which Proxy to use
 	if p1 != nil {
