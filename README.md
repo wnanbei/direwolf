@@ -2,7 +2,7 @@
 
 Package direwolf is a convenient and easy to use http client written in Golang.
 
-If you want find more info, please go here: [Direwolf HTTP Client: Save your time](https://wnanbei.github.io/direwolf/)
+If you want find more info, please go here: [Direwolf HTTP Client: Save your time](https://wnanbei.github.io/direwolf/)，内有中文文档。
 
 ![direwolf](docs/assets/cover.jpg)
 
@@ -10,7 +10,7 @@ If you want find more info, please go here: [Direwolf HTTP Client: Save your tim
 
 - Clean and Convenient API
 - Simple to Set Headers, Cookies, Parameters, Post Forms
-- Sessions with Cookie Persistence
+- Sessions Control
 - Keep-Alive & Connection Pooling
 - HTTP(S) Proxy Support
 - Redirect Control
@@ -92,3 +92,15 @@ Output:
     "url": "https://httpbin.org/get?age=18&name=wnanbei"
 }
 ```
+
+## Contribute
+
+Direwolf is a personal project now, but all contributions, bug reports, bug fixes, documentation improvements, enhancements, and ideas are welcome.
+
+If you find a bug in direwolf or have some good ideas:
+
+ - Go to [GitHub “issues” tab](https://github.com/wnanbei/direwolf/issues) and open a fresh issue to start a discussion around a feature idea or a bug.
+ - Send a pull request and bug the maintainer until it gets merged and published.
+ - Write a test which shows that the bug was fixed or that the feature works as expected.
+
+If you need to discuss about direwolf with me, you can send me a e-mail.
