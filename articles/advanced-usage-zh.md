@@ -32,11 +32,11 @@ resp, err := session.Put("https://httpbin.org/put", dw.NewPostForm("key", "value
 resp, err := session.Delete("https://httpbin.org/delete")
 ```
 
-以及 `Request()`：
+以及 `Send()`：
 
 ```go
-req := dw.NewRequestSetting("Get", "https://httpbin.org/get")
-resp, err := session.Request(req)
+req := dw.NewRequest("Get", "https://httpbin.org/get")
+resp, err := session.Send(req)
 ```
 
 ### 参数优先级

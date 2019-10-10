@@ -33,17 +33,17 @@ resp, err := dw.Put("https://httpbin.org/put", dw.NewPostForm("key", "value"))
 resp, err := dw.Delete("https://httpbin.org/delete")
 ```
 
-你还可以使用一个更加通用的函数 `Request()` 来发起请求，使用这个方法需要你先构造一个 `RequestSetting` 对象：
+你还可以使用一个更加通用的函数 `Send()` 来发起请求，使用这个方法需要你先构造一个 `Request` 对象：
 
 ```go
-req := dw.NewRequestSetting("Get", "https://httpbin.org/get")
-resp, err := dw.Request(req)
+req := dw.NewRequest("Get", "https://httpbin.org/get")
+resp, err := dw.Send(req)
 if err != nil {
     return
 }
 ```
 
-使用这种方法发起请求，那么 `RequestSetting` 对象将是可以被复用的。除了需要将请求方法的字符串作为第一个参数传入之外，`NewRequestSetting()` 方法与普通的 `Get()` 和 `Post()` 等方法需要的参数是一致的。
+使用这种方法发起请求，那么 `Request` 对象将是可以被复用的。除了需要将请求方法的字符串作为第一个参数传入之外，`NewRequest()` 方法与普通的 `Get()` 和 `Post()` 等方法需要的参数是一致的。
 
 ## 2. 传递URL参数
 

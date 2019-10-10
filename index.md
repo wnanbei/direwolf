@@ -18,7 +18,7 @@ author_profile: true
 
 - Clean and Convenient API
 - Simple to Set Headers, Cookies, Parameters, Post Forms
-- Sessions with Cookie Persistence
+- Sessions Control
 - Keep-Alive & Connection Pooling
 - HTTP(S) Proxy Support
 - Redirect Control

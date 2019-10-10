@@ -33,17 +33,17 @@ resp, err := dw.Put("https://httpbin.org/put", dw.NewPostForm("key", "value"))
 resp, err := dw.Delete("https://httpbin.org/delete")
 ```
 
-You can use a more generic function `Request()` to send request. This function requires you to construct a `RequestSetting` object first:
+You can use a more generic function `Send()` to send request. This function requires you to construct a `Request` object first:
 
 ```go
-req := dw.NewRequestSetting("Get", "https://httpbin.org/get")
-resp, err := dw.Request(req)
+req := dw.NewRequest("Get", "https://httpbin.org/get")
+resp, err := dw.Send(req)
 if err != nil {
     return
 }
 ```
 
-`RequestSetting` object could be reused if you use this method to send request. In addition to passing request type as the first argument, the other argument `NewRequestSetting()` need is the same as the normal methods `Get()` and `Post()`.
+`Request` object could be reused if you use this method to send request. In addition to passing request type as the first argument, the other argument `NewRequest()` need is the same as the normal methods `Get()` and `Post()`.
 
 ## 2. Passing Parameters In URLs
 
