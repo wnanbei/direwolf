@@ -1,5 +1,7 @@
 # Direwolf HTTP Client: Save your time
 
+[![Build Status](https://travis-ci.org/wnanbei/direwolf.svg?branch=master)](https://travis-ci.org/wnanbei/direwolf)
+[![codecov](https://codecov.io/gh/wnanbei/direwolf/branch/master/graph/badge.svg)](https://codecov.io/gh/wnanbei/direwolf)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/direwolf/wnanbei)
 ![GitHub](https://img.shields.io/github/license/wnanbei/direwolf)
 
