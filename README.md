@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/wnanbei/direwolf.svg?branch=master)](https://travis-ci.org/wnanbei/direwolf)
 [![codecov](https://codecov.io/gh/wnanbei/direwolf/branch/master/graph/badge.svg)](https://codecov.io/gh/wnanbei/direwolf)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/direwolf/wnanbei)
+![language](https://img.shields.io/badge/language-Golang%201.13%2B-blue)
 ![GitHub](https://img.shields.io/github/license/wnanbei/direwolf)
 
 Package direwolf is a convenient and easy to use http client written in Golang.
