@@ -1,5 +1,8 @@
 # Direwolf HTTP Client: Save your time
 
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/direwolf/wnanbei)
+![GitHub](https://img.shields.io/github/license/wnanbei/direwolf)
+
 Package direwolf is a convenient and easy to use http client written in Golang.
 
 If you want find more info, please go here: [Direwolf HTTP Client: Save your time](https://wnanbei.github.io/direwolf/)，内有中文文档。
