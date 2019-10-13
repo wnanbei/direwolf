@@ -31,7 +31,7 @@ func main() {
 }
 ```
 
-output:
+Output:
 
 ```json
 {

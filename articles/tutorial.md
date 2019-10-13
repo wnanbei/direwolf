@@ -43,11 +43,11 @@ if err != nil {
 }
 ```
 
-`Request` object could be reused if you use this method to send request. In addition to passing request type as the first argument, the other argument `NewRequest()` need is the same as the normal methods `Get()` and `Post()`.
+`Request` object could be reused if you use this method to send request. In addition to passing request type as the first argument, the other argument `NewRequest()` need is the same as what `Get()` and `Post()` need.
 
 ## 2. Passing Parameters In URLs
 
-Passing parameters in URLs is very easy, you only need to new a Params and pass it to request method.
+Passing parameters in URLs is very easy, you only need to new a Params with `NewParams()` and pass it to request method.
 
 ```go
 params := dw.NewParams("key", "value")
@@ -64,7 +64,7 @@ Output:
 https://httpbin.org/get?key=value
 ```
 
-If you want pass more parameters to URLs, just like this:
+If you want to pass more parameters to URLs, just like this:
 
 ```go
 params := dw.NewParams(
@@ -75,7 +75,7 @@ params := dw.NewParams(
 
 **Note: Remember the comma between key and value.**
 
-**Note: Key must to match Value one by one, if not, will report an error.**
+**Note: Key must to match Value one by one, if not, it will report an error.**
 
 If the parameters have the same key, it`s ok:
 
@@ -94,7 +94,7 @@ https://httpbin.org/get?key1=value1&key1=value2
 
 ## 3. Set Headers
 
-Set headers is similar to add parameters, use `NewHeaders()`:
+Setting headers is similar to adding parameters, use `NewHeaders()`:
 
 ```go
 headers := dw.NewHeaders(
@@ -130,7 +130,7 @@ If you did not set `User-Agent`, direwolf will use default `User-Agent`: `direwo
 
 ## 4. Add Cookies
 
-Add cookies is similar to add parameters, too.
+Adding cookies is similar to adding parameters, too.
 
 ```go
 cookies := dw.NewCookies(
@@ -162,7 +162,7 @@ Output:
 
 ## 5. Post Form
 
-If you want post form data, use `NewPostForm()`:
+If you want to post form data, use `NewPostForm()`:
 
 ```go
 postForm := dw.NewPostForm(
@@ -202,7 +202,7 @@ Output:
 
 ## 6. Post Body
 
-If you want post bytes type data, you can use `Body`, its original type is `[]byte`, like this:
+If you want to post bytes type data, you can use `Body`, its original type is `[]byte`, like this:
 
 ```go
 body := dw.Body("Hello World")
@@ -235,7 +235,7 @@ Output:
 
 ## 7. Set Timeout
 
-`Timeout` specifies a time limit for request. The timeout includes connection time, any redirects, and reading the response body.
+`Timeout` specifies a time limit for request. The timeout includes the time of connection, any redirects, and reading the response body.
 
 The timer remains running after Get, Head, Post, or Do return and will interrupt reading of the Response.Body.
 
@@ -283,7 +283,7 @@ resp, err := dw.Get(
 
 ## 9. Proxy
 
-Set proxy is easy, too. You can set different proxies for HTTP and HTTPS sites.
+Setting proxy is easy, too. You can set different proxies for HTTP and HTTPS sites.
 
 ```go
 proxies := &dw.Proxy{
@@ -325,7 +325,7 @@ Get response cookies:
 resp.Cookies
 ```
 
-If you want get request of response:
+If you want to get request of response:
 
 ```go
 resp.Request
@@ -333,7 +333,7 @@ resp.Request
 
 ## 11. Extract Data
 
-You can easily extract data using direwolf after sending a request, as we did above:
+You can easily extract data using direwolf after sending a request, as what we did above:
 
 ```go
 resp, err := dw.Get("https://httpbin.org/get")
@@ -343,7 +343,7 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-`Text()` will use `UTF8` to decode content by default. You can also specify decode method yourself:
+`Text()` will use `UTF8` to decode content by default. You can also specify decode method by yourself:
 
 ```go
 resp.Text("GBK")
@@ -351,13 +351,13 @@ resp.Text("GBK")
 
 It only support `UTF8`, `GBK`, `GB18030`, `Latin1` now.
 
-Note: Text() will decode content every time you call it. If you want reuse text, you would better store the text in a variable.
+Note: Text() will decode content every time you call it. If you want to reuse text, you would better store the text in a variable.
 
 ```go
 text := resp.Text()
 ```
 
-Besides, if you want get raw content, you can use `Content()` method, it will return a `[]byte`:
+Besides, if you want to get raw content, you can use `Content()` method and it will return a `[]byte`:
 
 ```go
 resp.Content()
@@ -373,9 +373,9 @@ Direwolf has a built-in Css selector via `goquery`, which makes it easy to extra
 text := resp.CSS("a").Text()
 ```
 
-It will find all matching values, put them in a slice and return it. If no matching values was found, it will return a empty slice.
+It will find all matching values and then put them in a slice and return it. If no matching values was found, it will return a empty slice.
 
-In many cases, we only looking for a single match result, then we can use `First()` or `At()` to extract single result:
+In many cases, we only look for a single match result, then we can use `First()` or `At()` to extract single result:
 
 ```go
 text1 := resp.CSS("a").First().Text()
@@ -384,7 +384,7 @@ text2 := resp.CSS("a").At(3).Text()
 
 Using these two methods will return a single string. If no matching values was found, it will return a empty string.
 
-`Text()` method only return the text under the current node, not contains the text in the child node. If you need text in all child node, consider `TextAll()`.
+`Text()` method only return the text under the current node, does not contains the text in the child node. If you need text in all child node, consider `TextAll()`.
 
 ```go
 text := resp.CSS("a").TextAll()
@@ -398,9 +398,9 @@ In addition to text, direwolf can also extract attributes.
 attr := resp.CSS("a").Attr("href")
 ```
 
-The same with `Text()`, it return a slice of attribute values. It can use `First()` or `At()` to extract single value, too.
+The same with `Text()`, it returns a slice of attribute values. It can use `First()` or `At()` to extract single value, too.
 
-`Attr()` can set a default value, if not match value is found, it will return the default value.
+`Attr()` can set a default value, if no matching values is found, it will return the default value.
 
 ```go
 attr := resp.CSS("a").Attr("class", "default value")
@@ -426,7 +426,7 @@ fmt.Println(resp.Re("-.*?-"))
 // [-Hello- -World- -direwolf- -wnanbei-]
 ```
 
-Then is `ReSubmatch()`, it will return a two-dimensional slice that contains all the sub matching results (Data only in brackets).
+Next is `ReSubmatch()`, it will return a two-dimensional slice that contains all the sub matching results (Data only in brackets).
 
 ```go
 fmt.Println(resp.ReSubmatch("-(.*?)--(.*?)-"))

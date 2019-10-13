@@ -10,11 +10,11 @@ author_profile: true
 
 As described in the title, direwolf is a library written in Golang and is dedicated to the convenient and easy to use HTTP client.
 
-When i first learned about Golang, i was surprised by its powerful Goroutine and complete support for network programming.But i also found that Golang does not have a relatively complete library similar to Requests in Python. The native `net/http` is pretty good, but it is always need many annoying steps to set a simple configuration while send a request.
+When I first knew about Golang, I was surprised by its powerful Goroutine and complete support for network programming.But I also found that Golang does not have a relatively complete library similar to the Requests in Python. The native `net/http` is pretty good, but it always needs many annoying steps to set a simple configuration while sending a request.
 
-In the third-part libraries, it seems that most people are more concerned about performance than ease of use, such as very powerful library `fasthttp`.
+In the third-part libraries, it seems that most people are more concerned about performance than the ease of use, such as very powerful library `fasthttp`.
 
-But i think that ease of use is also important. This is my original intention to develop direwolf.
+But I think that ease of use is also important. This is my original intention to develop direwolf.
 
 正如标题所描述的那样，direwolf 是一个使用 Golang 编写的，致力于简单易用的 HTTP 客户端。
 
