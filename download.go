@@ -2,7 +2,9 @@ package direwolf
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -91,7 +93,9 @@ func (session *Session) send(req *Request) (*Response, error) {
 func buildResponse(httpReq *Request, httpResp *http.Response) (*Response, error) {
 	content, err := ioutil.ReadAll(httpResp.Body)
 	if err != nil {
-		return nil, WrapErr(err, "read Response.Body failed")
+		if !errors.Is(err, io.ErrUnexpectedEOF) {  // Ignore Unexpected EOF error
+			return nil, WrapErr(err, "read Response.Body failed")
+		}
 	}
 	return &Response{
 		URL:           httpReq.URL,
