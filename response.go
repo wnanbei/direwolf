@@ -1,7 +1,6 @@
 package direwolf
 
 import (
-	"bytes"
 	"net/http"
 	"regexp"
 	"strings"
@@ -16,56 +15,36 @@ type Response struct {
 	URL           string
 	StatusCode    int
 	Proto         string
-	Encoding      string
 	Headers       http.Header
 	Cookies       Cookies
 	Request       *Request
+	Content       []byte
 	ContentLength int64
-	content       []byte
+	encoding      string
+	text          string
 	dom           *goquery.Document
 }
 
-// Content read bytes from Response.body.
-func (resp *Response) Content() []byte {
-	return resp.content
+// Encoding can change and return the encoding type of response. Like this:
+//   encoding := resp.Encoding("GBK")
+// You can specified encoding type. Such as GBK, GB18030, latin1. Default is UTF-8.
+// It will decode the content to string if you specified encoding type.
+// It will just return the encoding type of response if you do not pass parameter.
+func (resp *Response) Encoding(encoding ...string) string {
+	if len(encoding) > 0 {
+		resp.encoding = strings.ToUpper(encoding[0])
+		resp.text = decodeContent(resp.encoding, resp.Content)
+	}
+	return resp.encoding
 }
 
-// Text decode content to string. You can specified encoding type. Such as GBK, GB18030,
-// latin1. Default is UTF-8.
-//
-// If Response.content does not exists, it will call Response.Content() at first.
-func (resp *Response) Text(encoding ...string) string {
-	var text = ""
-	var encodingType = strings.ToUpper(resp.Encoding)
-
-	if len(encoding) > 0 {
-		encodingType = strings.ToUpper(encoding[0])
+// Text return the text of Response. It will decode the content to string the first time
+// it is called.
+func (resp *Response) Text() string {
+	if resp.text == "" {
+		resp.text = decodeContent(resp.encoding, resp.Content)
 	}
-
-	switch encodingType {
-	case "UTF-8", "UTF8":
-		text = string(resp.content)
-	case "GBK":
-		decodeBytes, err := simplifiedchinese.GBK.NewDecoder().Bytes(resp.content)
-		if err != nil {
-			return ""
-		}
-		text = string(decodeBytes)
-	case "GB18030":
-		decodeBytes, err := simplifiedchinese.GB18030.NewDecoder().Bytes(resp.content)
-		if err != nil {
-			return ""
-		}
-		text = string(decodeBytes)
-	case "LATIN1":
-		decodeBytes, err := charmap.ISO8859_1.NewDecoder().Bytes(resp.content)
-		if err != nil {
-			return ""
-		}
-		text = string(decodeBytes)
-	}
-
-	return text
+	return resp.text
 }
 
 // Re extract required data with regexp.
@@ -95,12 +74,14 @@ func (resp *Response) ReSubmatch(queryStr string) [][]string {
 
 // CSS is a method to extract data with css selector, it returns a CSSNodeList.
 func (resp *Response) CSS(queryStr string) *CSSNodeList {
-	content := bytes.NewReader(resp.Content())
-	dom, err := goquery.NewDocumentFromReader(content)
-	if err != nil {
-		return nil
+	if resp.dom == nil {  // New the dom if resp.dom not exists.
+		text := strings.NewReader(resp.Text())
+		dom, err := goquery.NewDocumentFromReader(text)
+		if err != nil {
+			return nil
+		}
+		resp.dom = dom
 	}
-	resp.dom = dom
 
 	newNodeList := make([]CSSNode, 0)
 	resp.dom.Find(queryStr).Each(func(i int, selection *goquery.Selection) {
@@ -108,6 +89,35 @@ func (resp *Response) CSS(queryStr string) *CSSNodeList {
 		newNodeList = append(newNodeList, newNode)
 	})
 	return &CSSNodeList{container: newNodeList}
+}
+
+// decodeContent decode the content with the encodingType. It just support
+// UTF-8, GBK, GB18030, Lantin1 now.
+func decodeContent(encodingType string, content []byte) (decodedText string) {
+	var text = ""
+	switch encodingType {
+	case "UTF-8", "UTF8":
+		text = string(content)
+	case "GBK":
+		decodeBytes, err := simplifiedchinese.GBK.NewDecoder().Bytes(content)
+		if err != nil {
+			return ""
+		}
+		text = string(decodeBytes)
+	case "GB18030":
+		decodeBytes, err := simplifiedchinese.GB18030.NewDecoder().Bytes(content)
+		if err != nil {
+			return ""
+		}
+		text = string(decodeBytes)
+	case "LATIN1":
+		decodeBytes, err := charmap.ISO8859_1.NewDecoder().Bytes(content)
+		if err != nil {
+			return ""
+		}
+		text = string(decodeBytes)
+	}
+	return text
 }
 
 // CSSNode is a container that stores single selected results

@@ -110,7 +110,7 @@ func TestResponseEncoding(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	resp3.Encoding = "latin1"
+	resp3.Encoding("latin1")
 	result3 := resp3.ReSubmatch(`<a href="/author/">(.*?)</a>`)
 	if result3[0][0] != "..." {
 		t.Fatal("Response latin1 failed.")
@@ -120,7 +120,7 @@ func TestResponseEncoding(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	resp.Encoding = "GBK"
+	resp.Encoding("GBK")
 	result1 := resp.ReSubmatch(`<a href="/author/">(.*?)</a>`)
 	if result1[0][0] != "南北" {
 		t.Fatal("Response GBK failed.")
@@ -130,7 +130,7 @@ func TestResponseEncoding(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	resp2.Encoding = "GB18030"
+	resp2.Encoding("GB18030")
 	result2 := resp2.ReSubmatch(`<a href="/author/">(.*?)</a>`)
 	if result2[0][0] != "南北" {
 		t.Fatal("Response GB18030 failed.")

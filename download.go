@@ -101,12 +101,12 @@ func buildResponse(httpReq *Request, httpResp *http.Response) (*Response, error)
 		URL:           httpReq.URL,
 		StatusCode:    httpResp.StatusCode,
 		Proto:         httpResp.Proto,
-		Encoding:      "UTF-8",
 		Headers:       httpResp.Header,
 		Cookies:       httpResp.Cookies(),
 		Request:       httpReq,
 		ContentLength: httpResp.ContentLength,
-		content:       content,
+		Content:       content,
+		encoding:      "UTF-8",
 	}, nil
 }
 
