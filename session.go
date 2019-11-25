@@ -31,7 +31,7 @@ func (session *Session) Send(req *Request) (*Response, error) {
 }
 
 // Get is a get method.
-func (session *Session) Get(URL string, args ...interface{}) (*Response, error) {
+func (session *Session) Get(URL string, args ...RequestOption) (*Response, error) {
 	req := NewRequest("GET", URL, args...)
 	resp, err := session.Send(req)
 	if err != nil {
@@ -41,7 +41,7 @@ func (session *Session) Get(URL string, args ...interface{}) (*Response, error) 
 }
 
 // Post is a post method.
-func (session *Session) Post(URL string, args ...interface{}) (*Response, error) {
+func (session *Session) Post(URL string, args ...RequestOption) (*Response, error) {
 	req := NewRequest("POST", URL, args...)
 	resp, err := session.Send(req)
 	if err != nil {
@@ -51,7 +51,7 @@ func (session *Session) Post(URL string, args ...interface{}) (*Response, error)
 }
 
 // Head is a post method.
-func (session *Session) Head(URL string, args ...interface{}) (*Response, error) {
+func (session *Session) Head(URL string, args ...RequestOption) (*Response, error) {
 	req := NewRequest("HEAD", URL, args...)
 	resp, err := session.Send(req)
 	if err != nil {
@@ -61,7 +61,7 @@ func (session *Session) Head(URL string, args ...interface{}) (*Response, error)
 }
 
 // Put is a post method.
-func (session *Session) Put(URL string, args ...interface{}) (*Response, error) {
+func (session *Session) Put(URL string, args ...RequestOption) (*Response, error) {
 	req := NewRequest("PUT", URL, args...)
 	resp, err := session.Send(req)
 	if err != nil {
@@ -71,7 +71,7 @@ func (session *Session) Put(URL string, args ...interface{}) (*Response, error) 
 }
 
 // Patch is a post method.
-func (session *Session) Patch(URL string, args ...interface{}) (*Response, error) {
+func (session *Session) Patch(URL string, args ...RequestOption) (*Response, error) {
 	req := NewRequest("PATCH", URL, args...)
 	resp, err := session.Send(req)
 	if err != nil {
@@ -81,7 +81,7 @@ func (session *Session) Patch(URL string, args ...interface{}) (*Response, error
 }
 
 // Delete is a post method.
-func (session *Session) Delete(URL string, args ...interface{}) (*Response, error) {
+func (session *Session) Delete(URL string, args ...RequestOption) (*Response, error) {
 	req := NewRequest("DELETE", URL, args...)
 	resp, err := session.Send(req)
 	if err != nil {

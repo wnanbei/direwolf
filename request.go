@@ -33,7 +33,7 @@ type Request struct {
 // 	direwolf.Proxy: Proxy url to use.
 // 	direwolf.Timeout: Request Timeout.
 // 	direwolf.RedirectNum: Number of Request allowed to redirect.
-func NewRequest(method string, URL string, args ...interface{}) *Request {
+func NewRequest(method string, URL string, args ...RequestOption) *Request {
 	req := &Request{}             // new a Request and set default field
 	req.Method = strings.ToUpper(method) // Upper the method string
 	req.URL = URL
@@ -41,25 +41,7 @@ func NewRequest(method string, URL string, args ...interface{}) *Request {
 
 	// Check the type of the parameter and handle it.
 	for _, arg := range args {
-		switch a := arg.(type) {
-		case http.Header:
-			req.Headers = a
-		case *Params:
-			req.Params = a
-			req.URL = req.URL + "?" + req.Params.URLEncode()
-		case *PostForm:
-			req.PostForm = a
-		case Body:
-			req.Body = a
-		case Cookies:
-			req.Cookies = a
-		case *Proxy:
-			req.Proxy = a
-		case RedirectNum:
-			req.RedirectNum = int(a)
-		case Timeout:
-			req.Timeout = int(a)
-		}
+		arg.bindRequest(req)
 	}
 	return req
 }

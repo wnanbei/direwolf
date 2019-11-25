@@ -7,29 +7,37 @@ import (
 	"strings"
 )
 
-// Params is url params you want to join to url, as parameter in Request method.
-// You should init it by using NewParams like this:
-// 	params := dw.NewParams(
-//		"key1", "value1",
-// 		"key2", "value2",
-// 	)
-// Note: mid symbol is comma.
-type Params struct {
-	stringSliceMap
+// RequestOption is the interface of Request Options. Use to bind the options to Request.
+type RequestOption interface {
+	// Bind Options to Request
+	bindRequest(request *Request)
 }
 
-// Body is data you want to post, as parameter in Request method.
+// Body is the data you want to post, one of the Request Options.
 type Body []byte
 
-// PostForm is the form you want to post, as parameter in Request method.
-// You should init it by using NewPostForm like this:
-// 	postForm := dw.NewPostForm(
-//		"key1", "value1",
-// 		"key2", "value2",
-// 	)
-// Note: mid symbol is comma.
-type PostForm struct {
-	stringSliceMap
+func (options Body) bindRequest(request *Request) {
+	request.Body = options
+}
+
+// RedirectNum is the number of request redirect allowed.
+// If RedirectNum > 0, it means a redirect number limit for requests.
+// If RedirectNum <= 0, it means ban redirect.
+// If RedirectNum is not set, it means default 5 times redirect limit.
+type RedirectNum int
+
+func (options RedirectNum) bindRequest(request *Request) {
+	request.RedirectNum = int(options)
+}
+
+// Timeout is the number of time to timeout request.
+// if timeout > 0, it means a time limit for requests.
+// if timeout < 0, it means no limit.
+// if timeout = 0, it means keep default 30 second timeout.
+type Timeout int
+
+func (options Timeout) bindRequest(request *Request) {
+	request.Timeout = int(options)
 }
 
 // Proxy is the proxy server address, like "http://127.0.0.1:1080".
@@ -39,24 +47,16 @@ type Proxy struct {
 	HTTPS string
 }
 
-// RedirectNum is the number of request redirect allowed.
-// If RedirectNum > 0, it means a redirect number limit for requests.
-// If RedirectNum <= 0, it means ban redirect.
-// If RedirectNum is not set, it means default 5 times redirect limit.
-type RedirectNum int
+func (options *Proxy) bindRequest(request *Request) {
+	request.Proxy = options
+}
 
-// Timeout is the number of time to timeout request.
-// if timeout > 0, it means a time limit for requests.
-// if timeout < 0, it means no limit.
-// if timeout = 0, it means keep default 30 second timeout.
-type Timeout int
-
-// stringSliceMap type is map[string][]string, used for Params, PostForm, Cookies.
-type stringSliceMap struct {
+// strSliceMap type is map[string][]string, used for Params, PostForm.
+type strSliceMap struct {
 	data map[string][]string
 }
 
-// New is the way to create a stringSliceMap.
+// New is the way to create a strSliceMap.
 // You can set key-value pair when you init it by sent params. Just like this:
 // 	stringSliceMap{}.New(
 // 		"key1", "value1",
@@ -64,7 +64,7 @@ type stringSliceMap struct {
 // 	)
 // But be careful, between the key and value is a comma.
 // And if the number of parameters is not a multiple of 2, it will panic.
-func (ssm *stringSliceMap) New(keyValue ...string) {
+func (ssm *strSliceMap) New(keyValue ...string) {
 	ssm.data = make(map[string][]string)
 	if keyValue != nil {
 		if len(keyValue)%2 != 0 {
@@ -81,24 +81,24 @@ func (ssm *stringSliceMap) New(keyValue ...string) {
 
 // Add key and value to stringSliceMap.
 // If key exists, value will append to slice.
-func (ssm *stringSliceMap) Add(key, value string) {
+func (ssm *strSliceMap) Add(key, value string) {
 	ssm.data[key] = append(ssm.data[key], value)
 }
 
 // Set key and value to stringSliceMap.
 // If key exists, existed value will drop and new value will set.
-func (ssm *stringSliceMap) Set(key, value string) {
+func (ssm *strSliceMap) Set(key, value string) {
 	ssm.data[key] = []string{value}
 }
 
 // Del delete the given key.
-func (ssm *stringSliceMap) Del(key string) {
+func (ssm *strSliceMap) Del(key string) {
 	delete(ssm.data, key)
 }
 
 // Get get the value pair to given key.
 // You can pass index to assign which value to get, when there are multiple values.
-func (ssm *stringSliceMap) Get(key string, index ...int) string {
+func (ssm *strSliceMap) Get(key string, index ...int) string {
 	if ssm.data == nil {
 		return ""
 	}
@@ -114,7 +114,7 @@ func (ssm *stringSliceMap) Get(key string, index ...int) string {
 
 // URLEncode encodes the values into ``URL encoded'' form
 // ("bar=baz&foo=qux") sorted by key.
-func (ssm *stringSliceMap) URLEncode() string {
+func (ssm *strSliceMap) URLEncode() string {
 	if ssm.data == nil {
 		return ""
 	}
@@ -139,6 +139,17 @@ func (ssm *stringSliceMap) URLEncode() string {
 	return buf.String()
 }
 
+// Params is url params you want to join to url, as parameter in Request method.
+// You should init it by using NewParams like this:
+// 	params := dw.NewParams(
+//		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// Note: mid symbol is comma.
+type Params struct {
+	strSliceMap
+}
+
 // NewParams new a Params type.
 //
 // You can set key-value pair when you init it by sent parameters. Just like this:
@@ -152,6 +163,22 @@ func NewParams(keyValue ...string) *Params {
 	var p = &Params{}
 	p.New(keyValue...)
 	return p
+}
+
+func (options *Params) bindRequest(request *Request) {
+	request.Params = options
+	request.URL = request.URL + "?" + request.Params.URLEncode()
+}
+
+// PostForm is the form you want to post, as parameter in Request method.
+// You should init it by using NewPostForm like this:
+// 	postForm := dw.NewPostForm(
+//		"key1", "value1",
+// 		"key2", "value2",
+// 	)
+// Note: mid symbol is comma.
+type PostForm struct {
+	strSliceMap
 }
 
 // NewPostForm new a PostForm type.
@@ -169,6 +196,18 @@ func NewPostForm(keyValue ...string) *PostForm {
 	return p
 }
 
+func (options *PostForm) bindRequest(request *Request) {
+	request.PostForm = options
+}
+
+type Headers struct {
+	http.Header
+}
+
+func (options Headers) bindRequest(request *Request) {
+	request.Headers = http.Header(options.Header)
+}
+
 // NewHeaders new a http.Header type.
 //
 // You can set key-value pair when you init it by sent parameters. Just like this:
@@ -178,8 +217,9 @@ func NewPostForm(keyValue ...string) *PostForm {
 // 	)
 // But be careful, between the key and value is a comma.
 // And if the number of parameters is not a multiple of 2, it will panic.
-func NewHeaders(keyValue ...string) http.Header {
-	h := http.Header{}
+func NewHeaders(keyValue ...string) *Headers {
+	h := new(Headers)
+	h.Header = http.Header{}
 	if keyValue != nil {
 		if len(keyValue)%2 != 0 {
 			panic("key and value must be part")
@@ -202,11 +242,6 @@ func NewHeaders(keyValue ...string) http.Header {
 // 	)
 // Note: mid symbol is comma.
 type Cookies []*http.Cookie
-
-// Add append a new cookie to Cookies.
-func (c Cookies) Add(key, value string) {
-	c = append(c, &http.Cookie{Name: key, Value: value})
-}
 
 // NewCookies new a Cookies type.
 //
@@ -232,4 +267,13 @@ func NewCookies(keyValue ...string) Cookies {
 		}
 	}
 	return c
+}
+
+func (c Cookies) bindRequest(request *Request) {
+	request.Cookies = c
+}
+
+// Add append a new cookie to Cookies.
+func (c Cookies) Add(key, value string) {
+	c = append(c, &http.Cookie{Name: key, Value: value})
 }

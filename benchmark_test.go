@@ -4,9 +4,11 @@ import (
 	"io/ioutil"
 	"net/http"
 	"testing"
+
+	"github.com/valyala/fasthttp"
 )
 
-func BenchmarkDefaultGet(b *testing.B) {
+func BenchmarkDirewolfGet(b *testing.B) {
 	ts := newTestResponseServer()
 	defer ts.Close()
 	b.ResetTimer()
@@ -16,7 +18,7 @@ func BenchmarkDefaultGet(b *testing.B) {
 	}
 }
 
-func BenchmarkGoGet(b *testing.B) {
+func BenchmarkGolangGet(b *testing.B) {
 	ts := newTestResponseServer()
 	defer ts.Close()
 	b.ResetTimer()
@@ -24,5 +26,14 @@ func BenchmarkGoGet(b *testing.B) {
 		resp, _ := http.Get(ts.URL)
 		ioutil.ReadAll(resp.Body)
 		resp.Body.Close()
+	}
+}
+
+func BenchmarkFasthttpGet(b *testing.B) {
+	ts := newTestResponseServer()
+	defer ts.Close()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		fasthttp.Get(nil, ts.URL)
 	}
 }
