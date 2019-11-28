@@ -259,7 +259,8 @@ var (
 	envProxyFuncValue func(*url.URL) (*url.URL, error)
 )
 
-// proxyFunc
+// proxyFunc get proxy from request context.
+// If there is no proxy set, use default proxy from environment.
 func proxyFunc(req *http.Request) (*url.URL, error) {
 	httpURLStr := req.Context().Value("http")   // get http proxy url form context
 	httpsURLStr := req.Context().Value("https") // get https proxy url form context
@@ -289,7 +290,7 @@ func proxyFunc(req *http.Request) (*url.URL, error) {
 	return envProxyFuncValue(req.URL)
 }
 
-// redirectFunc return a redirect control function. Default redirect number is 5.
+// redirectFunc get redirectNum from request context and check redirect number.
 func redirectFunc(req *http.Request, via []*http.Request) error {
 	redirectNum := req.Context().Value("redirectNum").(int)
 	if len(via) > redirectNum {

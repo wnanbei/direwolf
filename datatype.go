@@ -16,6 +16,7 @@ type RequestOption interface {
 // Body is the data you want to post, one of the Request Options.
 type Body []byte
 
+// RequestOption interface method, bind request option to request.
 func (options Body) bindRequest(request *Request) {
 	request.Body = options
 }
@@ -26,6 +27,7 @@ func (options Body) bindRequest(request *Request) {
 // If RedirectNum is not set, it means default 5 times redirect limit.
 type RedirectNum int
 
+// RequestOption interface method, bind request option to request.
 func (options RedirectNum) bindRequest(request *Request) {
 	request.RedirectNum = int(options)
 }
@@ -36,6 +38,7 @@ func (options RedirectNum) bindRequest(request *Request) {
 // if timeout = 0, it means keep default 30 second timeout.
 type Timeout int
 
+// RequestOption interface method, bind request option to request.
 func (options Timeout) bindRequest(request *Request) {
 	request.Timeout = int(options)
 }
@@ -47,6 +50,7 @@ type Proxy struct {
 	HTTPS string
 }
 
+// RequestOption interface method, bind request option to request.
 func (options *Proxy) bindRequest(request *Request) {
 	request.Proxy = options
 }
@@ -165,6 +169,7 @@ func NewParams(keyValue ...string) *Params {
 	return p
 }
 
+// RequestOption interface method, bind request option to request.
 func (options *Params) bindRequest(request *Request) {
 	request.Params = options
 	request.URL = request.URL + "?" + request.Params.URLEncode()
@@ -196,6 +201,7 @@ func NewPostForm(keyValue ...string) *PostForm {
 	return p
 }
 
+// RequestOption interface method, bind request option to request.
 func (options *PostForm) bindRequest(request *Request) {
 	request.PostForm = options
 }
@@ -204,6 +210,7 @@ type Headers struct {
 	http.Header
 }
 
+// RequestOption interface method, bind request option to request.
 func (options Headers) bindRequest(request *Request) {
 	request.Headers = http.Header(options.Header)
 }
@@ -269,6 +276,7 @@ func NewCookies(keyValue ...string) Cookies {
 	return c
 }
 
+// RequestOption interface method, bind request option to request.
 func (c Cookies) bindRequest(request *Request) {
 	request.Cookies = c
 }

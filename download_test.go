@@ -1,14 +1,18 @@
 package direwolf
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func newTestProxyServer() *httptest.Server {
@@ -75,6 +79,69 @@ func TestTimeout(t *testing.T) {
 
 	_, err := Get(timeoutServer.URL, Timeout(1))
 	if err != nil {
-		fmt.Println(err)
+		if !errors.Is(err, ErrTimeout) {
+			t.Fatal("TestTimeout failed: ", err)
+		}
+	}
+
+	_, err = Get(timeoutServer.URL, Timeout(3))
+	if err != nil {
+		t.Fatal("TestTimeout failed: ", err)
+	}
+}
+
+func newTestRedirectServer() *httptest.Server {
+	gin.SetMode(gin.ReleaseMode)
+	router := gin.New()
+	router.GET("/", func(c *gin.Context) {
+		c.String(200, "successed")
+	})
+	router.GET("/:number", func(c *gin.Context) {
+		number, _ := strconv.Atoi(c.Param("number"))
+		if number == 1 {
+			c.Redirect(302, "/")
+		}
+		number = number - 1
+		c.Redirect(302, strconv.Itoa(number))
+	})
+	ts := httptest.NewServer(router)
+	return ts
+}
+
+func TestRedirect(t *testing.T) {
+	redirectServer := newTestRedirectServer()
+	defer redirectServer.Close()
+
+	redirect := RedirectNum(-1) // ban redirect
+	resp, err := Get(redirectServer.URL+"/", redirect)
+	if err != nil {
+		t.Fatal("Test TestRedirectError failed.")
+	}
+	if resp.Text() != "successed" {
+		t.Fatal("Test TestRedirectError failed.")
+	}
+
+	redirect = RedirectNum(1) // allow 1 redirect
+	resp, err = Get(redirectServer.URL+"/1", redirect)
+	if err != nil {
+		t.Fatal("Test TestRedirectError failed.")
+	}
+	if resp.Text() != "successed" {
+		t.Fatal("Test TestRedirectError failed.")
+	}
+
+	redirect = RedirectNum(1) // allow 1 redirect
+	resp, err = Get(redirectServer.URL+"/2", redirect)
+	if err != nil {
+		var errType *RedirectError
+		if !errors.As(err, &errType) { // check RedirectError
+			fmt.Println("yyyyy")
+			t.Fatal("Test TestRedirectError failed.")
+		}
+	} else {
+		t.Fatal("Test TestRedirectError failed.")
+	}
+	if resp.Text() != "successed" {
+		t.Fatal("Test TestRedirectError failed.")
 	}
 }

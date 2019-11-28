@@ -36,8 +36,10 @@ func send(session *Session, req *Request) (*Response, error) {
 	// default RedirectNum is 10.
 	if req.RedirectNum == 0 {
 		ctx = context.WithValue(ctx, "redirectNum", 10)
-	} else {
+	} else if req.RedirectNum > 0 {
 		ctx = context.WithValue(ctx, "redirectNum", req.RedirectNum)
+	} else {
+		ctx = context.WithValue(ctx, "redirectNum", 0)
 	}
 
 	// Make new http.Request with context
