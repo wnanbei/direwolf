@@ -1,14 +1,15 @@
 package direwolf
 
 import (
-	"golang.org/x/net/http/httpproxy"
-	"golang.org/x/net/publicsuffix"
 	"net"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
 	"sync"
 	"time"
+
+	"golang.org/x/net/http/httpproxy"
+	"golang.org/x/net/publicsuffix"
 )
 
 // Session is the main object in direwolf. This is its main features:
@@ -49,7 +50,10 @@ func NewSession(options ...*SessionOptions) *Session {
 		trans.DisableKeepAlives = true
 	}
 
-	client := &http.Client{Transport: trans}
+	client := &http.Client{
+		Transport:     trans,
+		CheckRedirect: redirectFunc,
+	}
 
 	// set CookieJar
 	if sessionOptions.DisableCookieJar == false {
@@ -283,4 +287,14 @@ func proxyFunc(req *http.Request) (*url.URL, error) {
 		envProxyFuncValue = httpproxy.FromEnvironment().ProxyFunc()
 	})
 	return envProxyFuncValue(req.URL)
+}
+
+// redirectFunc return a redirect control function. Default redirect number is 5.
+func redirectFunc(req *http.Request, via []*http.Request) error {
+	redirectNum := req.Context().Value("redirectNum").(int)
+	if len(via) > redirectNum {
+		err := &RedirectError{redirectNum}
+		return WrapErr(err, "RedirectError")
+	}
+	return nil
 }
