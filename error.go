@@ -10,6 +10,7 @@ import (
 
 var (
 	ErrRequestBody = errors.New("request body can`t coexists with PostForm")
+	ErrTimeout = errors.New("reqeust timeout")
 )
 
 type RedirectError struct {

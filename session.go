@@ -1,13 +1,14 @@
 package direwolf
 
 import (
+	"golang.org/x/net/http/httpproxy"
+	"golang.org/x/net/publicsuffix"
 	"net"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
+	"sync"
 	"time"
-
-	"golang.org/x/net/publicsuffix"
 )
 
 // Session is the main object in direwolf. This is its main features:
@@ -21,11 +22,63 @@ type Session struct {
 	Timeout   int
 }
 
+// NewSession new a Session object, and set a default Client and Transport.
+func NewSession(options ...*SessionOptions) *Session {
+	var sessionOptions *SessionOptions
+	if len(options) > 0 {
+		sessionOptions = options[0]
+	} else {
+		sessionOptions = DefaultSessionOptions()
+	}
+
+	// set transport parameters.
+	trans := &http.Transport{
+		DialContext: (&net.Dialer{
+			Timeout:   sessionOptions.DialTimeout,
+			KeepAlive: sessionOptions.DialKeepAlive,
+		}).DialContext,
+		MaxIdleConns:          sessionOptions.MaxIdleConns,
+		MaxIdleConnsPerHost:   sessionOptions.MaxIdleConnsPerHost,
+		MaxConnsPerHost:       sessionOptions.MaxConnsPerHost,
+		IdleConnTimeout:       sessionOptions.IdleConnTimeout,
+		TLSHandshakeTimeout:   sessionOptions.TLSHandshakeTimeout,
+		ExpectContinueTimeout: sessionOptions.ExpectContinueTimeout,
+		Proxy:                 proxyFunc,
+	}
+	if sessionOptions.DisableDialKeepAlives {
+		trans.DisableKeepAlives = true
+	}
+
+	client := &http.Client{Transport: trans}
+
+	// set CookieJar
+	if sessionOptions.DisableCookieJar == false {
+		cookieJarOptions := cookiejar.Options{
+			PublicSuffixList: publicsuffix.List,
+		}
+		jar, err := cookiejar.New(&cookieJarOptions)
+		if err != nil {
+			return nil
+		}
+		client.Jar = jar
+	}
+
+	// Set default user agent
+	headers := http.Header{}
+	headers.Add("User-Agent", "direwolf - winter is coming")
+
+	return &Session{
+		client:    client,
+		transport: trans,
+		Headers:   headers,
+	}
+}
+
 // Send is a generic request method.
 func (session *Session) Send(req *Request) (*Response, error) {
-	resp, err := session.send(req)
+	resp, err := send(session, req)
 	if err != nil {
-		return nil, WrapErr(err, "request failed")
+		return nil, WrapErr(err, "session send failed")
 	}
 	return resp, nil
 }
@@ -114,57 +167,6 @@ func (session *Session) SetCookies(URL string, cookies Cookies) {
 	session.client.Jar.SetCookies(parsedURL, cookies)
 }
 
-// NewSession new a Session object, and set a default Client and Transport.
-func NewSession(options ...*SessionOptions) *Session {
-	var sessionOptions *SessionOptions
-	if len(options) > 0 {
-		sessionOptions = options[0]
-	} else {
-		sessionOptions = DefaultSessionOptions()
-	}
-
-	// set transport parameters.
-	trans := &http.Transport{
-		DialContext: (&net.Dialer{
-			Timeout:   sessionOptions.DialTimeout,
-			KeepAlive: sessionOptions.DialKeepAlive,
-		}).DialContext,
-		MaxIdleConns:          sessionOptions.MaxIdleConns,
-		MaxIdleConnsPerHost:   sessionOptions.MaxIdleConnsPerHost,
-		MaxConnsPerHost:       sessionOptions.MaxConnsPerHost,
-		IdleConnTimeout:       sessionOptions.IdleConnTimeout,
-		TLSHandshakeTimeout:   sessionOptions.TLSHandshakeTimeout,
-		ExpectContinueTimeout: sessionOptions.ExpectContinueTimeout,
-	}
-	if sessionOptions.DisableDialKeepAlives {
-		trans.DisableKeepAlives = true
-	}
-
-	client := &http.Client{Transport: trans}
-
-	// set CookieJar
-	if sessionOptions.DisableCookieJar == false {
-		cookieJarOptions := cookiejar.Options{
-			PublicSuffixList: publicsuffix.List,
-		}
-		jar, err := cookiejar.New(&cookieJarOptions)
-		if err != nil {
-			return nil
-		}
-		client.Jar = jar
-	}
-
-	// Set default user agent
-	headers := http.Header{}
-	headers.Add("User-Agent", "direwolf - winter is coming")
-
-	return &Session{
-		client:    client,
-		transport: trans,
-		Headers:   headers,
-	}
-}
-
 type SessionOptions struct {
 	// DialTimeout is the maximum amount of time a dial will wait for
 	// a connect to complete.
@@ -245,4 +247,40 @@ func DefaultSessionOptions() *SessionOptions {
 		DisableCookieJar:      false,
 		DisableDialKeepAlives: false,
 	}
+}
+
+var (
+	// proxyConfigOnce guards proxyConfig
+	envProxyOnce      sync.Once
+	envProxyFuncValue func(*url.URL) (*url.URL, error)
+)
+
+// proxyFunc
+func proxyFunc(req *http.Request) (*url.URL, error) {
+	httpURLStr := req.Context().Value("http")   // get http proxy url form context
+	httpsURLStr := req.Context().Value("https") // get https proxy url form context
+
+	// check whether set proxy
+	if httpURLStr != nil || httpsURLStr != nil {
+		if req.URL.Scheme == "http" {
+			httpURL, err := url.Parse(httpURLStr.(string))
+			if err != nil {
+				return nil, WrapErr(err, "HTTP Proxy error, please check proxy url")
+			}
+			return httpURL, nil
+		} else if req.URL.Scheme == "https" {
+			httpsURL, err := url.Parse(httpsURLStr.(string))
+			if err != nil {
+				return nil, WrapErr(err, "HTTPS Proxy error, please check proxy url")
+			}
+			return httpsURL, nil
+		}
+	}
+
+	// If there is no proxy set, use default proxy from environment.
+	// This mitigates expensive lookups on some platforms (e.g. Windows).
+	envProxyOnce.Do(func() {
+		envProxyFuncValue = httpproxy.FromEnvironment().ProxyFunc()
+	})
+	return envProxyFuncValue(req.URL)
 }

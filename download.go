@@ -2,6 +2,7 @@ package direwolf
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -13,9 +14,27 @@ import (
 )
 
 // send is low level request method.
-func (session *Session) send(req *Request) (*Response, error) {
-	// Make new http.Request
-	httpReq, err := http.NewRequest(req.Method, req.URL, nil)
+func send(session *Session, req *Request) (*Response, error) {
+	// set timeout to request context.
+	timeout := time.Second * 30
+	if req.Timeout > 0 {
+		timeout = time.Second * time.Duration(req.Timeout)
+	} else if session.Timeout > 0 {
+		timeout = time.Second * time.Duration(session.Timeout)
+	}
+	ctx, timeoutCancel := context.WithTimeout(context.Background(), timeout)
+
+	// set proxy to request context.
+	if req.Proxy != nil {
+		ctx = context.WithValue(ctx, "http", req.Proxy.HTTP)
+		ctx = context.WithValue(ctx, "https", req.Proxy.HTTPS)
+	} else if session.Proxy != nil {
+		ctx = context.WithValue(ctx, "http", session.Proxy.HTTP)
+		ctx = context.WithValue(ctx, "https", session.Proxy.HTTPS)
+	}
+
+	// Make new http.Request with context
+	httpReq, err := http.NewRequestWithContext(ctx, req.Method, req.URL, nil)
 	if err != nil {
 		return nil, WrapErr(err, "build Request error, please check request url or request method")
 	}
@@ -23,35 +42,8 @@ func (session *Session) send(req *Request) (*Response, error) {
 	// Handle the Headers.
 	httpReq.Header = mergeHeaders(req.Headers, session.Headers)
 
-	// Add proxy method to transport
-	proxyFunc, err := getProxyFunc(req.Proxy, session.Proxy)
-	if err != nil {
-		return nil, WrapErr(err, "build proxy failed, please check Proxy and session.Proxy")
-	}
-	if proxyFunc != nil {
-		session.transport.Proxy = proxyFunc
-	} else {
-		session.transport.Proxy = http.ProxyFromEnvironment
-	}
-
 	// set redirect
 	session.client.CheckRedirect = getRedirectFunc(req.RedirectNum)
-
-	// set timeout
-	// if timeout > 0, it means a time limit for requests.
-	// if timeout < 0, it means no limit.
-	// if timeout = 0, it means keep default 30 second timeout.
-	if req.Timeout > 0 {
-		session.client.Timeout = time.Duration(req.Timeout) * time.Second
-	} else if req.Timeout < 0 {
-		session.client.Timeout = 0
-	} else if session.Timeout > 0 {
-		session.client.Timeout = time.Duration(session.Timeout) * time.Second
-	} else if session.Timeout < 0 {
-		session.client.Timeout = 0
-	} else {
-		session.client.Timeout = 30 * time.Second
-	}
 
 	// Handle the DataForm, convert DataForm to strings.Reader.
 	// Set Content-Type to application/x-www-form-urlencoded.
@@ -74,6 +66,9 @@ func (session *Session) send(req *Request) (*Response, error) {
 
 	resp, err := session.client.Do(httpReq) // do request
 	if err != nil {
+		if strings.Contains(err.Error(), "context deadline exceeded") { // check timeout error
+			return nil, WrapErr(ErrTimeout, err.Error())
+		}
 		return nil, WrapErr(err, "Request Error")
 	}
 	defer func() {
@@ -86,6 +81,8 @@ func (session *Session) send(req *Request) (*Response, error) {
 	if err != nil {
 		return nil, WrapErr(err, "build Response Error")
 	}
+
+	timeoutCancel() // cancel the timeout context after request successed.
 	return response, nil
 }
 
@@ -93,7 +90,7 @@ func (session *Session) send(req *Request) (*Response, error) {
 func buildResponse(httpReq *Request, httpResp *http.Response) (*Response, error) {
 	content, err := ioutil.ReadAll(httpResp.Body)
 	if err != nil {
-		if !errors.Is(err, io.ErrUnexpectedEOF) {  // Ignore Unexpected EOF error
+		if !errors.Is(err, io.ErrUnexpectedEOF) { // Ignore Unexpected EOF error
 			return nil, WrapErr(err, "read Response.Body failed")
 		}
 	}

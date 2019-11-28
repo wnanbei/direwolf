@@ -39,6 +39,10 @@ func newTestSessionServer() *httptest.Server {
 				if _, err := w.Write([]byte(value)); err != nil {
 				}
 			}
+			if r.URL.Path == "/proxy" {
+				if _, err := w.Write([]byte("This is target website.")); err != nil {
+				}
+			}
 		}
 		if r.Method == "POST" {
 			if r.URL.Path == "/test" {
