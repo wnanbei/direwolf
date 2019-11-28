@@ -3,12 +3,10 @@ package direwolf
 import (
 	"errors"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
-	"strings"
 	"testing"
 	"time"
 
@@ -16,32 +14,30 @@ import (
 )
 
 func newTestProxyServer() *httptest.Server {
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cli := &http.Client{}
-
-		body, err := ioutil.ReadAll(r.Body)
+	gin.SetMode(gin.ReleaseMode)
+	router := gin.New()
+	router.GET("/:a", func(c *gin.Context) {
+		reqUrl := c.Request.URL.String() // Get request url
+		req, err := http.NewRequest(c.Request.Method, reqUrl, nil)
 		if err != nil {
-			fmt.Print("io.ReadFull(r.Body, body) ", err.Error())
-		}
-
-		reqUrl := r.URL.String()
-
-		req, err := http.NewRequest(r.Method, reqUrl, strings.NewReader(string(body)))
-		if err != nil {
-			fmt.Print("http.NewRequest ", err.Error())
+			c.AbortWithStatus(404)
 			return
 		}
 
+		// Forwarding requests from client.
+		cli := &http.Client{}
 		resp, err := cli.Do(req)
 		if err != nil {
-			fmt.Print("cli.Do(req) ", err.Error())
+			c.AbortWithStatus(404)
 			return
 		}
 		defer resp.Body.Close()
-		io.Copy(w, resp.Body)
-		if _, err := w.Write([]byte("This is proxy Server.")); err != nil {
-		}
-	}))
+
+		body, err := ioutil.ReadAll(resp.Body)
+		c.Data(200, "text/plain", body)        // write response body to response.
+		c.String(200, "This is proxy Server.") // add proxy info.
+	})
+	ts := httptest.NewServer(router)
 	return ts
 }
 
@@ -65,11 +61,13 @@ func TestSetProxy(t *testing.T) {
 }
 
 func newTestTimeoutServer() *httptest.Server {
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	gin.SetMode(gin.ReleaseMode)
+	router := gin.New()
+	router.GET("/", func(c *gin.Context) {
 		time.Sleep(time.Second * 2)
-		if _, err := w.Write([]byte("timeout")); err != nil {
-		}
-	}))
+		c.String(200, "successed")
+	})
+	ts := httptest.NewServer(router)
 	return ts
 }
 
@@ -139,9 +137,6 @@ func TestRedirect(t *testing.T) {
 			t.Fatal("Test TestRedirectError failed.")
 		}
 	} else {
-		t.Fatal("Test TestRedirectError failed.")
-	}
-	if resp.Text() != "successed" {
 		t.Fatal("Test TestRedirectError failed.")
 	}
 }

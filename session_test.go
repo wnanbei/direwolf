@@ -1,78 +1,137 @@
 package direwolf
 
 import (
-	"io/ioutil"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 )
 
 func newTestSessionServer() *httptest.Server {
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// check method is GET before going to check other features
-		if r.Method == "GET" {
-			if r.URL.Path == "/test" {
-				if _, err := w.Write([]byte("GET")); err != nil {
-				}
-			}
-			if r.URL.Path == "/setCookie" {
-				http.SetCookie(w, &http.Cookie{Name: "key", Value: "value"})
-			}
-			if r.URL.Path == "/getCookie" {
-				cookies := r.Cookies()
-				for _, cookie := range cookies {
-					if _, err := w.Write([]byte(cookie.Name + "=" + cookie.Value)); err != nil {
-					}
-				}
-			}
-			if r.URL.Path == "/getHeader" {
-				header := r.Header
-				value := header.Get("user-agent")
-				if _, err := w.Write([]byte(value)); err != nil {
-				}
-			}
-			if r.URL.Path == "/getParams" {
-				if err := r.ParseForm(); err != nil {
-				}
-				params := r.Form
-				value := params.Get("key")
-				if _, err := w.Write([]byte(value)); err != nil {
-				}
-			}
-			if r.URL.Path == "/proxy" {
-				if _, err := w.Write([]byte("This is target website.")); err != nil {
-				}
-			}
+	gin.SetMode(gin.ReleaseMode)
+	router := gin.New()
+	router.GET("/test", func(c *gin.Context) {
+		c.String(200, "GET")
+	})
+	router.GET("/setCookie", func(c *gin.Context) {
+		http.SetCookie(c.Writer, &http.Cookie{
+			Name:    "key",
+			Value:   "value",
+			Path:    "/",
+			Expires: time.Now().Add(30* time.Second),
+		})
+	})
+	router.GET("/getCookie", func(c *gin.Context) {
+		cookies := c.Request.Cookies()
+		for _, cookie := range cookies {
+			c.String(200, cookie.Name+"="+cookie.Value)
 		}
-		if r.Method == "POST" {
-			if r.URL.Path == "/test" {
-				body, _ := ioutil.ReadAll(r.Body)
-				if string(body) != "key=value" {
-					if _, err := w.Write([]byte("Failed")); err != nil {
-					}
-				} else {
-					if _, err := w.Write([]byte("POST")); err != nil {
-					}
-				}
-			}
+	})
+	router.GET("/getHeader", func(c *gin.Context) {
+		header := c.GetHeader("user-agent")
+		c.String(200, header)
+	})
+	router.GET("/getParams", func(c *gin.Context) {
+		value := c.Query("key")
+		c.String(200, value)
+	})
+	router.GET("/proxy", func(c *gin.Context) {
+		c.String(200, "This is target website.")
+	})
+	router.POST("/test", func(c *gin.Context) {
+		data, err := c.GetRawData()
+		if err != nil {
+			c.AbortWithStatus(404)
+			return
 		}
-		if r.Method == "HEAD" {
-			http.SetCookie(w, &http.Cookie{Name: "HEAD", Value: "RIGHT"})
+		if string(data) == "key=value" {
+			c.String(200, "POST")
+		} else {
+			c.String(200, "Failed")
 		}
-		if r.Method == "PUT" {
-			if _, err := w.Write([]byte("PUT")); err != nil {
-			}
-		}
-		if r.Method == "PATCH" {
-			if _, err := w.Write([]byte("PATCH")); err != nil {
-			}
-		}
-		if r.Method == "DELETE" {
-			if _, err := w.Write([]byte("DELETE")); err != nil {
-			}
-		}
-	}))
+	})
+	router.HEAD("/", func(c *gin.Context) {
+		c.SetCookie("HEAD", "RIGHT", 1000, "/", "localhost", false, false)
+	})
+	router.PUT("/", func(c *gin.Context) {
+		c.String(200, "PUT")
+	})
+	router.DELETE("/", func(c *gin.Context) {
+		c.String(200, "DELETE")
+	})
+	router.PATCH("/", func(c *gin.Context) {
+		c.String(200, "PATCH")
+	})
+
+	ts := httptest.NewServer(router)
 	return ts
+
+	//ys := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	//	// check method is GET before going to check other features
+	//	if r.Method == "GET" {
+	//		if r.URL.Path == "/test" {
+	//			if _, err := w.Write([]byte("GET")); err != nil {
+	//			}
+	//		}
+	//		if r.URL.Path == "/setCookie" {
+	//			http.SetCookie(w, &http.Cookie{Name: "key", Value: "value"})
+	//		}
+	//		if r.URL.Path == "/getCookie" {
+	//			cookies := r.Cookies()
+	//			for _, cookie := range cookies {
+	//				if _, err := w.Write([]byte(cookie.Name + "=" + cookie.Value)); err != nil {
+	//				}
+	//			}
+	//		}
+	//		if r.URL.Path == "/getHeader" {
+	//			header := r.Header
+	//			value := header.Get("user-agent")
+	//			if _, err := w.Write([]byte(value)); err != nil {
+	//			}
+	//		}
+	//		if r.URL.Path == "/getParams" {
+	//			if err := r.ParseForm(); err != nil {
+	//			}
+	//			params := r.Form
+	//			value := params.Get("key")
+	//			if _, err := w.Write([]byte(value)); err != nil {
+	//			}
+	//		}
+	//		if r.URL.Path == "/proxy" {
+	//			if _, err := w.Write([]byte("This is target website.")); err != nil {
+	//			}
+	//		}
+	//	}
+	//	if r.Method == "POST" {
+	//		if r.URL.Path == "/test" {
+	//			body, _ := ioutil.ReadAll(r.Body)
+	//			if string(body) != "key=value" {
+	//				if _, err := w.Write([]byte("Failed")); err != nil {
+	//				}
+	//			} else {
+	//				if _, err := w.Write([]byte("POST")); err != nil {
+	//				}
+	//			}
+	//		}
+	//	}
+	//	if r.Method == "HEAD" {
+	//		http.SetCookie(w, &http.Cookie{Name: "HEAD", Value: "RIGHT"})
+	//	}
+	//	if r.Method == "PUT" {
+	//		if _, err := w.Write([]byte("PUT")); err != nil {
+	//		}
+	//	}
+	//	if r.Method == "PATCH" {
+	//		if _, err := w.Write([]byte("PATCH")); err != nil {
+	//		}
+	//	}
+	//	if r.Method == "DELETE" {
+	//		if _, err := w.Write([]byte("DELETE")); err != nil {
+	//		}
+	//	}
+	//}))
+	//return ys
 }
 
 func TestSessionGet(t *testing.T) {

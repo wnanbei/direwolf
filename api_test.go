@@ -127,8 +127,7 @@ func TestSendCookie(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	text := resp.Text()
-	if text != "name=direwolf" {
+	if resp.Text() != "name=direwolf" {
 		t.Fatal("request cookies test failed")
 	}
 }
@@ -161,8 +160,7 @@ func TestSendParams(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	text := resp.Text()
-	if text != "value" {
-		t.Fatal("request headers test failed")
+	if resp.Text() != "value" {
+		t.Fatal("request params test failed")
 	}
 }

@@ -1,8 +1,7 @@
 package direwolf
 
 import (
-	"log"
-	"net/http"
+	"github.com/gin-gonic/gin"
 	"net/http/httptest"
 	"testing"
 
@@ -23,31 +22,24 @@ func newTestResponseServer() *httptest.Server {
 	</body>
 	</html>`
 
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// check method is GET before going to check other features
-		if r.Method != "GET" {
-			log.Fatalf("Expected method %q; got %q", "GET", r.Method)
-		}
-		if r.URL.Path == "/" {
-			if _, err := w.Write([]byte(respString)); err != nil {
-			}
-		}
-		if r.URL.Path == "/GBK" {
-			content, _ := simplifiedchinese.GBK.NewEncoder().Bytes([]byte(respString))
-			if _, err := w.Write(content); err != nil {
-			}
-		}
-		if r.URL.Path == "/GB18030" {
-			content, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte(respString))
-			if _, err := w.Write(content); err != nil {
-			}
-		}
-		if r.URL.Path == "/latin1" {
-			content, _ := charmap.ISO8859_1.NewEncoder().Bytes([]byte(`<li><a href="/author/">...</a></li>`))
-			if _, err := w.Write(content); err != nil {
-			}
-		}
-	}))
+	gin.SetMode(gin.ReleaseMode)
+	router := gin.New()
+	router.GET("/", func(c *gin.Context) {
+		c.String(200, respString)
+	})
+	router.GET("/GBK", func(c *gin.Context) {
+		content, _ := simplifiedchinese.GBK.NewEncoder().Bytes([]byte(respString))
+		c.Data(200, "text/html", content)
+	})
+	router.GET("/GB18030", func(c *gin.Context) {
+		content, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte(respString))
+		c.Data(200, "text/html", content)
+	})
+	router.GET("/latin1", func(c *gin.Context) {
+		content, _ := charmap.ISO8859_1.NewEncoder().Bytes([]byte(`<li><a href="/author/">...</a></li>`))
+		c.Data(200, "text/html", content)
+	})
+	ts := httptest.NewServer(router)
 	return ts
 }
 
