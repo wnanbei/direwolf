@@ -33,7 +33,13 @@ func BenchmarkFasthttpGet(b *testing.B) {
 	ts := newTestResponseServer()
 	defer ts.Close()
 	b.ResetTimer()
+	client := fasthttp.Client{}
 	for i := 0; i < b.N; i++ {
-		fasthttp.Get(nil, ts.URL)
+		req := fasthttp.AcquireRequest()
+		resp := fasthttp.AcquireResponse()
+		req.SetRequestURI(ts.URL)
+		client.Do(req, resp)
+		req.Reset()
+		resp.Reset()
 	}
 }
