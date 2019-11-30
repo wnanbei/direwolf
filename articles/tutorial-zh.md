@@ -240,8 +240,7 @@ fmt.Println(resp.Text())
 计时器在 Get、Head、Post 等方法返回之后仍在运行，并且可能会打断 Response.Body 的读取，在 Response.Body 读取完毕后计时结束。
 
 - 如果 timeout > 0, 表示设置了一个超时时间。
-- 如果 timeout < 0, 表示不设置超时。
-- 如果 timeout = 0, 表示使用默认的30秒超时。
+- 如果 timeout = 0 或者没有设置超时, 表示使用默认的30秒超时。
 
 ```go
 timeout := dw.Timeout(5)
@@ -263,9 +262,9 @@ RedirectNum 是允许重定向的次数。
 
 - 如果 RedirectNum > 0, 表示设置一个允许重定向的次数。
 
-- 如果 RedirectNum = 0, 表示禁止重定向。
+- 如果 RedirectNum = 0 或者没有设置 RedirectNum, 表示默认允许10次重定向。
 
-- 如果没有设置 RedirectNum, 表示默认允许5次重定向。
+- 如果 RedirectNum < 0, 表示禁止重定向。
 
 ```go
 redirect := dw.RedirectNum(10)
@@ -296,6 +295,8 @@ if err != nil {
 }
 fmt.Println(resp.Text())
 ```
+
+如果没有设置代理，那么将使用默认的环境代理。
 
 ## 10. Response 响应
 
@@ -343,24 +344,24 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-`Text()` 会默认使用 `UTF8` 编码来解码内容，你也可以自行指定解码的编码：
+`direwolf` 会默认使用 `UTF8` 编码来解码内容。你也可以使用 `Encoding()` 方法自行指定解码的编码，此方法会返回当前正在使用的解码方式。
 
 ```go
-resp.Text("GBK")
+resp.Encoding("GBK")
 ```
 
 目前仅支持 `UTF8`, `GBK`, `GB18030`, `Latin1` 这几种编码。
 
-注：Text() 在你每次调用时都会解码一次响应内容，如果你希望重用 text，你最好将 text 存到一个变量中。
+注：Text() 会在第一次被调用时解码内容并缓存结果。
 
 ```go
 text := resp.Text()
 ```
 
-除此之外，如果你想要获取原始的 content，可以使用 `Content()` 方法，它会返回一个 `[]byte`:
+除此之外，如果你想要获取原始的 content，可以使用 `Content` ，这是一个 `[]byte`:
 
 ```go
-resp.Content()
+resp.Content
 ```
 
 ## 12. 使用 CSS 选择器提取数据

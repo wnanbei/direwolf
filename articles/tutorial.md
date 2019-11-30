@@ -240,8 +240,7 @@ Output:
 The timer remains running after Get, Head, Post, or Do return and will interrupt reading of the Response.Body.
 
 - if timeout > 0, it means a time limit for requests.
-- if timeout < 0, it means no limit.
-- if timeout = 0, it means keep default 30 second timeout.
+- if timeout = 0 or did not set timeout, it means keep default 30 second timeout.
 
 ```go
 timeout := dw.Timeout(5)
@@ -263,9 +262,9 @@ RedirectNum is the number of request redirect allowed.
 
 - If RedirectNum > 0, it means a redirect number limit for requests.
 
-- If RedirectNum = 0, it means ban redirect.
+- If RedirectNum = 0 or RedirectNum is not set, it means default 10 times redirect limit.
 
-- If RedirectNum is not set, it means default 5 times redirect limit.
+- If RedirectNum < 0, it means ban redirect.
 
 ```go
 redirect := dw.RedirectNum(10)
@@ -296,6 +295,8 @@ if err != nil {
 }
 fmt.Println(resp.Text())
 ```
+
+If there is no proxy set, use default proxy from environment.
 
 ## 10. Response
 
@@ -343,24 +344,24 @@ if err != nil {
 fmt.Println(resp.Text())
 ```
 
-`Text()` will use `UTF8` to decode content by default. You can also specify decode method by yourself:
+`direwolf` will use `UTF8` to decode content by default. You can also use `Encoding()` to specify decode method by yourself, this method will return the decode method being used.
 
 ```go
-resp.Text("GBK")
+resp.Encoding("GBK")
 ```
 
 It only support `UTF8`, `GBK`, `GB18030`, `Latin1` now.
 
-Note: Text() will decode content every time you call it. If you want to reuse text, you would better store the text in a variable.
+Note: Text() will decode the content to string the first time it is called.
 
 ```go
 text := resp.Text()
 ```
 
-Besides, if you want to get raw content, you can use `Content()` method and it will return a `[]byte`:
+Besides, if you want to get raw content, you can use `Content`, it is a `[]byte`:
 
 ```go
-resp.Content()
+resp.Content
 ```
 
 ## 12. Extract Data by CSS Selector

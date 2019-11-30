@@ -13,8 +13,6 @@ permalink: /docs/advanced-usage-zh
 
 ## 1. 会话 Session
 
-`Get()`，`Post()` 等请求方法，默认使用的是短连接，不会复用连接，如果希望复用连接以提升效率的话，可以使用 `Session`。
-
 Session 中集成了 `http.Client`，通过其底层的连接池，在对单个域名发起大量请求时，可以复用连接来极大的提升效率。
 
 ```go

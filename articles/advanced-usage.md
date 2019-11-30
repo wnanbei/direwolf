@@ -13,8 +13,6 @@ permalink: /docs/advanced-usage
 
 ## 1. Session Object
 
-Request method such as `Get()` and `Post()`, which use short connection by default, do not reuse connections. You can use `Session` if you want to reuse connections for efficiency.
-
 The session integrates `http.Client`. When made a large number of requests to a single domain, the connections can be reused to improve efficiency through the underlying connection pool.
 
 ```go
