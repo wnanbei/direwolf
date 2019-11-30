@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"golang.org/x/net/http/httpproxy"
+
 	"golang.org/x/net/publicsuffix"
 )
 
@@ -265,15 +266,22 @@ func proxyFunc(req *http.Request) (*url.URL, error) {
 	httpURLStr := req.Context().Value("http")   // get http proxy url form context
 	httpsURLStr := req.Context().Value("https") // get https proxy url form context
 
-	// check whether set proxy
-	if httpURLStr != nil || httpsURLStr != nil {
-		if req.URL.Scheme == "http" {
+	// If there is no proxy set, use default proxy from environment.
+	// This mitigates expensive lookups on some platforms (e.g. Windows).
+	envProxyOnce.Do(func() {
+		envProxyFuncValue = httpproxy.FromEnvironment().ProxyFunc()
+	})
+
+	if req.URL.Scheme == "http" { // set proxy for http site
+		if httpURLStr != nil {
 			httpURL, err := url.Parse(httpURLStr.(string))
 			if err != nil {
 				return nil, WrapErr(err, "HTTP Proxy error, please check proxy url")
 			}
 			return httpURL, nil
-		} else if req.URL.Scheme == "https" {
+		}
+	} else if req.URL.Scheme == "https" { // set proxy for https site
+		if httpsURLStr != nil {
 			httpsURL, err := url.Parse(httpsURLStr.(string))
 			if err != nil {
 				return nil, WrapErr(err, "HTTPS Proxy error, please check proxy url")
@@ -282,11 +290,6 @@ func proxyFunc(req *http.Request) (*url.URL, error) {
 		}
 	}
 
-	// If there is no proxy set, use default proxy from environment.
-	// This mitigates expensive lookups on some platforms (e.g. Windows).
-	envProxyOnce.Do(func() {
-		envProxyFuncValue = httpproxy.FromEnvironment().ProxyFunc()
-	})
 	return envProxyFuncValue(req.URL)
 }
 
