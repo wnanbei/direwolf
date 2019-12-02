@@ -105,7 +105,11 @@ func TestRequest(t *testing.T) {
 	ts := newTestSessionServer()
 	defer ts.Close()
 
-	req := NewRequest("Get", ts.URL+"/test")
+	req, err := NewRequest("Get", ts.URL+"/test")
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	resp, err := Send(req)
 	if err != nil {
 		t.Fatal(err)

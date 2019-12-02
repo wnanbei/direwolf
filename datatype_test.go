@@ -62,7 +62,10 @@ func TestParams(t *testing.T) {
 	params := NewParams(
 		"key1", "value2",
 		"key2", "value2")
-	req := NewRequest("GET", URL, params)
+	req, err := NewRequest("GET", URL, params)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if req.URL != "http://test.com?key1=value2&key2=value2" {
 		t.Fatal("Test params failed.")
 	}
@@ -71,7 +74,10 @@ func TestParams(t *testing.T) {
 	params = NewParams(
 		"key1", "value2",
 		"key2", "value2")
-	req = NewRequest("GET", URL, params)
+	req, err = NewRequest("GET", URL, params)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if req.URL != "http://test.com?key1=value2&key2=value2" {
 		t.Fatal("Test params failed.")
 	}
@@ -80,7 +86,10 @@ func TestParams(t *testing.T) {
 	params = NewParams(
 		"key1", "value2",
 		"key2", "value2")
-	req = NewRequest("GET", URL, params)
+	req, err = NewRequest("GET", URL, params)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if req.URL != "http://test.com?xxx=yyy&key1=value2&key2=value2" {
 		t.Fatal("Test params failed.")
 	}

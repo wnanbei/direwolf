@@ -90,7 +90,10 @@ func (session *Session) Send(req *Request) (*Response, error) {
 
 // Get is a get method.
 func (session *Session) Get(URL string, args ...RequestOption) (*Response, error) {
-	req := NewRequest("GET", URL, args...)
+	req, err := NewRequest("GET", URL, args...)
+	if err != nil {
+		return nil, err
+	}
 	resp, err := session.Send(req)
 	if err != nil {
 		return nil, err
@@ -100,7 +103,10 @@ func (session *Session) Get(URL string, args ...RequestOption) (*Response, error
 
 // Post is a post method.
 func (session *Session) Post(URL string, args ...RequestOption) (*Response, error) {
-	req := NewRequest("POST", URL, args...)
+	req, err := NewRequest("POST", URL, args...)
+	if err != nil {
+		return nil, err
+	}
 	resp, err := session.Send(req)
 	if err != nil {
 		return nil, err
@@ -110,7 +116,10 @@ func (session *Session) Post(URL string, args ...RequestOption) (*Response, erro
 
 // Head is a post method.
 func (session *Session) Head(URL string, args ...RequestOption) (*Response, error) {
-	req := NewRequest("HEAD", URL, args...)
+	req, err := NewRequest("HEAD", URL, args...)
+	if err != nil {
+		return nil, err
+	}
 	resp, err := session.Send(req)
 	if err != nil {
 		return nil, err
@@ -120,7 +129,10 @@ func (session *Session) Head(URL string, args ...RequestOption) (*Response, erro
 
 // Put is a post method.
 func (session *Session) Put(URL string, args ...RequestOption) (*Response, error) {
-	req := NewRequest("PUT", URL, args...)
+	req, err := NewRequest("PUT", URL, args...)
+	if err != nil {
+		return nil, err
+	}
 	resp, err := session.Send(req)
 	if err != nil {
 		return nil, err
@@ -130,7 +142,10 @@ func (session *Session) Put(URL string, args ...RequestOption) (*Response, error
 
 // Patch is a post method.
 func (session *Session) Patch(URL string, args ...RequestOption) (*Response, error) {
-	req := NewRequest("PATCH", URL, args...)
+	req, err := NewRequest("PATCH", URL, args...)
+	if err != nil {
+		return nil, err
+	}
 	resp, err := session.Send(req)
 	if err != nil {
 		return nil, err
@@ -140,7 +155,10 @@ func (session *Session) Patch(URL string, args ...RequestOption) (*Response, err
 
 // Delete is a post method.
 func (session *Session) Delete(URL string, args ...RequestOption) (*Response, error) {
-	req := NewRequest("DELETE", URL, args...)
+	req, err := NewRequest("DELETE", URL, args...)
+	if err != nil {
+		return nil, err
+	}
 	resp, err := session.Send(req)
 	if err != nil {
 		return nil, err

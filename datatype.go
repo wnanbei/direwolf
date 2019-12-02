@@ -10,15 +10,16 @@ import (
 // RequestOption is the interface of Request Options. Use to bind the options to Request.
 type RequestOption interface {
 	// Bind Options to Request
-	bindRequest(request *Request)
+	bindRequest(request *Request) error
 }
 
 // Body is the data you want to post, one of the Request Options.
 type Body []byte
 
 // RequestOption interface method, bind request option to request.
-func (options Body) bindRequest(request *Request) {
+func (options Body) bindRequest(request *Request) error {
 	request.Body = options
+	return nil
 }
 
 // RedirectNum is the number of request redirect allowed.
@@ -28,8 +29,9 @@ func (options Body) bindRequest(request *Request) {
 type RedirectNum int
 
 // RequestOption interface method, bind request option to request.
-func (options RedirectNum) bindRequest(request *Request) {
+func (options RedirectNum) bindRequest(request *Request) error {
 	request.RedirectNum = int(options)
+	return nil
 }
 
 // Timeout is the number of time to timeout request.
@@ -39,8 +41,9 @@ func (options RedirectNum) bindRequest(request *Request) {
 type Timeout int
 
 // RequestOption interface method, bind request option to request.
-func (options Timeout) bindRequest(request *Request) {
+func (options Timeout) bindRequest(request *Request) error {
 	request.Timeout = int(options)
+	return nil
 }
 
 // Proxy is the proxy server address, like "http://127.0.0.1:1080".
@@ -51,8 +54,9 @@ type Proxy struct {
 }
 
 // RequestOption interface method, bind request option to request.
-func (options *Proxy) bindRequest(request *Request) {
+func (options *Proxy) bindRequest(request *Request) error {
 	request.Proxy = options
+	return nil
 }
 
 // strSliceMap type is map[string][]string, used for Params, PostForm.
@@ -170,11 +174,11 @@ func NewParams(keyValue ...string) *Params {
 }
 
 // RequestOption interface method, bind request option to request.
-func (options *Params) bindRequest(request *Request) {
+func (options *Params) bindRequest(request *Request) error {
 	request.Params = options
 	u, err := url.Parse(request.URL)
 	if err != nil {
-		return
+		return WrapErrf(err, "URL error")
 	}
 
 	// check whether parameters is existed in url.
@@ -185,6 +189,7 @@ func (options *Params) bindRequest(request *Request) {
 	} else {
 		request.URL = request.URL + "&" + request.Params.URLEncode()
 	}
+	return nil
 }
 
 // PostForm is the form you want to post, as parameter in Request method.
@@ -214,8 +219,9 @@ func NewPostForm(keyValue ...string) *PostForm {
 }
 
 // RequestOption interface method, bind request option to request.
-func (options *PostForm) bindRequest(request *Request) {
+func (options *PostForm) bindRequest(request *Request) error {
 	request.PostForm = options
+	return nil
 }
 
 type Headers struct {
@@ -223,8 +229,9 @@ type Headers struct {
 }
 
 // RequestOption interface method, bind request option to request.
-func (options Headers) bindRequest(request *Request) {
+func (options Headers) bindRequest(request *Request) error {
 	request.Headers = http.Header(options.Header)
+	return nil
 }
 
 // NewHeaders new a http.Header type.
@@ -289,8 +296,9 @@ func NewCookies(keyValue ...string) Cookies {
 }
 
 // RequestOption interface method, bind request option to request.
-func (c Cookies) bindRequest(request *Request) {
+func (c Cookies) bindRequest(request *Request) error {
 	request.Cookies = c
+	return nil
 }
 
 // Add append a new cookie to Cookies.

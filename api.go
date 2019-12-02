@@ -37,7 +37,10 @@ func Send(req *Request) (*Response, error) {
 // 	direwolf.Timeout: Request Timeout. Default value is 30.
 // 	direwolf.RedirectNum: Number of Request allowed to redirect. Default value is 5.
 func Get(URL string, args ...RequestOption) (*Response, error) {
-	req := NewRequest("GET", URL, args...)
+	req, err := NewRequest("GET", URL, args...)
+	if err != nil {
+		return nil, err
+	}
 	resp, err := Send(req)
 	if err != nil {
 		return nil, err
@@ -50,7 +53,10 @@ func Get(URL string, args ...RequestOption) (*Response, error) {
 //
 // Note: direwolf.Body can`t existed with direwolf.PostForm.
 func Post(URL string, args ...RequestOption) (*Response, error) {
-	req := NewRequest("POST", URL, args...)
+	req, err := NewRequest("POST", URL, args...)
+	if err != nil {
+		return nil, err
+	}
 	resp, err := Send(req)
 	if err != nil {
 		return nil, err
@@ -61,7 +67,10 @@ func Post(URL string, args ...RequestOption) (*Response, error) {
 // Head is the method to constructs and sends a Head request. Parameters are
 // the same with direwolf.Get()
 func Head(URL string, args ...RequestOption) (*Response, error) {
-	req := NewRequest("HEAD", URL, args...)
+	req, err := NewRequest("HEAD", URL, args...)
+	if err != nil {
+		return nil, err
+	}
 	resp, err := Send(req)
 	if err != nil {
 		return nil, err
@@ -72,7 +81,10 @@ func Head(URL string, args ...RequestOption) (*Response, error) {
 // Put is the method to constructs and sends a Put request. Parameters are
 // the same with direwolf.Get()
 func Put(URL string, args ...RequestOption) (*Response, error) {
-	req := NewRequest("Put", URL, args...)
+	req, err := NewRequest("Put", URL, args...)
+	if err != nil {
+		return nil, err
+	}
 	resp, err := Send(req)
 	if err != nil {
 		return nil, err
@@ -83,7 +95,10 @@ func Put(URL string, args ...RequestOption) (*Response, error) {
 // Patch is the method to constructs and sends a Patch request. Parameters are
 // the same with direwolf.Get()
 func Patch(URL string, args ...RequestOption) (*Response, error) {
-	req := NewRequest("Patch", URL, args...)
+	req, err := NewRequest("Patch", URL, args...)
+	if err != nil {
+		return nil, err
+	}
 	resp, err := Send(req)
 	if err != nil {
 		return nil, err
@@ -94,7 +109,10 @@ func Patch(URL string, args ...RequestOption) (*Response, error) {
 // Delete is the method to constructs and sends a Delete request. Parameters are
 // the same with direwolf.Get()
 func Delete(URL string, args ...RequestOption) (*Response, error) {
-	req := NewRequest("Delete", URL, args...)
+	req, err := NewRequest("Delete", URL, args...)
+	if err != nil {
+		return nil, err
+	}
 	resp, err := Send(req)
 	if err != nil {
 		return nil, err

@@ -25,7 +25,7 @@ type Request struct {
 // You can construct this request by passing the following parameters:
 // 	method: Method for the request.
 // 	url: URL for the request.
-// 	http.Header: HTTP Headers to send.
+// 	direwolf.Header: HTTP Headers to send.
 // 	direwolf.Params: Parameters to send in the query string.
 // 	direwolf.Cookies: Cookies to send.
 // 	direwolf.PostForm: Post data form to send.
@@ -33,14 +33,16 @@ type Request struct {
 // 	direwolf.Proxy: Proxy url to use.
 // 	direwolf.Timeout: Request Timeout.
 // 	direwolf.RedirectNum: Number of Request allowed to redirect.
-func NewRequest(method string, URL string, args ...RequestOption) *Request {
-	req := &Request{}             // new a Request and set default field
+func NewRequest(method string, URL string, args ...RequestOption) (req *Request, err error) {
+	req = &Request{}             // new a Request and set default field
 	req.Method = strings.ToUpper(method) // Upper the method string
 	req.URL = URL
 
 	// Check the type of the parameter and handle it.
 	for _, arg := range args {
-		arg.bindRequest(req)
+		if err := arg.bindRequest(req); err != nil {
+			return nil, WrapErr(err, "set request parameters failed.")
+		}
 	}
-	return req
+	return req, nil
 }
