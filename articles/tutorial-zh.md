@@ -36,7 +36,10 @@ resp, err := dw.Delete("https://httpbin.org/delete")
 你还可以使用一个更加通用的函数 `Send()` 来发起请求，使用这个方法需要你先构造一个 `Request` 对象：
 
 ```go
-req := dw.NewRequest("Get", "https://httpbin.org/get")
+req, err := dw.NewRequest("Get", "https://httpbin.org/get")
+if err != nil {
+    return
+}
 resp, err := dw.Send(req)
 if err != nil {
     return

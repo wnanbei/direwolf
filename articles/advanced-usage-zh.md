@@ -33,7 +33,10 @@ resp, err := session.Delete("https://httpbin.org/delete")
 以及 `Send()`：
 
 ```go
-req := dw.NewRequest("Get", "https://httpbin.org/get")
+req, err := dw.NewRequest("Get", "https://httpbin.org/get")
+if err != nil {
+    return
+}
 resp, err := session.Send(req)
 ```
 

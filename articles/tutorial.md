@@ -36,7 +36,10 @@ resp, err := dw.Delete("https://httpbin.org/delete")
 You can use a more generic function `Send()` to send request. This function requires you to construct a `Request` object first:
 
 ```go
-req := dw.NewRequest("Get", "https://httpbin.org/get")
+req, err := dw.NewRequest("Get", "https://httpbin.org/get")
+if err != nil {
+    return
+}
 resp, err := dw.Send(req)
 if err != nil {
     return
