@@ -57,6 +57,31 @@ func TestStringSliceMap(t *testing.T) {
 	}
 }
 
-func TestCookies(t *testing.T) {
+func TestParams(t *testing.T) {
+	URL := "http://test.com"
+	params := NewParams(
+		"key1", "value2",
+		"key2", "value2")
+	req := NewRequest("GET", URL, params)
+	if req.URL != "http://test.com?key1=value2&key2=value2" {
+		t.Fatal("Test params failed.")
+	}
 
+	URL = "http://test.com?"
+	params = NewParams(
+		"key1", "value2",
+		"key2", "value2")
+	req = NewRequest("GET", URL, params)
+	if req.URL != "http://test.com?key1=value2&key2=value2" {
+		t.Fatal("Test params failed.")
+	}
+
+	URL = "http://test.com?xxx=yyy"
+	params = NewParams(
+		"key1", "value2",
+		"key2", "value2")
+	req = NewRequest("GET", URL, params)
+	if req.URL != "http://test.com?xxx=yyy&key1=value2&key2=value2" {
+		t.Fatal("Test params failed.")
+	}
 }

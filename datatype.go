@@ -172,7 +172,19 @@ func NewParams(keyValue ...string) *Params {
 // RequestOption interface method, bind request option to request.
 func (options *Params) bindRequest(request *Request) {
 	request.Params = options
-	request.URL = request.URL + "?" + request.Params.URLEncode()
+	u, err := url.Parse(request.URL)
+	if err != nil {
+		return
+	}
+
+	// check whether parameters is existed in url.
+	if u.RawQuery == "" && u.ForceQuery == false {
+		request.URL = request.URL + "?" + request.Params.URLEncode()
+	} else if u.RawQuery == "" && u.ForceQuery == true {
+		request.URL = request.URL + request.Params.URLEncode()
+	} else {
+		request.URL = request.URL + "&" + request.Params.URLEncode()
+	}
 }
 
 // PostForm is the form you want to post, as parameter in Request method.
