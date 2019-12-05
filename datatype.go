@@ -181,14 +181,14 @@ func (options *Params) bindRequest(request *Request) error {
 		return WrapErrf(err, "URL error")
 	}
 
+	spacer := "?"
 	// check whether parameters is existed in url.
-	if u.RawQuery == "" && u.ForceQuery == false {
-		request.URL = request.URL + "?" + request.Params.URLEncode()
-	} else if u.RawQuery == "" && u.ForceQuery == true {
-		request.URL = request.URL + request.Params.URLEncode()
-	} else {
-		request.URL = request.URL + "&" + request.Params.URLEncode()
+	if u.RawQuery != "" {
+		spacer = "&"
+	} else if u.ForceQuery == true {
+		spacer = ""
 	}
+	request.URL = request.URL + spacer + request.Params.URLEncode()
 	return nil
 }
 
