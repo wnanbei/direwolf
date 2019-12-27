@@ -11,7 +11,8 @@ type Request struct {
 	Method      string
 	URL         string
 	Headers     http.Header
-	Body        Body
+	Body        []byte
+	JsonBody    []byte
 	Params      *Params
 	PostForm    *PostForm
 	Cookies     Cookies
@@ -34,7 +35,7 @@ type Request struct {
 // 	direwolf.Timeout: Request Timeout.
 // 	direwolf.RedirectNum: Number of Request allowed to redirect.
 func NewRequest(method string, URL string, args ...RequestOption) (req *Request, err error) {
-	req = &Request{}             // new a Request and set default field
+	req = &Request{}                     // new a Request and set default field
 	req.Method = strings.ToUpper(method) // Upper the method string
 	req.URL = URL
 

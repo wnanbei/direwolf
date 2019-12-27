@@ -1,9 +1,10 @@
 package direwolf
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/gin-gonic/gin"
 
 	"golang.org/x/text/encoding/charmap"
 	"golang.org/x/text/encoding/simplifiedchinese"

@@ -51,16 +51,17 @@ func send(session *Session, req *Request) (*Response, error) {
 	// Handle the Headers.
 	httpReq.Header = mergeHeaders(req.Headers, session.Headers)
 
-	// Handle the DataForm, convert DataForm to strings.Reader.
-	// Set Content-Type to application/x-www-form-urlencoded.
-	if req.Body != nil && req.PostForm != nil {
-		return nil, ErrRequestBody
-	} else if req.PostForm != nil {
-		httpReq.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	// Handle the DataForm, Body or JsonBody.
+	// Set right Content-Type.
+	if req.PostForm != nil {
+		httpReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 		data := req.PostForm.URLEncode()
 		httpReq.Body = ioutil.NopCloser(strings.NewReader(data))
 	} else if req.Body != nil {
 		httpReq.Body = ioutil.NopCloser(bytes.NewReader(req.Body))
+	} else if req.JsonBody != nil {
+		httpReq.Header.Set("Content-Type", "application/json")
+		httpReq.Body = ioutil.NopCloser(bytes.NewReader(req.JsonBody))
 	}
 
 	// Handle Cookies
