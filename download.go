@@ -51,11 +51,8 @@ func send(session *Session, req *Request) (*Response, error) {
 	// Handle the Headers.
 	httpReq.Header = mergeHeaders(req.Headers, session.Headers)
 
-	// Handle the DataForm, convert DataForm to strings.Reader.
-	// Set Content-Type to application/x-www-form-urlencoded.
-	if req.Body != nil && req.PostForm != nil {
-		return nil, ErrRequestBody
-	}
+	// Handle the DataForm, Body or JsonBody.
+	// Set right Content-Type.
 	if req.PostForm != nil {
 		httpReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 		data := req.PostForm.URLEncode()

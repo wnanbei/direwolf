@@ -2,10 +2,11 @@ package direwolf
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/gin-gonic/gin"
 )
 
 func TestHeaders(t *testing.T) {
@@ -107,7 +108,6 @@ func GetJsonTestServer() *httptest.Server {
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println(data)
 		c.String(200, string(data))
 	})
 	ts := httptest.NewServer(router)
@@ -118,9 +118,9 @@ func TestJsonBody(t *testing.T) {
 	ts := GetJsonTestServer()
 
 	type Student struct {
-		Name    string
-		Age     int
-		Guake   bool
+		Name  string
+		Age   int
+		Guake bool
 	}
 	jsonText := &Student{
 		"Xiao Ming",
@@ -133,5 +133,16 @@ func TestJsonBody(t *testing.T) {
 	if err != nil {
 		t.Fatal("TestJsonBody Failed.")
 	}
-	fmt.Println(resp.Text())
+
+	if resp.JsonGet("Name").String() != "Xiao Ming" {
+		t.Fatal("TestJsonBody Failed.")
+	}
+
+	jsonRespBody := &Student{}
+	if err := resp.Json(jsonRespBody); err != nil {
+		t.Fatal("TestJsonBody Failed.")
+	}
+	if jsonRespBody.Name != "Xiao Ming" {
+		t.Fatal("TestJsonBody Failed.")
+	}
 }

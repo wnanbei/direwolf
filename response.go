@@ -6,6 +6,8 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	jsoniter "github.com/json-iterator/go"
+	"github.com/tidwall/gjson"
 	"golang.org/x/text/encoding/charmap"
 	"golang.org/x/text/encoding/simplifiedchinese"
 )
@@ -74,7 +76,7 @@ func (resp *Response) ReSubmatch(queryStr string) [][]string {
 
 // CSS is a method to extract data with css selector, it returns a CSSNodeList.
 func (resp *Response) CSS(queryStr string) *CSSNodeList {
-	if resp.dom == nil {  // New the dom if resp.dom not exists.
+	if resp.dom == nil { // New the dom if resp.dom not exists.
 		text := strings.NewReader(resp.Text())
 		dom, err := goquery.NewDocumentFromReader(text)
 		if err != nil {
@@ -89,6 +91,19 @@ func (resp *Response) CSS(queryStr string) *CSSNodeList {
 		newNodeList = append(newNodeList, newNode)
 	})
 	return &CSSNodeList{container: newNodeList}
+}
+
+// Json can unmarshal json type response body to a struct.
+func (resp *Response) Json(output interface{}) error {
+	if err := jsoniter.Unmarshal(resp.Content, output); err != nil {
+		return err
+	}
+	return nil
+}
+
+// JsonGet can get a value from json type response body with path.
+func (resp *Response) JsonGet(path string) gjson.Result {
+	return gjson.GetBytes(resp.Content, path)
 }
 
 // decodeContent decode the content with the encodingType. It just support

@@ -7,7 +7,7 @@ package direwolf
 var defatultSession *Session
 
 func init() {
-	sessionOptions := DefaultSessionOptions()  // New default global session
+	sessionOptions := DefaultSessionOptions() // New default global session
 	sessionOptions.DisableCookieJar = true
 	defatultSession = NewSession(sessionOptions)
 }

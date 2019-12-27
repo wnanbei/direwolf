@@ -1,11 +1,12 @@
 package direwolf
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func newTestSessionServer() *httptest.Server {
@@ -19,7 +20,7 @@ func newTestSessionServer() *httptest.Server {
 			Name:    "key",
 			Value:   "value",
 			Path:    "/",
-			Expires: time.Now().Add(30* time.Second),
+			Expires: time.Now().Add(30 * time.Second),
 		})
 	})
 	router.GET("/getCookie", func(c *gin.Context) {
