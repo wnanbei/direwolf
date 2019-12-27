@@ -1,6 +1,10 @@
 package direwolf
 
 import (
+	"fmt"
+	"github.com/gin-gonic/gin"
+	"io/ioutil"
+	"net/http/httptest"
 	"testing"
 )
 
@@ -93,4 +97,41 @@ func TestParams(t *testing.T) {
 	if req.URL != "http://test.com?xxx=yyy&key1=value2&key2=value2" {
 		t.Fatal("Test params failed.")
 	}
+}
+
+func GetJsonTestServer() *httptest.Server {
+	gin.SetMode(gin.ReleaseMode)
+	router := gin.New()
+	router.GET("/json", func(c *gin.Context) {
+		data, err := ioutil.ReadAll(c.Request.Body)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println(data)
+		c.String(200, string(data))
+	})
+	ts := httptest.NewServer(router)
+	return ts
+}
+
+func TestJsonBody(t *testing.T) {
+	ts := GetJsonTestServer()
+
+	type Student struct {
+		Name    string
+		Age     int
+		Guake   bool
+	}
+	jsonText := &Student{
+		"Xiao Ming",
+		16,
+		true,
+	}
+
+	jsonBody := NewJsonBody(jsonText)
+	resp, err := Get(ts.URL+"/json", jsonBody)
+	if err != nil {
+		t.Fatal("TestJsonBody Failed.")
+	}
+	fmt.Println(resp.Text())
 }

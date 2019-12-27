@@ -5,6 +5,8 @@ import (
 	"net/url"
 	"sort"
 	"strings"
+
+	jsoniter "github.com/json-iterator/go"
 )
 
 // RequestOption is the interface of Request Options. Use to bind the options to Request.
@@ -18,6 +20,24 @@ type Body []byte
 
 // RequestOption interface method, bind request option to request.
 func (options Body) bindRequest(request *Request) error {
+	request.Body = options
+	return nil
+}
+
+// JsonBody is the json data you want to post.
+type JsonBody []byte
+
+// NewJsonBody new a json type body.
+func NewJsonBody(v interface{}) JsonBody {
+	body, err := jsoniter.Marshal(v)
+	if err != nil {
+		return nil
+	}
+	return body
+}
+
+// RequestOption interface method, bind request option to request.
+func (options JsonBody) bindRequest(request *Request) error {
 	request.Body = options
 	return nil
 }
@@ -230,7 +250,7 @@ type Headers struct {
 
 // RequestOption interface method, bind request option to request.
 func (options Headers) bindRequest(request *Request) error {
-	request.Headers = http.Header(options.Header)
+	request.Headers = options.Header
 	return nil
 }
 
