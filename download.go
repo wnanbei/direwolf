@@ -45,6 +45,7 @@ func send(session *Session, req *Request) (*Response, error) {
 	// Make new http.Request with context
 	httpReq, err := http.NewRequestWithContext(ctx, req.Method, req.URL, nil)
 	if err != nil {
+		timeoutCancel()
 		return nil, WrapErr(err, "build Request error, please check request url or request method")
 	}
 
@@ -74,8 +75,10 @@ func send(session *Session, req *Request) (*Response, error) {
 	resp, err := session.client.Do(httpReq) // do request
 	if err != nil {
 		if strings.Contains(err.Error(), "context deadline exceeded") { // check timeout error
+			timeoutCancel()
 			return nil, WrapErr(ErrTimeout, err.Error())
 		}
+		timeoutCancel()
 		return nil, WrapErr(err, "Request Error")
 	}
 	defer func() {
@@ -86,6 +89,7 @@ func send(session *Session, req *Request) (*Response, error) {
 
 	response, err := buildResponse(req, resp)
 	if err != nil {
+		timeoutCancel()
 		return nil, WrapErr(err, "build Response Error")
 	}
 
