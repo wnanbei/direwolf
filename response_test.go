@@ -57,12 +57,12 @@ func TestReExtract(t *testing.T) {
 		t.Fatal("Response.Re() failed.")
 	}
 
-	result2 := resp.ReSubmatch(`<a href.*?>(.*?)</a>`)
+	result2 := resp.ReSubMatch(`<a href.*?>(.*?)</a>`)
 	if len(result2) != 4 {
-		t.Fatal("Response.ReSubmatch() failed.")
+		t.Fatal("Response.ReSubMatch() failed.")
 	}
 	if result2[3][0] != "2019-06-21" {
-		t.Fatal("Response.ReSubmatch() failed.")
+		t.Fatal("Response.ReSubMatch() failed.")
 	}
 }
 
@@ -104,7 +104,7 @@ func TestResponseEncoding(t *testing.T) {
 		t.Fatal(err)
 	}
 	resp3.Encoding("latin1")
-	result3 := resp3.ReSubmatch(`<a href="/author/">(.*?)</a>`)
+	result3 := resp3.ReSubMatch(`<a href="/author/">(.*?)</a>`)
 	if result3[0][0] != "..." {
 		t.Fatal("Response latin1 failed.")
 	}
@@ -114,7 +114,7 @@ func TestResponseEncoding(t *testing.T) {
 		t.Fatal(err)
 	}
 	resp.Encoding("GBK")
-	result1 := resp.ReSubmatch(`<a href="/author/">(.*?)</a>`)
+	result1 := resp.ReSubMatch(`<a href="/author/">(.*?)</a>`)
 	if result1[0][0] != "南北" {
 		t.Fatal("Response GBK failed.")
 	}
@@ -124,7 +124,7 @@ func TestResponseEncoding(t *testing.T) {
 		t.Fatal(err)
 	}
 	resp2.Encoding("GB18030")
-	result2 := resp2.ReSubmatch(`<a href="/author/">(.*?)</a>`)
+	result2 := resp2.ReSubMatch(`<a href="/author/">(.*?)</a>`)
 	if result2[0][0] != "南北" {
 		t.Fatal("Response GB18030 failed.")
 	}

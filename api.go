@@ -4,19 +4,19 @@ Package direwolf is a convenient and easy to use http client written in Golang.
 package direwolf
 
 // Default global session
-var defatultSession *Session
+var defaultSession *Session
 
 func init() {
 	sessionOptions := DefaultSessionOptions() // New default global session
 	sessionOptions.DisableCookieJar = true
-	defatultSession = NewSession(sessionOptions)
+	defaultSession = NewSession(sessionOptions)
 }
 
 // Send is different with Get and Post method, you should pass a
 // Request to it. You can construct Request by use NewRequest
 // method.
 func Send(req *Request) (*Response, error) {
-	resp, err := defatultSession.Send(req)
+	resp, err := defaultSession.Send(req)
 	if err != nil {
 		return nil, err
 	}

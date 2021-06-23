@@ -93,7 +93,7 @@ func send(session *Session, req *Request) (*Response, error) {
 		return nil, WrapErr(err, "build Response Error")
 	}
 
-	timeoutCancel() // cancel the timeout context after request successed.
+	timeoutCancel() // cancel the timeout context after request succeed.
 	return response, nil
 }
 

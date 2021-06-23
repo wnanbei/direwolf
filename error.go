@@ -60,7 +60,7 @@ func WrapErr(err error, msg string) error {
 	}
 }
 
-// WrapErr will wrap a error with some information: filename, line, time and some message.
+// WrapErrf will wrap a error with some information: filename, line, time and some message.
 // You can format message of error.
 func WrapErrf(err error, format string, args ...interface{}) error {
 	msg := fmt.Sprintf(format, args...)
