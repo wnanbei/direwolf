@@ -8,17 +8,18 @@ import (
 // Request is a prepared request setting, you should construct it by using
 // NewRequest().
 type Request struct {
-	Method      string
-	URL         string
-	Headers     http.Header
-	Body        []byte
-	JsonBody    []byte
-	Params      *Params
-	PostForm    *PostForm
-	Cookies     Cookies
-	Proxy       *Proxy
-	RedirectNum int
-	Timeout     int
+	Method        string
+	URL           string
+	Headers       http.Header
+	Body          []byte
+	JsonBody      []byte
+	Params        *Params
+	PostForm      *PostForm
+	Cookies       Cookies
+	Proxy         *Proxy
+	RedirectNum   int
+	Timeout       int
+	MultipartForm *MultipartForm
 }
 
 // NewRequest construct a Request by passing the parameters.

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -63,6 +64,10 @@ func send(session *Session, req *Request) (*Response, error) {
 	} else if req.JsonBody != nil {
 		httpReq.Header.Set("Content-Type", "application/json")
 		httpReq.Body = ioutil.NopCloser(bytes.NewReader(req.JsonBody))
+	} else if req.MultipartForm != nil {
+		ct := fmt.Sprintf("multipart/form-data; boundary=--%s", req.MultipartForm.Boundary())
+		httpReq.Header.Set("Content-Type", ct)
+		httpReq.Body = ioutil.NopCloser(req.MultipartForm.Reader())
 	}
 
 	// Handle Cookies
