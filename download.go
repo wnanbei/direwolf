@@ -64,7 +64,7 @@ func send(session *Session, req *Request) (*Response, error) {
 		httpReq.Header.Set("Content-Type", "application/json")
 		httpReq.Body = ioutil.NopCloser(bytes.NewReader(req.JsonBody))
 	} else if req.MultipartForm != nil {
-		httpReq.Header.Set("Content-Type", req.MultipartForm.Boundary())
+		httpReq.Header.Set("Content-Type", req.MultipartForm.ContentType())
 		httpReq.Body = ioutil.NopCloser(req.MultipartForm.Reader())
 	}
 
