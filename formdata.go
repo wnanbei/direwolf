@@ -2,16 +2,17 @@ package direwolf
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"mime/multipart"
+	"net/textproto"
 	"os"
 	"path/filepath"
 )
 
 type MultipartForm struct {
-	body     *bytes.Buffer
-	m        *multipart.Writer
-	boundary string
+	body *bytes.Buffer
+	m    *multipart.Writer
 }
 
 func NewMultipartForm() *MultipartForm {
@@ -19,9 +20,8 @@ func NewMultipartForm() *MultipartForm {
 	w := multipart.NewWriter(&body)
 
 	mf := MultipartForm{
-		body:     &body,
-		m:        w,
-		boundary: w.Boundary(),
+		body: &body,
+		m:    w,
 	}
 	return &mf
 }
@@ -33,7 +33,10 @@ func (mf *MultipartForm) WriteField(key, value string) error {
 func (mf *MultipartForm) WriteFile(key, filePath string) error {
 	_, fileName := filepath.Split(filePath)
 
-	fw, err := mf.m.CreateFormFile(key, fileName)
+	h := make(textproto.MIMEHeader)
+	h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s"; filename="%s"`, key, fileName))
+
+	fw, err := mf.m.CreatePart(h)
 	if err != nil {
 		return err
 	}
@@ -56,8 +59,8 @@ func (mf *MultipartForm) Reader() *bytes.Reader {
 	return bytes.NewReader(mf.body.Bytes())
 }
 
-func (mf *MultipartForm) Boundary() string {
-	return mf.boundary
+func (mf *MultipartForm) ContentType() string {
+	return mf.m.FormDataContentType()
 }
 
 func (mf *MultipartForm) bindRequest(request *Request) error {

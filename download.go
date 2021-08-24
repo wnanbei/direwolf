@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -65,8 +64,7 @@ func send(session *Session, req *Request) (*Response, error) {
 		httpReq.Header.Set("Content-Type", "application/json")
 		httpReq.Body = ioutil.NopCloser(bytes.NewReader(req.JsonBody))
 	} else if req.MultipartForm != nil {
-		ct := fmt.Sprintf("multipart/form-data; boundary=--%s", req.MultipartForm.Boundary())
-		httpReq.Header.Set("Content-Type", ct)
+		httpReq.Header.Set("Content-Type", req.MultipartForm.Boundary())
 		httpReq.Body = ioutil.NopCloser(req.MultipartForm.Reader())
 	}
 
