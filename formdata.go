@@ -2,10 +2,8 @@ package direwolf
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"mime/multipart"
-	"net/textproto"
 	"os"
 	"path/filepath"
 )
@@ -33,10 +31,7 @@ func (mf *MultipartForm) WriteField(key, value string) error {
 func (mf *MultipartForm) WriteFile(key, filePath string) error {
 	_, fileName := filepath.Split(filePath)
 
-	h := make(textproto.MIMEHeader)
-	h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s"; filename="%s"`, key, fileName))
-
-	fw, err := mf.m.CreatePart(h)
+	fw, err := mf.m.CreateFormFile(key, fileName)
 	if err != nil {
 		return err
 	}
